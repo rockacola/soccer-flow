@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "SoccerFlow",
+    "slug": "soccer-flow",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "newArchEnabled": true,
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTabletMode": true
+    },
+    "plugins": ["expo-font"]
+  }
+}
