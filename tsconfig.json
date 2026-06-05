@@ -13,6 +13,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".expo"]
+  "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"],
+  "exclude": ["node_modules", ".expo"],
+  "extends": "expo/tsconfig.base"
 }

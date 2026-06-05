@@ -11,7 +11,7 @@
 ## File Structure
 
 - One component per file
-- Styles are `className` props (NativeWind) — no StyleSheet files
+- Styles use `StyleSheet.create` — one `styles` object per file, defined at the bottom
 - Types live in `src/types/index.ts` unless they are only used in one file
 - Stores live in `src/stores/` — one file per domain
 

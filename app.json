@@ -9,6 +9,6 @@
     "ios": {
       "supportsTabletMode": true
     },
-    "plugins": ["expo-font"]
+    "plugins": ["expo-font", "expo-asset"]
   }
 }

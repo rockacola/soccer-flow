@@ -103,6 +103,6 @@ See [docs/decisions.md](decisions.md) for full ADRs.
 - **Services layer** — screens stay dumb; logic is testable in isolation
 - **Repository layer (future)** — data source swappable without touching UI
 - **AsyncStorage** — local source of truth; no backend required at this stage
-- **NativeWind** — Tailwind utility classes for all styles
+- **StyleSheet** — React Native built-in styling, no external styling library
 - **TypeScript strict mode** — catches nullable reads and unset state early
 - **iOS-first, platform-isolated** — iOS-specific features gated behind `Platform.OS === 'ios'`; core app must run on Android without crashing
