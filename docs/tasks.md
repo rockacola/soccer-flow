@@ -12,11 +12,11 @@
 
 ## Phase 2 — Navigation and persistence
 
-- [ ] React Navigation bottom tabs (Teams, Matches)
-- [ ] `RootParamList` types for all screens
-- [ ] `teamsStore` wired to AsyncStorage (load on mount, persist on change)
-- [ ] `matchStore` wired to AsyncStorage (same pattern)
-- [ ] Storage key constants in `src/constants/`
+- [x] React Navigation bottom tabs (Teams, Matches)
+- [x] `RootParamList` types for all screens
+- [x] `teamsStore` wired to AsyncStorage (load on mount, persist on change)
+- [x] `matchStore` wired to AsyncStorage (same pattern)
+- [x] Storage key constants in `src/constants/`
 
 ## Phase 3 — Teams management
 

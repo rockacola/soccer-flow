@@ -1,3 +1,21 @@
+import type { NavigatorScreenParams } from '@react-navigation/native';
+
+export type TeamsStackParamList = {
+  TeamsList: undefined;
+  TeamDetail: { teamId: string };
+};
+
+export type MatchesStackParamList = {
+  MatchesList: undefined;
+  MatchSetup: undefined;
+  MatchLive: undefined;
+};
+
+export type RootTabParamList = {
+  Teams: NavigatorScreenParams<TeamsStackParamList>;
+  Matches: NavigatorScreenParams<MatchesStackParamList>;
+};
+
 export type PlayerPosition = 'GK' | 'DEF' | 'MID' | 'FWD';
 
 export type Player = {
