@@ -1,66 +1,53 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { createTeam } from '../services/teamsService';
+import { addPlayer } from '../../services/teamsService';
+import type { PlayerPosition } from '../../types';
 
-const COLOUR_OPTIONS = [
-  '#E53935',
-  '#D81B60',
-  '#8E24AA',
-  '#1E88E5',
-  '#00897B',
-  '#43A047',
-  '#FB8C00',
-  '#6D4C41',
-  '#757575',
-  '#1A1A1A',
-];
+const POSITIONS: PlayerPosition[] = ['GK', 'DEF', 'MID', 'FWD'];
 
 type Props = {
+  teamId: string;
   visible: boolean;
   onClose: () => void;
 };
 
-export default function CreateTeamModal({ visible, onClose }: Props) {
+export default function AddPlayerModal({ teamId, visible, onClose }: Props) {
   const [name, setName] = useState('');
-  const [colour, setColour] = useState(COLOUR_OPTIONS[0]);
+  const [jerseyInput, setJerseyInput] = useState('');
+  const [position, setPosition] = useState<PlayerPosition | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
   function handleSave() {
+    const jerseyNumber = jerseyInput.trim() === '' ? undefined : parseInt(jerseyInput, 10);
     try {
-      createTeam(name, colour);
-      setName('');
-      setColour(COLOUR_OPTIONS[0]);
-      setError(null);
-      onClose();
+      addPlayer(teamId, name, jerseyNumber, position);
+      resetAndClose();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
     }
   }
 
-  function handleClose() {
+  function resetAndClose() {
     setName('');
-    setColour(COLOUR_OPTIONS[0]);
+    setJerseyInput('');
+    setPosition(undefined);
     setError(null);
     onClose();
+  }
+
+  function handlePositionPress(p: PlayerPosition) {
+    setPosition((prev) => (prev === p ? undefined : p));
   }
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose}>
+          <TouchableOpacity onPress={resetAndClose}>
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>New Team</Text>
+          <Text style={styles.title}>New Player</Text>
           <TouchableOpacity onPress={handleSave}>
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
@@ -75,25 +62,44 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
               setName(t);
               setError(null);
             }}
-            placeholder="e.g. Red Lions"
+            placeholder="e.g. Alex Morgan"
             autoFocus
+            returnKeyType="next"
+          />
+
+          <Text style={styles.label}>Jersey Number (optional)</Text>
+          <TextInput
+            style={styles.input}
+            value={jerseyInput}
+            onChangeText={(t) => {
+              setJerseyInput(t);
+              setError(null);
+            }}
+            placeholder="e.g. 10"
+            keyboardType="number-pad"
             returnKeyType="done"
             onSubmitEditing={handleSave}
           />
+
           {error !== null && <Text style={styles.errorText}>{error}</Text>}
 
-          <Text style={styles.label}>Colour</Text>
-          <View style={styles.colourGrid}>
-            {COLOUR_OPTIONS.map((c) => (
-              <Pressable
-                key={c}
-                style={[
-                  styles.colourSwatch,
-                  { backgroundColor: c },
-                  colour === c && styles.colourSwatchSelected,
-                ]}
-                onPress={() => setColour(c)}
-              />
+          <Text style={styles.label}>Position (optional)</Text>
+          <View style={styles.positionRow}>
+            {POSITIONS.map((p) => (
+              <TouchableOpacity
+                key={p}
+                style={[styles.positionChip, position === p && styles.positionChipSelected]}
+                onPress={() => handlePositionPress(p)}
+              >
+                <Text
+                  style={[
+                    styles.positionChipText,
+                    position === p && styles.positionChipTextSelected,
+                  ]}
+                >
+                  {p}
+                </Text>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -156,18 +162,28 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#FF3B30',
   },
-  colourGrid: {
+  positionRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    gap: 10,
   },
-  colourSwatch: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  positionChip: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#C6C6C8',
   },
-  colourSwatchSelected: {
-    borderWidth: 3,
+  positionChipSelected: {
+    backgroundColor: '#007AFF',
     borderColor: '#007AFF',
+  },
+  positionChipText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1C1C1E',
+  },
+  positionChipTextSelected: {
+    color: '#FFFFFF',
   },
 });

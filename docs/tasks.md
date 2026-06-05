@@ -24,14 +24,14 @@
 
 - [x] List all saved teams
 - [x] Create a new team (name, colour)
-- [ ] Delete a team (swipe to delete)
+- [x] Delete a team (swipe to delete)
 
 **Team detail screen**
 
-- [ ] View player roster
-- [ ] Add a player (name, jersey number, position)
-- [ ] Edit player details
-- [ ] Remove a player
+- [x] View player roster
+- [x] Add a player (name, jersey number, position)
+- [x] Edit player details
+- [x] Remove a player
 
 ## Phase 4 — Match setup and live tracking
 
@@ -58,3 +58,14 @@
 - [ ] Export / share summary
 - [ ] App icon and splash screen
 - [ ] TestFlight build
+
+## Phase 6 — Settings
+
+- [ ] Settings / config screen
+- [ ] Clear local data (calls AsyncStorage.clear())
+
+## Phase 7 — Test coverage
+
+- [ ] Unit tests (Jest) — services and utils
+- [ ] Integration / component tests (Jest + React Native Testing Library) — components and store interactions, runs in JS environment without a device
+- [ ] E2E tests (Detox or Maestro) — requires dev build, not Expo Go; full app on simulator or physical device

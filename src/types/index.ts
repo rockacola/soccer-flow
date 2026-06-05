@@ -21,8 +21,8 @@ export type PlayerPosition = 'GK' | 'DEF' | 'MID' | 'FWD';
 export type Player = {
   id: string;
   name: string;
-  jerseyNumber: number;
-  position: PlayerPosition;
+  jerseyNumber?: number;
+  position?: PlayerPosition;
 };
 
 export type Team = {

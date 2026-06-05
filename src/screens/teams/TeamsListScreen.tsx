@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import CreateTeamModal from '../../components/CreateTeamModal';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { Team } from '../../types';
 
-function TeamRow({ team }: { team: Team }) {
-  return (
-    <View style={styles.row}>
-      <View style={[styles.colourDot, { backgroundColor: team.colour }]} />
-      <View style={styles.rowText}>
-        <Text style={styles.teamName}>{team.name}</Text>
-        <Text style={styles.playerCount}>{team.players.length} players</Text>
-      </View>
-    </View>
-  );
-}
+import CreateTeamModal from './CreateTeamModal';
+import TeamRow from './TeamRow';
 
 export default function TeamsListScreen() {
   const teams = useTeamsStore((s) => s.teams);
@@ -43,32 +32,6 @@ export default function TeamsListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
-  },
-  colourDot: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  rowText: {
-    flex: 1,
-  },
-  teamName: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  playerCount: {
-    fontSize: 13,
-    color: '#8E8E93',
-    marginTop: 2,
   },
   emptyContainer: {
     flex: 1,
