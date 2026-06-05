@@ -56,9 +56,9 @@ Repository interfaces abstract the data source so the UI never knows whether dat
 
 ## Styling
 
-- NativeWind (Tailwind CSS v3) for all component styles — use `className` prop
-- No inline `style` props or `StyleSheet.create` unless Tailwind cannot express it (e.g. dynamic numeric values, shadow objects)
-- Tailwind v3 only — NativeWind v4 does not support Tailwind v4
+- `StyleSheet.create` for all component styles
+- Inline `style` props permitted for dynamic values
+- NativeWind is not used — see ADR-005
 
 ## Configuration
 

@@ -36,7 +36,7 @@ When the Repository layer does not yet exist, services may call stores and Async
 - Maintain all shared types in `src/types/index.ts`
 - Place new business logic in `src/services/` — not in stores or screens
 - Use Zustand stores for state; use `useState` for component-local state
-- Use `className` (NativeWind) for all styles — no StyleSheet
+- Use `StyleSheet.create` for all styles — defined at the bottom of each file
 - Follow naming conventions: camelCase for functions/variables, PascalCase for components/types
 
 ---
@@ -59,4 +59,4 @@ When the Repository layer does not yet exist, services may call stores and Async
 - [ ] No `any` types
 - [ ] No `console.log` in production code
 - [ ] AsyncStorage calls wrapped in try-catch
-- [ ] Styles use `className` (NativeWind), not `StyleSheet`
+- [ ] Styles use `StyleSheet.create`, not inline objects
