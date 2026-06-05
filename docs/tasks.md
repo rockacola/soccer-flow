@@ -22,8 +22,8 @@
 
 **Team list screen**
 
-- [ ] List all saved teams
-- [ ] Create a new team (name, colour)
+- [x] List all saved teams
+- [x] Create a new team (name, colour)
 - [ ] Delete a team (swipe to delete)
 
 **Team detail screen**

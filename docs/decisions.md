@@ -72,10 +72,10 @@
 
 ---
 
-## ADR-008: `uuid` Library for ID Generation
+## ADR-008: `expo-crypto` for ID Generation
 
-**Decision:** Use the `uuid` package (`v4()`) for all ID generation. No polyfill required.
+**Decision:** Use `expo-crypto`'s `randomUUID()` via a thin `src/utils/id.ts` wrapper (`generateId()`).
 
-**Reason:** `uuid` is the standard JavaScript ecosystem choice — widely recognised and not tied to any platform. React Native 0.73+ (Hermes) added native `crypto.getRandomValues()` support, which is all `uuid` v9+ needs internally. On this stack (RN 0.85.3) it works with no extra setup.
+**Reason:** Two attempts preceded this decision. First, `uuid` v14 was used but it references `import.meta` internally, which Metro's web bundler does not support (blank screen on web). Second, `crypto.randomUUID()` was called directly, but `crypto` is not a reliable global in Hermes on Expo Go — it caused a runtime crash on device. `expo-crypto` is Expo's own cryptography module, is bundled into Expo Go, works on web, and abstracts over whatever the platform provides. The `generateId()` wrapper means all future call sites are unaffected if the implementation changes again.
 
-**Trade-off:** One external dependency, but it is zero-config and platform-agnostic.
+**Trade-off:** One Expo SDK dependency, but it is a first-party package with no native build step required in managed workflow.
