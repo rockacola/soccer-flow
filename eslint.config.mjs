@@ -105,6 +105,12 @@ const eslintConfig = [
       'react/react-in-jsx-scope': 'off',
     },
   },
+  {
+    files: ['**/__tests__/**/*.ts', '**/__tests__/**/*.tsx'],
+    languageOptions: {
+      globals: { ...globals.jest },
+    },
+  },
   prettierConfig,
 ];
 

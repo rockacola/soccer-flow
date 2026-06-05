@@ -1,0 +1,152 @@
+import { addPlayer, createTeam, deletePlayer, deleteTeam, updatePlayer } from '../teamsService';
+
+const mockAddTeam = jest.fn();
+const mockDeleteTeam = jest.fn();
+const mockAddPlayer = jest.fn();
+const mockUpdatePlayer = jest.fn();
+const mockDeletePlayer = jest.fn();
+
+jest.mock('../../stores/teamsStore', () => ({
+  useTeamsStore: {
+    getState: () => ({
+      addTeam: mockAddTeam,
+      deleteTeam: mockDeleteTeam,
+      addPlayer: mockAddPlayer,
+      updatePlayer: mockUpdatePlayer,
+      deletePlayer: mockDeletePlayer,
+    }),
+  },
+}));
+
+jest.mock('../../utils/id', () => ({
+  generateId: (prefix?: string) => (prefix ? `${prefix}_test` : 'test'),
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+// ── createTeam ────────────────────────────────────────────────────────────────
+
+describe('createTeam', () => {
+  it('returns a team with the correct shape', () => {
+    const team = createTeam('Red Lions', '#E53935');
+    expect(team).toEqual({ id: 't_test', name: 'Red Lions', colour: '#E53935', players: [] });
+  });
+
+  it('trims whitespace from name', () => {
+    const team = createTeam('  Red Lions  ', '#E53935');
+    expect(team.name).toBe('Red Lions');
+  });
+
+  it('calls addTeam on the store', () => {
+    const team = createTeam('Red Lions', '#E53935');
+    expect(mockAddTeam).toHaveBeenCalledWith(team);
+  });
+
+  it('throws when name is empty', () => {
+    expect(() => createTeam('', '#E53935')).toThrow('Team name cannot be empty.');
+  });
+
+  it('throws when name is only whitespace', () => {
+    expect(() => createTeam('   ', '#E53935')).toThrow('Team name cannot be empty.');
+  });
+});
+
+// ── deleteTeam ────────────────────────────────────────────────────────────────
+
+describe('deleteTeam', () => {
+  it('calls deleteTeam on the store with the teamId', () => {
+    deleteTeam('t_abc');
+    expect(mockDeleteTeam).toHaveBeenCalledWith('t_abc');
+  });
+});
+
+// ── addPlayer ─────────────────────────────────────────────────────────────────
+
+describe('addPlayer', () => {
+  it('returns a player with the correct shape', () => {
+    const player = addPlayer('t_abc', 'Alex Morgan', 13, 'FWD');
+    expect(player).toEqual({
+      id: 'p_test',
+      name: 'Alex Morgan',
+      jerseyNumber: 13,
+      position: 'FWD',
+    });
+  });
+
+  it('calls addPlayer on the store', () => {
+    const player = addPlayer('t_abc', 'Alex Morgan', 13, 'FWD');
+    expect(mockAddPlayer).toHaveBeenCalledWith('t_abc', player);
+  });
+
+  it('trims whitespace from name', () => {
+    const player = addPlayer('t_abc', '  Alex Morgan  ', 13, 'FWD');
+    expect(player.name).toBe('Alex Morgan');
+  });
+
+  it('accepts undefined jersey number', () => {
+    expect(() => addPlayer('t_abc', 'Alex Morgan', undefined, 'FWD')).not.toThrow();
+  });
+
+  it('accepts undefined position', () => {
+    expect(() => addPlayer('t_abc', 'Alex Morgan', 13, undefined)).not.toThrow();
+  });
+
+  it('throws when name is empty', () => {
+    expect(() => addPlayer('t_abc', '', 13, 'FWD')).toThrow('Player name cannot be empty.');
+  });
+
+  it('throws when jersey number is 0', () => {
+    expect(() => addPlayer('t_abc', 'Alex Morgan', 0, 'FWD')).toThrow(
+      'Jersey number must be between 1 and 9999.',
+    );
+  });
+
+  it('throws when jersey number exceeds 9999', () => {
+    expect(() => addPlayer('t_abc', 'Alex Morgan', 10000, 'FWD')).toThrow(
+      'Jersey number must be between 1 and 9999.',
+    );
+  });
+
+  it('throws when jersey number is a float', () => {
+    expect(() => addPlayer('t_abc', 'Alex Morgan', 7.5, 'FWD')).toThrow(
+      'Jersey number must be between 1 and 9999.',
+    );
+  });
+});
+
+// ── updatePlayer ──────────────────────────────────────────────────────────────
+
+describe('updatePlayer', () => {
+  it('returns a player preserving the existing id', () => {
+    const player = updatePlayer('t_abc', 'p_existing', 'Alex Morgan', 13, 'FWD');
+    expect(player.id).toBe('p_existing');
+  });
+
+  it('calls updatePlayer on the store', () => {
+    const player = updatePlayer('t_abc', 'p_existing', 'Alex Morgan', 13, 'FWD');
+    expect(mockUpdatePlayer).toHaveBeenCalledWith('t_abc', player);
+  });
+
+  it('throws when name is empty', () => {
+    expect(() => updatePlayer('t_abc', 'p_existing', '', 13, 'FWD')).toThrow(
+      'Player name cannot be empty.',
+    );
+  });
+
+  it('throws when jersey number is invalid', () => {
+    expect(() => updatePlayer('t_abc', 'p_existing', 'Alex Morgan', 10000, 'FWD')).toThrow(
+      'Jersey number must be between 1 and 9999.',
+    );
+  });
+});
+
+// ── deletePlayer ──────────────────────────────────────────────────────────────
+
+describe('deletePlayer', () => {
+  it('calls deletePlayer on the store with teamId and playerId', () => {
+    deletePlayer('t_abc', 'p_xyz');
+    expect(mockDeletePlayer).toHaveBeenCalledWith('t_abc', 'p_xyz');
+  });
+});
