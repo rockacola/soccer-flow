@@ -13,7 +13,20 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
-    "check": "npm run format && npm run lint:fix && npm run typecheck"
+    "check": "npm run format && npm run lint:fix && npm run typecheck",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "**/__tests__/**/*.test.ts",
+      "**/__tests__/**/*.test.tsx"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|zustand)"
+    ]
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
@@ -37,6 +50,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.10",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
@@ -45,6 +59,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.0.0",
     "eslint-plugin-react-hooks": "^7.0.0",
+    "jest-expo": "^54.0.17",
     "prettier": "^3.0.0",
     "typescript": "~5.9.2"
   },
