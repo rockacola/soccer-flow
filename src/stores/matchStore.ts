@@ -13,6 +13,7 @@ type MatchStore = {
   resumeMatch: () => void;
   finishMatch: () => void;
   tick: (elapsedSeconds: number) => void;
+  setSegmentActuals: (actuals: number[]) => void;
   setScore: (homeScore: number, awayScore: number) => void;
   addActivity: (activity: MatchActivity) => void;
   removeActivity: (activityId: string) => void;
@@ -41,6 +42,12 @@ export const useMatchStore = create<MatchStore>()(
         ),
       tick: (elapsedSeconds) =>
         set((s) => (s.currentMatch ? { currentMatch: { ...s.currentMatch, elapsedSeconds } } : {})),
+      setSegmentActuals: (actuals) =>
+        set((s) =>
+          s.currentMatch
+            ? { currentMatch: { ...s.currentMatch, segmentActualSeconds: actuals } }
+            : {},
+        ),
       setScore: (homeScore, awayScore) =>
         set((s) =>
           s.currentMatch ? { currentMatch: { ...s.currentMatch, homeScore, awayScore } } : {},

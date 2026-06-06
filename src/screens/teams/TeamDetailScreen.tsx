@@ -1,9 +1,12 @@
+import type { NavigationProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { Player, TeamsStackParamList } from '../../types';
+import type { Player, RootTabParamList, TeamsStackParamList } from '../../types';
 
 import AddPlayerModal from './AddPlayerModal';
 import EditPlayerModal from './EditPlayerModal';
@@ -11,11 +14,31 @@ import PlayerRow from './PlayerRow';
 
 type Props = NativeStackScreenProps<TeamsStackParamList, 'TeamDetail'>;
 
-export default function TeamDetailScreen({ route }: Props) {
+export default function TeamDetailScreen({ route, navigation }: Props) {
   const { teamId } = route.params;
   const team = useTeamsStore((s) => s.teams.find((t) => t.id === teamId));
+  const currentMatch = useMatchStore((s) => s.currentMatch);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const rootNav = useNavigation<NavigationProp<RootTabParamList>>();
+
+  useEffect(() => {
+    const parent = navigation.getParent();
+    if (!parent) {
+      return () => {};
+    }
+    const unsubscribe = parent.addListener('blur', () => {
+      navigation.popToTop();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleStartMatch = () => {
+    rootNav.navigate('Matches', {
+      screen: 'MatchSetup',
+      params: { homeTeamId: teamId },
+    });
+  };
 
   if (!team) {
     return (
@@ -25,6 +48,19 @@ export default function TeamDetailScreen({ route }: Props) {
     );
   }
 
+  const matchButton =
+    currentMatch !== null ? (
+      <View style={[styles.matchButton, styles.matchButtonDisabled]}>
+        <Text style={[styles.matchButtonText, styles.matchButtonTextDisabled]}>
+          A match is already in progress
+        </Text>
+      </View>
+    ) : (
+      <TouchableOpacity style={styles.matchButton} onPress={handleStartMatch}>
+        <Text style={styles.matchButtonText}>Start Match</Text>
+      </TouchableOpacity>
+    );
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -33,6 +69,7 @@ export default function TeamDetailScreen({ route }: Props) {
         renderItem={({ item }) => (
           <PlayerRow teamId={teamId} player={item} onPress={() => setSelectedPlayer(item)} />
         )}
+        ListHeaderComponent={matchButton}
         contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={<Text style={styles.emptyText}>No players yet.</Text>}
       />
@@ -70,6 +107,26 @@ const styles = StyleSheet.create({
   },
   missingText: {
     fontSize: 15,
+    color: '#8E8E93',
+  },
+  matchButton: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 8,
+    backgroundColor: '#34C759',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  matchButtonDisabled: {
+    backgroundColor: '#E5E5EA',
+  },
+  matchButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  matchButtonTextDisabled: {
     color: '#8E8E93',
   },
   emptyContainer: {

@@ -37,19 +37,19 @@
 
 **Match setup screen**
 
-- [ ] Select home team and away team
-- [ ] Set match duration (default 2 x 40 min)
-- [ ] Start match
+- [x] Select home team and away team
+- [x] Set match duration (default 2 x 40 min)
+- [x] Start match
 
 **Live match screen**
 
-- [ ] Running match timer (count up)
-- [ ] Pause / resume timer
-- [ ] Record goal (team, player, minute)
-- [ ] Record substitution (player out, player in, minute)
-- [ ] Record remark (free text, minute)
-- [ ] Scrollable activity log (reverse chronological)
-- [ ] Finish match
+- [x] Running match timer (count up)
+- [x] Pause / resume timer
+- [x] Record goal (team, player, minute)
+- [x] Record substitution (player out, player in, minute)
+- [x] Record remark (free text, minute)
+- [x] Scrollable activity log (reverse chronological)
+- [x] Finish match
 
 ## Phase 5 — Match summary and polish
 
@@ -66,6 +66,6 @@
 
 ## Phase 7 — Test coverage
 
-- [ ] Unit tests (Jest) — services and utils
+- [x] Unit tests (Jest) — services and utils
 - [ ] Integration / component tests (Jest + React Native Testing Library) — components and store interactions, runs in JS environment without a device
 - [ ] E2E tests (Detox or Maestro) — requires dev build, not Expo Go; full app on simulator or physical device

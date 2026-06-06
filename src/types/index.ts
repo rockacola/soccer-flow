@@ -7,8 +7,9 @@ export type TeamsStackParamList = {
 
 export type MatchesStackParamList = {
   MatchesList: undefined;
-  MatchSetup: undefined;
+  MatchSetup: { homeTeamId: string };
   MatchLive: undefined;
+  MatchDetail: { matchId: string };
 };
 
 export type RootTabParamList = {
@@ -37,16 +38,16 @@ export type MatchActivityType = 'goal' | 'substitution' | 'remark';
 export type GoalActivity = {
   id: string;
   type: 'goal';
-  minute: number;
-  teamId: string;
-  playerId: string;
+  elapsedSeconds: number;
+  side: 'home' | 'away';
+  playerId: string | null;
 };
 
 export type SubstitutionActivity = {
   id: string;
   type: 'substitution';
-  minute: number;
-  teamId: string;
+  elapsedSeconds: number;
+  side: 'home' | 'away';
   playerOutId: string;
   playerInId: string;
 };
@@ -54,7 +55,7 @@ export type SubstitutionActivity = {
 export type RemarkActivity = {
   id: string;
   type: 'remark';
-  minute: number;
+  elapsedSeconds: number;
   text: string;
 };
 
@@ -65,13 +66,14 @@ export type MatchStatus = 'setup' | 'live' | 'paused' | 'finished';
 export type Match = {
   id: string;
   homeTeamId: string;
-  awayTeamId: string;
-  halfCount: number;
-  halfDurationMinutes: number;
+  opponentName: string;
+  periodCount: number;
+  periodDurationMinutes: number;
   breakDurationMinutes: number;
   status: MatchStatus;
   startedAt: number | null;
   elapsedSeconds: number;
+  segmentActualSeconds: number[];
   homeScore: number;
   awayScore: number;
   activities: MatchActivity[];
