@@ -35,7 +35,8 @@ App.tsx
         └── Matches tab
               ├── MatchesListScreen
               ├── MatchSetupScreen
-              └── MatchLiveScreen
+              ├── MatchLiveScreen
+              └── MatchDetailScreen
 ```
 
 ---

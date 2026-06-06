@@ -1,10 +1,282 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  FlatList,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-export default function MatchLiveScreen() {
+import {
+  adjustScore,
+  adjustSegments,
+  finishMatch,
+  pauseMatch,
+  recordGoal,
+  recordRemark,
+  recordSubstitution,
+  resumeMatch,
+  tickTimer,
+} from '../../services/matchService';
+import { useMatchStore } from '../../stores/matchStore';
+import { useTeamsStore } from '../../stores/teamsStore';
+import type { MatchActivity, MatchesStackParamList } from '../../types';
+import { computePhase, phaseLabel } from '../../utils/match';
+import { formatElapsed } from '../../utils/time';
+
+import ActivityLogItem from './ActivityLogItem';
+import GoalModal from './GoalModal';
+import RemarkModal from './RemarkModal';
+import SlideToConfirm from './SlideToConfirm';
+import SubstitutionModal from './SubstitutionModal';
+import TimerAdjustModal from './TimerAdjustModal';
+
+type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchLive'>;
+
+export default function MatchLiveScreen({ navigation }: Props) {
+  const currentMatch = useMatchStore((s) => s.currentMatch);
+  const teams = useTeamsStore((s) => s.teams);
+
+  const [goalModalVisible, setGoalModalVisible] = useState(false);
+  const [subModalVisible, setSubModalVisible] = useState(false);
+  const [remarkModalVisible, setRemarkModalVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [timerAdjustVisible, setTimerAdjustVisible] = useState(false);
+
+  useEffect(() => {
+    const id = setInterval(tickTimer, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!currentMatch) {
+    return (
+      <View style={styles.centred}>
+        <Text style={styles.noMatchText}>No active match.</Text>
+      </View>
+    );
+  }
+
+  const homeTeam = teams.find((t) => t.id === currentMatch.homeTeamId);
+
+  if (!homeTeam) {
+    return (
+      <View style={styles.centred}>
+        <Text style={styles.noMatchText}>Team data not found.</Text>
+      </View>
+    );
+  }
+
+  const opponentLabel = currentMatch.opponentName.trim() || 'Opponent';
+
+  const phase = computePhase(
+    currentMatch.elapsedSeconds,
+    currentMatch.periodDurationMinutes,
+    currentMatch.periodCount,
+    currentMatch.breakDurationMinutes,
+    currentMatch.segmentActualSeconds,
+  );
+  const currentElapsedSeconds = currentMatch.elapsedSeconds;
+  const isLive = currentMatch.status === 'live';
+  const reversedActivities = [...currentMatch.activities].reverse();
+
+  const handlePauseResume = () => {
+    if (isLive) {
+      pauseMatch();
+    } else {
+      resumeMatch();
+    }
+  };
+
+  const doFinish = () => {
+    setConfirmVisible(false);
+    finishMatch();
+    navigation.navigate('MatchesList');
+  };
+
+  const handleFinish = () => {
+    setConfirmVisible(true);
+  };
+
+  const handleGoal = (side: 'home' | 'away', playerId: string | null, elapsedSeconds: number) => {
+    try {
+      recordGoal(side, playerId, elapsedSeconds);
+    } catch (e) {
+      Alert.alert('Error', e instanceof Error ? e.message : 'Could not record goal.');
+    }
+  };
+
+  const handleSub = (outId: string, inId: string, elapsedSeconds: number) => {
+    try {
+      recordSubstitution('home', outId, inId, elapsedSeconds);
+    } catch (e) {
+      Alert.alert('Error', e instanceof Error ? e.message : 'Could not record substitution.');
+    }
+  };
+
+  const handleRemark = (text: string, elapsedSeconds: number) => {
+    try {
+      recordRemark(text, elapsedSeconds);
+    } catch (e) {
+      Alert.alert('Error', e instanceof Error ? e.message : 'Could not record note.');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Match Live</Text>
+      {/* Scoreboard */}
+      <View style={styles.scoreboard}>
+        <TouchableOpacity
+          style={styles.timerRow}
+          onPress={() => setTimerAdjustVisible(true)}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.periodLabel}>{phaseLabel(phase, currentMatch.periodCount)}</Text>
+          <Text style={styles.timer}>{formatElapsed(phase.withinSeconds)}</Text>
+          {!isLive && <Text style={styles.pausedBadge}>PAUSED</Text>}
+        </TouchableOpacity>
+
+        <View style={styles.scoreRow}>
+          {/* Home */}
+          <View style={styles.scoreTeam}>
+            <Text style={styles.teamNameLabel} numberOfLines={1}>
+              {homeTeam.name}
+            </Text>
+            <View style={styles.scoreControl}>
+              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('home', -1)}>
+                <Text style={styles.scoreButtonText}>−</Text>
+              </TouchableOpacity>
+              <Text style={styles.scoreDigit}>{currentMatch.homeScore}</Text>
+              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('home', 1)}>
+                <Text style={styles.scoreButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <Text style={styles.scoreDivider}>–</Text>
+
+          {/* Opponent */}
+          <View style={styles.scoreTeam}>
+            <Text style={styles.teamNameLabel} numberOfLines={1}>
+              {opponentLabel}
+            </Text>
+            <View style={styles.scoreControl}>
+              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('away', -1)}>
+                <Text style={styles.scoreButtonText}>−</Text>
+              </TouchableOpacity>
+              <Text style={styles.scoreDigit}>{currentMatch.awayScore}</Text>
+              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('away', 1)}>
+                <Text style={styles.scoreButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* Controls */}
+        <View style={styles.controlRow}>
+          <TouchableOpacity style={styles.pauseButton} onPress={handlePauseResume}>
+            <Text style={styles.pauseButtonText}>{isLive ? 'Pause' : 'Resume'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
+            <Text style={styles.finishButtonText}>Finish</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Activity buttons */}
+      <View style={styles.activityButtons}>
+        <TouchableOpacity
+          style={[styles.activityButton, styles.goalButton]}
+          onPress={() => setGoalModalVisible(true)}
+        >
+          <Text style={styles.activityButtonText}>Goal</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.activityButton, styles.subButton]}
+          onPress={() => setSubModalVisible(true)}
+        >
+          <Text style={styles.activityButtonText}>Sub</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.activityButton, styles.noteButton]}
+          onPress={() => setRemarkModalVisible(true)}
+        >
+          <Text style={styles.activityButtonText}>Note</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Activity log */}
+      <FlatList
+        data={reversedActivities}
+        keyExtractor={(item: MatchActivity) => item.id}
+        renderItem={({ item }) => (
+          <ActivityLogItem
+            activity={item}
+            homeTeam={homeTeam}
+            opponentName={currentMatch.opponentName}
+          />
+        )}
+        contentContainerStyle={reversedActivities.length === 0 ? styles.emptyLog : undefined}
+        ListEmptyComponent={<Text style={styles.emptyLogText}>No activity yet.</Text>}
+      />
+
+      <GoalModal
+        visible={goalModalVisible}
+        onClose={() => setGoalModalVisible(false)}
+        onRecord={handleGoal}
+        homeTeam={homeTeam}
+        opponentName={currentMatch.opponentName}
+        currentElapsedSeconds={currentElapsedSeconds}
+      />
+      <SubstitutionModal
+        visible={subModalVisible}
+        onClose={() => setSubModalVisible(false)}
+        onRecord={handleSub}
+        homeTeam={homeTeam}
+        currentElapsedSeconds={currentElapsedSeconds}
+      />
+      <RemarkModal
+        visible={remarkModalVisible}
+        onClose={() => setRemarkModalVisible(false)}
+        onRecord={handleRemark}
+        currentElapsedSeconds={currentElapsedSeconds}
+      />
+
+      <TimerAdjustModal
+        visible={timerAdjustVisible}
+        onClose={() => setTimerAdjustVisible(false)}
+        onApply={adjustSegments}
+        periodCount={currentMatch.periodCount}
+        periodDurationMinutes={currentMatch.periodDurationMinutes}
+        breakDurationMinutes={currentMatch.breakDurationMinutes}
+        segmentActualSeconds={currentMatch.segmentActualSeconds}
+        currentElapsedSeconds={currentElapsedSeconds}
+        startedAt={currentMatch.startedAt}
+      />
+
+      <Modal visible={confirmVisible} transparent animationType="fade">
+        <View style={styles.confirmOverlay}>
+          <TouchableOpacity
+            style={styles.confirmBackdrop}
+            activeOpacity={1}
+            onPress={() => setConfirmVisible(false)}
+          />
+          <View style={styles.confirmPanel}>
+            <Text style={styles.confirmTitle}>End match?</Text>
+            <Text style={styles.confirmSubtitle}>Slide to confirm</Text>
+            <SlideToConfirm onConfirm={doFinish} />
+            <TouchableOpacity
+              style={styles.confirmCancelButton}
+              onPress={() => setConfirmVisible(false)}
+            >
+              <Text style={styles.confirmCancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -12,7 +284,202 @@ export default function MatchLiveScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F2F2F7',
+  },
+  centred: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  noMatchText: {
+    fontSize: 15,
+    color: '#8E8E93',
+  },
+  scoreboard: {
+    backgroundColor: '#1C1C1E',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 16,
+  },
+  timerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 16,
+  },
+  periodLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#8E8E93',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  timer: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    fontVariant: ['tabular-nums'],
+    fontFamily: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
+  },
+  pausedBadge: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#FF9500',
+    letterSpacing: 0.5,
+    borderWidth: 1,
+    borderColor: '#FF9500',
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  scoreTeam: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  teamNameLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#EBEBF5',
+    opacity: 0.6,
+    marginBottom: 6,
+  },
+  scoreControl: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  scoreButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#3A3A3C',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scoreButtonText: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    lineHeight: 24,
+  },
+  scoreDigit: {
+    fontSize: 40,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    minWidth: 48,
+    textAlign: 'center',
+    fontVariant: ['tabular-nums'],
+  },
+  scoreDivider: {
+    fontSize: 32,
+    color: '#636366',
+    paddingTop: 18,
+  },
+  controlRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  pauseButton: {
+    flex: 1,
+    backgroundColor: '#3A3A3C',
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  pauseButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  finishButton: {
+    flex: 1,
+    backgroundColor: '#FF3B30',
+    borderRadius: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  finishButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  activityButtons: {
+    flexDirection: 'row',
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  activityButton: {
+    flex: 1,
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  goalButton: {
+    backgroundColor: '#34C759',
+  },
+  subButton: {
+    backgroundColor: '#007AFF',
+  },
+  noteButton: {
+    backgroundColor: '#FF9500',
+  },
+  activityButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  emptyLog: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyLogText: {
+    fontSize: 15,
+    color: '#8E8E93',
+  },
+  confirmOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  confirmBackdrop: {
+    flex: 1,
+  },
+  confirmPanel: {
+    backgroundColor: '#1C1C1E',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 40,
+    gap: 16,
+  },
+  confirmTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    textAlign: 'center',
+  },
+  confirmSubtitle: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.4)',
+    textAlign: 'center',
+    marginTop: -8,
+  },
+  confirmCancelButton: {
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  confirmCancelText: {
+    fontSize: 16,
+    color: '#8E8E93',
+    fontWeight: '500',
   },
 });

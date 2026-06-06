@@ -112,6 +112,13 @@ const eslintConfig = [
     },
   },
   prettierConfig,
+  // Re-assert after prettierConfig, which sets curly: 'off'
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      curly: ['error', 'all'],
+    },
+  },
 ];
 
 export default eslintConfig;

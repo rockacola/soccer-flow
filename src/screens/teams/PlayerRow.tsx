@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
+import JerseyBadge from '../../components/JerseyBadge';
 import { deletePlayer } from '../../services/teamsService';
 import type { Player } from '../../types';
 
@@ -28,11 +29,7 @@ export default function PlayerRow({ teamId, player, onPress }: Props) {
       overshootRight={false}
     >
       <TouchableOpacity style={styles.playerRow} onPress={onPress} activeOpacity={0.7}>
-        <View style={styles.jerseyBadge}>
-          {player.jerseyNumber !== undefined && (
-            <Text style={styles.jerseyNumber}>{player.jerseyNumber}</Text>
-          )}
-        </View>
+        <JerseyBadge number={player.jerseyNumber} />
         <View style={styles.playerInfo}>
           <Text style={styles.playerName}>{player.name}</Text>
           {player.position !== undefined && (
@@ -54,20 +51,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#C6C6C8',
     backgroundColor: '#FFFFFF',
-  },
-  jerseyBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F2F2F7',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  jerseyNumber: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1C1C1E',
+    gap: 12,
   },
   playerInfo: {
     flex: 1,
