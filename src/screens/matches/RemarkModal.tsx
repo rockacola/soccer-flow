@@ -6,11 +6,11 @@ import { formatElapsed } from '../../utils/time';
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onRecord: (text: string, elapsedSeconds: number) => void;
-  currentElapsedSeconds: number;
+  onRecord: (text: string) => void;
+  capturedPhaseSeconds: number;
 };
 
-export default function RemarkModal({ visible, onClose, onRecord, currentElapsedSeconds }: Props) {
+export default function RemarkModal({ visible, onClose, onRecord, capturedPhaseSeconds }: Props) {
   const [text, setText] = useState('');
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function RemarkModal({ visible, onClose, onRecord, currentElapsed
       Alert.alert('Empty remark', 'Please enter a note before recording.');
       return;
     }
-    onRecord(text.trim(), currentElapsedSeconds);
+    onRecord(text.trim());
     onClose();
   };
 
@@ -32,7 +32,7 @@ export default function RemarkModal({ visible, onClose, onRecord, currentElapsed
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Note — {formatElapsed(currentElapsedSeconds)}</Text>
+          <Text style={styles.title}>Note — {formatElapsed(capturedPhaseSeconds)}</Text>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>

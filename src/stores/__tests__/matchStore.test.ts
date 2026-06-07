@@ -1,21 +1,26 @@
-import type { Match } from '../../types';
+import type { Match, MatchSegment } from '../../types';
 import { useMatchStore } from '../matchStore';
 
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
 
+const T0 = 1_000_000_000;
+
+const baseSegments: MatchSegment[] = [
+  { segmentType: 'period', startedAt: T0 },
+  { segmentType: 'break', startedAt: T0 + 2400 * 1000 },
+  { segmentType: 'period', startedAt: T0 + 3300 * 1000 },
+];
+
 const baseMatch: Match = {
   id: 'm_1',
   homeTeamId: 't_1',
   opponentName: 'Rivals',
-  periodCount: 2,
   periodDurationMinutes: 40,
   breakDurationMinutes: 15,
   status: 'live',
-  startedAt: 1000000,
-  elapsedSeconds: 0,
-  segmentActualSeconds: [],
+  segments: baseSegments,
   homeScore: 0,
   awayScore: 0,
   activities: [],
@@ -31,36 +36,6 @@ describe('startMatch', () => {
   it('sets currentMatch', () => {
     useMatchStore.getState().startMatch(baseMatch);
     expect(useMatchStore.getState().currentMatch).toEqual(baseMatch);
-  });
-});
-
-// ── pauseMatch ────────────────────────────────────────────────────────────────
-
-describe('pauseMatch', () => {
-  it('sets status to paused', () => {
-    useMatchStore.setState({ currentMatch: { ...baseMatch, status: 'live' } });
-    useMatchStore.getState().pauseMatch();
-    expect(useMatchStore.getState().currentMatch?.status).toBe('paused');
-  });
-
-  it('does nothing when there is no current match', () => {
-    useMatchStore.getState().pauseMatch();
-    expect(useMatchStore.getState().currentMatch).toBeNull();
-  });
-});
-
-// ── resumeMatch ───────────────────────────────────────────────────────────────
-
-describe('resumeMatch', () => {
-  it('sets status to live', () => {
-    useMatchStore.setState({ currentMatch: { ...baseMatch, status: 'paused' } });
-    useMatchStore.getState().resumeMatch();
-    expect(useMatchStore.getState().currentMatch?.status).toBe('live');
-  });
-
-  it('does nothing when there is no current match', () => {
-    useMatchStore.getState().resumeMatch();
-    expect(useMatchStore.getState().currentMatch).toBeNull();
   });
 });
 
@@ -94,32 +69,22 @@ describe('finishMatch', () => {
   });
 });
 
-// ── tick ──────────────────────────────────────────────────────────────────────
+// ── setSegments ───────────────────────────────────────────────────────────────
 
-describe('tick', () => {
-  it('updates elapsedSeconds', () => {
+describe('setSegments', () => {
+  it('updates the segments array', () => {
     useMatchStore.setState({ currentMatch: baseMatch });
-    useMatchStore.getState().tick(120);
-    expect(useMatchStore.getState().currentMatch?.elapsedSeconds).toBe(120);
+    const newSegments: MatchSegment[] = [
+      { segmentType: 'period', startedAt: T0 },
+      { segmentType: 'break', startedAt: T0 + 3000 * 1000 }, // extended period 1
+      { segmentType: 'period', startedAt: T0 + 3900 * 1000 },
+    ];
+    useMatchStore.getState().setSegments(newSegments);
+    expect(useMatchStore.getState().currentMatch?.segments).toEqual(newSegments);
   });
 
   it('does nothing when there is no current match', () => {
-    useMatchStore.getState().tick(120);
-    expect(useMatchStore.getState().currentMatch).toBeNull();
-  });
-});
-
-// ── setSegmentActuals ─────────────────────────────────────────────────────────
-
-describe('setSegmentActuals', () => {
-  it('updates segmentActualSeconds', () => {
-    useMatchStore.setState({ currentMatch: baseMatch });
-    useMatchStore.getState().setSegmentActuals([2400, 600]);
-    expect(useMatchStore.getState().currentMatch?.segmentActualSeconds).toEqual([2400, 600]);
-  });
-
-  it('does nothing when there is no current match', () => {
-    useMatchStore.getState().setSegmentActuals([2400]);
+    useMatchStore.getState().setSegments(baseSegments);
     expect(useMatchStore.getState().currentMatch).toBeNull();
   });
 });
@@ -146,18 +111,18 @@ describe('setScore', () => {
 describe('addActivity', () => {
   it('appends an activity to the list', () => {
     useMatchStore.setState({ currentMatch: baseMatch });
-    const activity = { id: 'a_1', type: 'remark' as const, elapsedSeconds: 300, text: 'Hello' };
+    const activity = { id: 'a_1', type: 'remark' as const, createdAt: T0 + 60000, text: 'Hello' };
     useMatchStore.getState().addActivity(activity);
     expect(useMatchStore.getState().currentMatch?.activities).toEqual([activity]);
   });
 
   it('preserves existing activities', () => {
-    const existing = { id: 'a_0', type: 'remark' as const, elapsedSeconds: 0, text: 'First' };
+    const existing = { id: 'a_0', type: 'remark' as const, createdAt: T0, text: 'First' };
     useMatchStore.setState({ currentMatch: { ...baseMatch, activities: [existing] } });
     const newActivity = {
       id: 'a_1',
       type: 'remark' as const,
-      elapsedSeconds: 100,
+      createdAt: T0 + 60000,
       text: 'Second',
     };
     useMatchStore.getState().addActivity(newActivity);
@@ -165,7 +130,7 @@ describe('addActivity', () => {
   });
 
   it('does nothing when there is no current match', () => {
-    const activity = { id: 'a_1', type: 'remark' as const, elapsedSeconds: 0, text: 'Hello' };
+    const activity = { id: 'a_1', type: 'remark' as const, createdAt: T0, text: 'Hello' };
     useMatchStore.getState().addActivity(activity);
     expect(useMatchStore.getState().currentMatch).toBeNull();
   });
@@ -173,8 +138,8 @@ describe('addActivity', () => {
 
 describe('removeActivity', () => {
   it('removes the activity with the given id', () => {
-    const a1 = { id: 'a_1', type: 'remark' as const, elapsedSeconds: 0, text: 'One' };
-    const a2 = { id: 'a_2', type: 'remark' as const, elapsedSeconds: 10, text: 'Two' };
+    const a1 = { id: 'a_1', type: 'remark' as const, createdAt: T0, text: 'One' };
+    const a2 = { id: 'a_2', type: 'remark' as const, createdAt: T0 + 10000, text: 'Two' };
     useMatchStore.setState({ currentMatch: { ...baseMatch, activities: [a1, a2] } });
     useMatchStore.getState().removeActivity('a_1');
     expect(useMatchStore.getState().currentMatch?.activities).toEqual([a2]);

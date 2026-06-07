@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { computePhase, segmentLabel } from '../../utils/match';
+import type { MatchSegment } from '../../types';
+import { segmentLabel } from '../../utils/match';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onApply: (newActuals: number[]) => void;
-  periodCount: number;
+  onApply: (newSegments: MatchSegment[]) => void;
+  segments: MatchSegment[];
   periodDurationMinutes: number;
   breakDurationMinutes: number;
-  segmentActualSeconds: number[];
-  currentElapsedSeconds: number;
-  startedAt: number | null;
 };
 
 function formatWallClock(timestamp: number): string {
@@ -22,31 +20,6 @@ function formatWallClock(timestamp: number): string {
     minute: '2-digit',
     second: '2-digit',
   });
-}
-
-function buildInitialActuals(
-  periodCount: number,
-  periodDurationMinutes: number,
-  breakDurationMinutes: number,
-  segmentActualSeconds: number[],
-): number[] {
-  const totalSegments = periodCount * 2 - 1;
-  const P = periodDurationMinutes * 60;
-  const B = breakDurationMinutes * 60;
-  return Array.from(
-    { length: totalSegments },
-    (_, i) => segmentActualSeconds[i] ?? (i % 2 === 0 ? P : B),
-  );
-}
-
-function computeRanges(actuals: number[]): Array<{ start: number; end: number }> {
-  const ranges: Array<{ start: number; end: number }> = [];
-  let cursor = 0;
-  for (const duration of actuals) {
-    ranges.push({ start: cursor, end: cursor + duration });
-    cursor += duration;
-  }
-  return ranges;
 }
 
 function StepperRow({
@@ -82,68 +55,45 @@ export default function TimerAdjustModal({
   visible,
   onClose,
   onApply,
-  periodCount,
+  segments,
   periodDurationMinutes,
   breakDurationMinutes,
-  segmentActualSeconds,
-  currentElapsedSeconds,
-  startedAt,
 }: Props) {
-  const propsRef = useRef({
-    periodCount,
-    periodDurationMinutes,
-    breakDurationMinutes,
-    segmentActualSeconds,
-  });
-  propsRef.current = {
-    periodCount,
-    periodDurationMinutes,
-    breakDurationMinutes,
-    segmentActualSeconds,
-  };
+  const [draft, setDraft] = useState<MatchSegment[]>([]);
+  const segmentsRef = useRef(segments);
+  segmentsRef.current = segments;
 
-  const [actuals, setActuals] = useState<number[]>(() =>
-    buildInitialActuals(
-      periodCount,
-      periodDurationMinutes,
-      breakDurationMinutes,
-      segmentActualSeconds,
-    ),
-  );
-
-  // Seed from props when opening — not on every tick (segmentActualSeconds ref changes each second)
   useEffect(() => {
     if (visible) {
-      const p = propsRef.current;
-      setActuals(
-        buildInitialActuals(
-          p.periodCount,
-          p.periodDurationMinutes,
-          p.breakDurationMinutes,
-          p.segmentActualSeconds,
-        ),
-      );
+      setDraft([...segmentsRef.current]);
     }
   }, [visible]);
 
-  const ranges = computeRanges(actuals);
-
-  const phase = computePhase(
-    currentElapsedSeconds,
-    periodDurationMinutes,
-    periodCount,
-    breakDurationMinutes,
-    segmentActualSeconds,
-  );
-  const currentSegIdx =
-    phase.type === 'period' ? (phase.number - 1) * 2 : (phase.after - 1) * 2 + 1;
-
-  const adjustSegment = (segIdx: number, deltaSeconds: number) => {
-    setActuals((prev) => {
+  // Shift all segments from startIdx onwards by deltaMs, keeping the first segment fixed.
+  const shiftFrom = (startIdx: number, deltaMs: number) => {
+    setDraft((prev) => {
       const next = [...prev];
-      next[segIdx] = Math.max(0, (next[segIdx] ?? 0) + deltaSeconds);
+      for (let i = startIdx; i < next.length; i++) {
+        next[i] = { ...next[i], startedAt: next[i].startedAt + deltaMs };
+      }
       return next;
     });
+  };
+
+  // Duration of segment i = start of segment i+1 minus start of segment i.
+  // Last segment has no defined end, so we use the planned duration for display.
+  const segmentDurationSeconds = (i: number): number | null => {
+    if (i + 1 < draft.length) {
+      return Math.round((draft[i + 1].startedAt - draft[i].startedAt) / 1000);
+    }
+    return null;
+  };
+
+  const adjustSegmentDuration = (i: number, deltaSeconds: number) => {
+    // Shifting segment i+1 (and all following) changes segment i's duration.
+    if (i + 1 < draft.length) {
+      shiftFrom(i + 1, deltaSeconds * 1000);
+    }
   };
 
   return (
@@ -157,30 +107,41 @@ export default function TimerAdjustModal({
         </View>
 
         <ScrollView contentContainerStyle={styles.list}>
-          {actuals.map((duration, idx) => {
-            const mins = Math.floor(duration / 60);
-            const secs = duration % 60;
-            const isCurrent = idx === currentSegIdx;
-            const range = ranges[idx];
+          {draft.map((seg, i) => {
+            const durationSeconds = segmentDurationSeconds(i);
+            const mins = durationSeconds !== null ? Math.floor(durationSeconds / 60) : null;
+            const secs = durationSeconds !== null ? durationSeconds % 60 : null;
+            const label = segmentLabel(seg, i, draft);
+            const isLast = i === draft.length - 1;
 
             return (
-              <View key={idx} style={styles.card}>
+              <View key={i} style={styles.card}>
                 <View style={styles.cardHeader}>
-                  <Text style={styles.cardTitle}>{segmentLabel(idx, periodCount)}</Text>
-                  {isCurrent ? <Text style={styles.currentBadge}>current</Text> : null}
+                  <Text style={styles.cardTitle}>{label}</Text>
+                  <Text style={styles.clockText}>{formatWallClock(seg.startedAt)}</Text>
                 </View>
-                <Text style={styles.rangeText}>
-                  {formatElapsed(range.start)} – {formatElapsed(range.end)}
-                </Text>
-                {startedAt !== null && (
-                  <Text style={styles.clockText}>
-                    {formatWallClock(startedAt + range.start * 1000)}
-                    {' – '}
-                    {formatWallClock(startedAt + range.end * 1000)}
+
+                {!isLast && durationSeconds !== null && mins !== null && secs !== null ? (
+                  <>
+                    <Text style={styles.durationText}>{formatElapsed(durationSeconds)}</Text>
+                    <StepperRow
+                      label="min"
+                      value={mins}
+                      onAdjust={(d) => adjustSegmentDuration(i, d * 60)}
+                    />
+                    <StepperRow
+                      label="sec"
+                      value={secs}
+                      onAdjust={(d) => adjustSegmentDuration(i, d)}
+                    />
+                  </>
+                ) : (
+                  <Text style={styles.openEndedText}>
+                    Planned{' '}
+                    {seg.segmentType === 'period' ? periodDurationMinutes : breakDurationMinutes}{' '}
+                    min
                   </Text>
                 )}
-                <StepperRow label="min" value={mins} onAdjust={(d) => adjustSegment(idx, d * 60)} />
-                <StepperRow label="sec" value={secs} onAdjust={(d) => adjustSegment(idx, d)} />
               </View>
             );
           })}
@@ -189,7 +150,7 @@ export default function TimerAdjustModal({
         <TouchableOpacity
           style={styles.applyButton}
           onPress={() => {
-            onApply(actuals);
+            onApply(draft);
             onClose();
           }}
         >
@@ -244,21 +205,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#000000',
   },
-  currentBadge: {
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#007AFF',
-    backgroundColor: '#E5F0FF',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
+  clockText: {
+    fontSize: 13,
+    color: '#8E8E93',
   },
-  rangeText: {
+  durationText: {
     fontSize: 13,
     color: '#8E8E93',
     fontVariant: ['tabular-nums'],
   },
-  clockText: {
+  openEndedText: {
     fontSize: 13,
     color: '#8E8E93',
   },

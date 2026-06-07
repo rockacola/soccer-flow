@@ -48,13 +48,14 @@ export default function MatchDetailScreen({ route }: Props) {
           activity={item}
           homeTeam={homeTeam ?? { id: '', name: 'Unknown', colour: '#ccc', players: [] }}
           opponentName={opponentName}
+          segments={match.segments}
         />
       )}
       ListHeaderComponent={
         <View>
           {/* Score */}
           <View style={styles.scoreCard}>
-            <Text style={styles.date}>{formatDate(match.startedAt)}</Text>
+            <Text style={styles.date}>{formatDate(match.segments[0]?.startedAt ?? null)}</Text>
             <View style={styles.scoreRow}>
               <Text style={styles.teamName} numberOfLines={2}>
                 {homeTeam?.name ?? 'Unknown'}
@@ -72,7 +73,9 @@ export default function MatchDetailScreen({ route }: Props) {
           <View style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={styles.infoLabel}>Periods</Text>
-              <Text style={styles.infoValue}>{match.periodCount}</Text>
+              <Text style={styles.infoValue}>
+                {match.segments.filter((s) => s.segmentType === 'period').length}
+              </Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.infoRow}>

@@ -7,9 +7,9 @@ import { formatElapsed } from '../../utils/time';
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onRecord: (playerOutId: string, playerInId: string, elapsedSeconds: number) => void;
+  onRecord: (playerOutId: string, playerInId: string) => void;
   homeTeam: Team;
-  currentElapsedSeconds: number;
+  capturedPhaseSeconds: number;
 };
 
 export default function SubstitutionModal({
@@ -17,7 +17,7 @@ export default function SubstitutionModal({
   onClose,
   onRecord,
   homeTeam,
-  currentElapsedSeconds,
+  capturedPhaseSeconds,
 }: Props) {
   const [playerOutId, setPlayerOutId] = useState<string | null>(null);
   const [playerInId, setPlayerInId] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export default function SubstitutionModal({
       Alert.alert('Incomplete', 'Select both the player coming off and the player coming on.');
       return;
     }
-    onRecord(playerOutId, playerInId, currentElapsedSeconds);
+    onRecord(playerOutId, playerInId);
     onClose();
   };
 
@@ -45,7 +45,7 @@ export default function SubstitutionModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Substitution — {formatElapsed(currentElapsedSeconds)}</Text>
+          <Text style={styles.title}>Substitution — {formatElapsed(capturedPhaseSeconds)}</Text>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>

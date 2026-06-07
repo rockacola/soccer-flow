@@ -8,10 +8,10 @@ import { formatElapsed } from '../../utils/time';
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onRecord: (side: 'home' | 'away', playerId: string | null, elapsedSeconds: number) => void;
+  onRecord: (side: 'home' | 'away', playerId: string | null) => void;
   homeTeam: Team;
   opponentName: string;
-  currentElapsedSeconds: number;
+  capturedPhaseSeconds: number;
 };
 
 type ScorerRow = { type: 'unknown' } | { type: 'player'; player: Player };
@@ -22,7 +22,7 @@ export default function GoalModal({
   onRecord,
   homeTeam,
   opponentName,
-  currentElapsedSeconds,
+  capturedPhaseSeconds,
 }: Props) {
   const [side, setSide] = useState<'home' | 'away'>('home');
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null | undefined>(undefined);
@@ -46,7 +46,7 @@ export default function GoalModal({
   const handleRecord = () => {
     const playerId =
       side === 'home' ? (selectedPlayerId === undefined ? null : selectedPlayerId) : null;
-    onRecord(side, playerId, currentElapsedSeconds);
+    onRecord(side, playerId);
     onClose();
   };
 
@@ -56,7 +56,7 @@ export default function GoalModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Goal — {formatElapsed(currentElapsedSeconds)}</Text>
+          <Text style={styles.title}>Goal — {formatElapsed(capturedPhaseSeconds)}</Text>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>

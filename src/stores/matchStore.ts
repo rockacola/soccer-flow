@@ -3,17 +3,14 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { STORAGE_KEY_PAST_MATCHES } from '../constants/storageKeys';
-import type { Match, MatchActivity } from '../types';
+import type { Match, MatchActivity, MatchSegment } from '../types';
 
 type MatchStore = {
   currentMatch: Match | null;
   pastMatches: Match[];
   startMatch: (match: Match) => void;
-  pauseMatch: () => void;
-  resumeMatch: () => void;
   finishMatch: () => void;
-  tick: (elapsedSeconds: number) => void;
-  setSegmentActuals: (actuals: number[]) => void;
+  setSegments: (segments: MatchSegment[]) => void;
   setScore: (homeScore: number, awayScore: number) => void;
   addActivity: (activity: MatchActivity) => void;
   removeActivity: (activityId: string) => void;
@@ -25,12 +22,6 @@ export const useMatchStore = create<MatchStore>()(
       currentMatch: null,
       pastMatches: [],
       startMatch: (match) => set({ currentMatch: match }),
-      pauseMatch: () =>
-        set((s) =>
-          s.currentMatch ? { currentMatch: { ...s.currentMatch, status: 'paused' } } : {},
-        ),
-      resumeMatch: () =>
-        set((s) => (s.currentMatch ? { currentMatch: { ...s.currentMatch, status: 'live' } } : {})),
       finishMatch: () =>
         set((s) =>
           s.currentMatch
@@ -40,14 +31,8 @@ export const useMatchStore = create<MatchStore>()(
               }
             : {},
         ),
-      tick: (elapsedSeconds) =>
-        set((s) => (s.currentMatch ? { currentMatch: { ...s.currentMatch, elapsedSeconds } } : {})),
-      setSegmentActuals: (actuals) =>
-        set((s) =>
-          s.currentMatch
-            ? { currentMatch: { ...s.currentMatch, segmentActualSeconds: actuals } }
-            : {},
-        ),
+      setSegments: (segments) =>
+        set((s) => (s.currentMatch ? { currentMatch: { ...s.currentMatch, segments } } : {})),
       setScore: (homeScore, awayScore) =>
         set((s) =>
           s.currentMatch ? { currentMatch: { ...s.currentMatch, homeScore, awayScore } } : {},
@@ -78,6 +63,16 @@ export const useMatchStore = create<MatchStore>()(
     {
       name: STORAGE_KEY_PAST_MATCHES,
       storage: createJSONStorage(() => AsyncStorage),
+      version: 1,
+      migrate: (persisted) => {
+        const state = persisted as { pastMatches: unknown[] };
+        return {
+          pastMatches: (state.pastMatches ?? []).filter(
+            (m): m is Match =>
+              m !== null && typeof m === 'object' && Array.isArray((m as Match).segments),
+          ),
+        };
+      },
       partialize: (s) => ({ pastMatches: s.pastMatches }),
     },
   ),
