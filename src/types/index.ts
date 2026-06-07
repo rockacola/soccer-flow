@@ -38,7 +38,7 @@ export type MatchActivityType = 'goal' | 'substitution' | 'remark';
 export type GoalActivity = {
   id: string;
   type: 'goal';
-  elapsedSeconds: number;
+  createdAt: number;
   side: 'home' | 'away';
   playerId: string | null;
 };
@@ -46,7 +46,7 @@ export type GoalActivity = {
 export type SubstitutionActivity = {
   id: string;
   type: 'substitution';
-  elapsedSeconds: number;
+  createdAt: number;
   side: 'home' | 'away';
   playerOutId: string;
   playerInId: string;
@@ -55,25 +55,27 @@ export type SubstitutionActivity = {
 export type RemarkActivity = {
   id: string;
   type: 'remark';
-  elapsedSeconds: number;
+  createdAt: number;
   text: string;
 };
 
 export type MatchActivity = GoalActivity | SubstitutionActivity | RemarkActivity;
 
-export type MatchStatus = 'setup' | 'live' | 'paused' | 'finished';
+export type MatchStatus = 'live' | 'finished';
+
+export type MatchSegment = {
+  segmentType: 'period' | 'break';
+  startedAt: number;
+};
 
 export type Match = {
   id: string;
   homeTeamId: string;
   opponentName: string;
-  periodCount: number;
   periodDurationMinutes: number;
   breakDurationMinutes: number;
   status: MatchStatus;
-  startedAt: number | null;
-  elapsedSeconds: number;
-  segmentActualSeconds: number[];
+  segments: MatchSegment[];
   homeScore: number;
   awayScore: number;
   activities: MatchActivity[];

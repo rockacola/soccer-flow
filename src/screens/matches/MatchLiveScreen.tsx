@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -13,14 +13,11 @@ import {
 
 import {
   adjustScore,
-  adjustSegments,
+  adjustTimestamps,
   finishMatch,
-  pauseMatch,
   recordGoal,
   recordRemark,
   recordSubstitution,
-  resumeMatch,
-  tickTimer,
 } from '../../services/matchService';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
@@ -41,14 +38,16 @@ export default function MatchLiveScreen({ navigation }: Props) {
   const currentMatch = useMatchStore((s) => s.currentMatch);
   const teams = useTeamsStore((s) => s.teams);
 
+  const [, tick] = useReducer((n: number) => n + 1, 0);
   const [goalModalVisible, setGoalModalVisible] = useState(false);
   const [subModalVisible, setSubModalVisible] = useState(false);
   const [remarkModalVisible, setRemarkModalVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [timerAdjustVisible, setTimerAdjustVisible] = useState(false);
+  const [capturedAt, setCapturedAt] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(tickTimer, 1000);
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);
 
@@ -71,24 +70,25 @@ export default function MatchLiveScreen({ navigation }: Props) {
   }
 
   const opponentLabel = currentMatch.opponentName.trim() || 'Opponent';
+  const now = Date.now();
+  const phase = computePhase(now, currentMatch.segments);
+  const capturedPhase = capturedAt > 0 ? computePhase(capturedAt, currentMatch.segments) : phase;
 
-  const phase = computePhase(
-    currentMatch.elapsedSeconds,
-    currentMatch.periodDurationMinutes,
-    currentMatch.periodCount,
-    currentMatch.breakDurationMinutes,
-    currentMatch.segmentActualSeconds,
-  );
-  const currentElapsedSeconds = currentMatch.elapsedSeconds;
-  const isLive = currentMatch.status === 'live';
   const reversedActivities = [...currentMatch.activities].reverse();
 
-  const handlePauseResume = () => {
-    if (isLive) {
-      pauseMatch();
-    } else {
-      resumeMatch();
-    }
+  const openGoalModal = () => {
+    setCapturedAt(Date.now());
+    setGoalModalVisible(true);
+  };
+
+  const openSubModal = () => {
+    setCapturedAt(Date.now());
+    setSubModalVisible(true);
+  };
+
+  const openRemarkModal = () => {
+    setCapturedAt(Date.now());
+    setRemarkModalVisible(true);
   };
 
   const doFinish = () => {
@@ -97,29 +97,25 @@ export default function MatchLiveScreen({ navigation }: Props) {
     navigation.navigate('MatchesList');
   };
 
-  const handleFinish = () => {
-    setConfirmVisible(true);
-  };
-
-  const handleGoal = (side: 'home' | 'away', playerId: string | null, elapsedSeconds: number) => {
+  const handleGoal = (side: 'home' | 'away', playerId: string | null) => {
     try {
-      recordGoal(side, playerId, elapsedSeconds);
+      recordGoal(side, playerId);
     } catch (e) {
       Alert.alert('Error', e instanceof Error ? e.message : 'Could not record goal.');
     }
   };
 
-  const handleSub = (outId: string, inId: string, elapsedSeconds: number) => {
+  const handleSub = (outId: string, inId: string) => {
     try {
-      recordSubstitution('home', outId, inId, elapsedSeconds);
+      recordSubstitution('home', outId, inId);
     } catch (e) {
       Alert.alert('Error', e instanceof Error ? e.message : 'Could not record substitution.');
     }
   };
 
-  const handleRemark = (text: string, elapsedSeconds: number) => {
+  const handleRemark = (text: string) => {
     try {
-      recordRemark(text, elapsedSeconds);
+      recordRemark(text);
     } catch (e) {
       Alert.alert('Error', e instanceof Error ? e.message : 'Could not record note.');
     }
@@ -134,9 +130,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
           onPress={() => setTimerAdjustVisible(true)}
           activeOpacity={0.7}
         >
-          <Text style={styles.periodLabel}>{phaseLabel(phase, currentMatch.periodCount)}</Text>
+          <Text style={styles.periodLabel}>{phaseLabel(phase, currentMatch.segments)}</Text>
           <Text style={styles.timer}>{formatElapsed(phase.withinSeconds)}</Text>
-          {!isLive && <Text style={styles.pausedBadge}>PAUSED</Text>}
         </TouchableOpacity>
 
         <View style={styles.scoreRow}>
@@ -177,10 +172,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
         {/* Controls */}
         <View style={styles.controlRow}>
-          <TouchableOpacity style={styles.pauseButton} onPress={handlePauseResume}>
-            <Text style={styles.pauseButtonText}>{isLive ? 'Pause' : 'Resume'}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.finishButton} onPress={handleFinish}>
+          <TouchableOpacity style={styles.finishButton} onPress={() => setConfirmVisible(true)}>
             <Text style={styles.finishButtonText}>Finish</Text>
           </TouchableOpacity>
         </View>
@@ -190,19 +182,16 @@ export default function MatchLiveScreen({ navigation }: Props) {
       <View style={styles.activityButtons}>
         <TouchableOpacity
           style={[styles.activityButton, styles.goalButton]}
-          onPress={() => setGoalModalVisible(true)}
+          onPress={openGoalModal}
         >
           <Text style={styles.activityButtonText}>Goal</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.activityButton, styles.subButton]}
-          onPress={() => setSubModalVisible(true)}
-        >
+        <TouchableOpacity style={[styles.activityButton, styles.subButton]} onPress={openSubModal}>
           <Text style={styles.activityButtonText}>Sub</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.activityButton, styles.noteButton]}
-          onPress={() => setRemarkModalVisible(true)}
+          onPress={openRemarkModal}
         >
           <Text style={styles.activityButtonText}>Note</Text>
         </TouchableOpacity>
@@ -217,6 +206,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
             activity={item}
             homeTeam={homeTeam}
             opponentName={currentMatch.opponentName}
+            segments={currentMatch.segments}
           />
         )}
         contentContainerStyle={reversedActivities.length === 0 ? styles.emptyLog : undefined}
@@ -229,32 +219,29 @@ export default function MatchLiveScreen({ navigation }: Props) {
         onRecord={handleGoal}
         homeTeam={homeTeam}
         opponentName={currentMatch.opponentName}
-        currentElapsedSeconds={currentElapsedSeconds}
+        capturedPhaseSeconds={capturedPhase.withinSeconds}
       />
       <SubstitutionModal
         visible={subModalVisible}
         onClose={() => setSubModalVisible(false)}
         onRecord={handleSub}
         homeTeam={homeTeam}
-        currentElapsedSeconds={currentElapsedSeconds}
+        capturedPhaseSeconds={capturedPhase.withinSeconds}
       />
       <RemarkModal
         visible={remarkModalVisible}
         onClose={() => setRemarkModalVisible(false)}
         onRecord={handleRemark}
-        currentElapsedSeconds={currentElapsedSeconds}
+        capturedPhaseSeconds={capturedPhase.withinSeconds}
       />
 
       <TimerAdjustModal
         visible={timerAdjustVisible}
         onClose={() => setTimerAdjustVisible(false)}
-        onApply={adjustSegments}
-        periodCount={currentMatch.periodCount}
+        onApply={adjustTimestamps}
+        segments={currentMatch.segments}
         periodDurationMinutes={currentMatch.periodDurationMinutes}
         breakDurationMinutes={currentMatch.breakDurationMinutes}
-        segmentActualSeconds={currentMatch.segmentActualSeconds}
-        currentElapsedSeconds={currentElapsedSeconds}
-        startedAt={currentMatch.startedAt}
       />
 
       <Modal visible={confirmVisible} transparent animationType="fade">
@@ -322,17 +309,6 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
     fontFamily: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
   },
-  pausedBadge: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#FF9500',
-    letterSpacing: 0.5,
-    borderWidth: 1,
-    borderColor: '#FF9500',
-    borderRadius: 4,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-  },
   scoreRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -383,19 +359,6 @@ const styles = StyleSheet.create({
   },
   controlRow: {
     flexDirection: 'row',
-    gap: 10,
-  },
-  pauseButton: {
-    flex: 1,
-    backgroundColor: '#3A3A3C',
-    borderRadius: 10,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  pauseButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#FFFFFF',
   },
   finishButton: {
     flex: 1,

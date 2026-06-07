@@ -2,13 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
-import type { MatchActivity, Team } from '../../types';
+import type { MatchActivity, MatchSegment, Team } from '../../types';
+import { computePhase } from '../../utils/match';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
   activity: MatchActivity;
   homeTeam: Team;
   opponentName: string;
+  segments: MatchSegment[];
 };
 
 function PlayerChip({ team, playerId }: { team: Team; playerId: string | null }) {
@@ -21,14 +23,22 @@ function PlayerChip({ team, playerId }: { team: Team; playerId: string | null })
   );
 }
 
-export default React.memo(function ActivityLogItem({ activity, homeTeam, opponentName }: Props) {
+export default React.memo(function ActivityLogItem({
+  activity,
+  homeTeam,
+  opponentName,
+  segments,
+}: Props) {
   const sideLabel = (side: 'home' | 'away') =>
     side === 'home' ? homeTeam.name : opponentName.trim() || 'Opponent';
+
+  const { withinSeconds } = computePhase(activity.createdAt, segments);
+  const displayTime = formatElapsed(withinSeconds);
 
   if (activity.type === 'goal') {
     return (
       <View style={styles.row}>
-        <Text style={styles.minute}>{formatElapsed(activity.elapsedSeconds)}</Text>
+        <Text style={styles.minute}>{displayTime}</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>GOAL</Text>
         </View>
@@ -46,7 +56,7 @@ export default React.memo(function ActivityLogItem({ activity, homeTeam, opponen
   if (activity.type === 'substitution') {
     return (
       <View style={styles.row}>
-        <Text style={styles.minute}>{formatElapsed(activity.elapsedSeconds)}</Text>
+        <Text style={styles.minute}>{displayTime}</Text>
         <View style={[styles.badge, styles.badgeSub]}>
           <Text style={styles.badgeText}>SUB</Text>
         </View>
@@ -61,7 +71,7 @@ export default React.memo(function ActivityLogItem({ activity, homeTeam, opponen
 
   return (
     <View style={styles.row}>
-      <Text style={styles.minute}>{formatElapsed(activity.elapsedSeconds)}</Text>
+      <Text style={styles.minute}>{displayTime}</Text>
       <View style={[styles.badge, styles.badgeNote]}>
         <Text style={styles.badgeText}>NOTE</Text>
       </View>

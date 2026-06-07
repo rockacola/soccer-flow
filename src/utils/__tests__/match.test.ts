@@ -1,29 +1,41 @@
-import { computePhase, phaseLabel, segmentLabel } from '../match';
+import type { MatchSegment } from '../../types';
+import { buildSegments, computePhase, phaseLabel, segmentLabel } from '../match';
 
-// Standard 2-period, 40 min periods, 15 min break, no actuals
-// P = 2400s, B = 900s
-// Timeline: [0..2399] period 1, [2400..3299] break, [3300..] period 2
+// Standard 2-period match: T0, P=40min (2400s), B=15min (900s)
+// Segment timeline:
+//   period 1:  T0  → T0+2400s
+//   break:     T0+2400s → T0+3300s
+//   period 2:  T0+3300s → …
+const T0 = 1_000_000_000;
+const P = 2400 * 1000;
+const B = 900 * 1000;
+
+function twoPeriodsSegments(): MatchSegment[] {
+  return [
+    { segmentType: 'period', startedAt: T0 },
+    { segmentType: 'break', startedAt: T0 + P },
+    { segmentType: 'period', startedAt: T0 + P + B },
+  ];
+}
 
 describe('computePhase', () => {
-  describe('two-period match with no actuals', () => {
+  describe('two-period match', () => {
+    const segs = twoPeriodsSegments();
+
     it('returns period 1 at start', () => {
-      expect(computePhase(0, 40, 2, 15, [])).toEqual({
-        type: 'period',
-        number: 1,
-        withinSeconds: 0,
-      });
+      expect(computePhase(T0, segs)).toEqual({ type: 'period', number: 1, withinSeconds: 0 });
     });
 
     it('returns period 1 mid-period', () => {
-      expect(computePhase(1200, 40, 2, 15, [])).toEqual({
+      expect(computePhase(T0 + 1200 * 1000, segs)).toEqual({
         type: 'period',
         number: 1,
         withinSeconds: 1200,
       });
     });
 
-    it('returns period 1 at last second before boundary', () => {
-      expect(computePhase(2399, 40, 2, 15, [])).toEqual({
+    it('returns period 1 at last ms before break', () => {
+      expect(computePhase(T0 + P - 1, segs)).toEqual({
         type: 'period',
         number: 1,
         withinSeconds: 2399,
@@ -31,15 +43,11 @@ describe('computePhase', () => {
     });
 
     it('returns break at period 1 boundary', () => {
-      expect(computePhase(2400, 40, 2, 15, [])).toEqual({
-        type: 'break',
-        after: 1,
-        withinSeconds: 0,
-      });
+      expect(computePhase(T0 + P, segs)).toEqual({ type: 'break', after: 1, withinSeconds: 0 });
     });
 
     it('returns break mid-break', () => {
-      expect(computePhase(2700, 40, 2, 15, [])).toEqual({
+      expect(computePhase(T0 + P + 300 * 1000, segs)).toEqual({
         type: 'break',
         after: 1,
         withinSeconds: 300,
@@ -47,46 +55,40 @@ describe('computePhase', () => {
     });
 
     it('returns period 2 at start of second period', () => {
-      expect(computePhase(3300, 40, 2, 15, [])).toEqual({
+      expect(computePhase(T0 + P + B, segs)).toEqual({
         type: 'period',
         number: 2,
         withinSeconds: 0,
       });
     });
 
-    it('clamps to period 2 beyond full match duration', () => {
-      expect(computePhase(9999, 40, 2, 15, [])).toEqual({
+    it('clamps to period 2 beyond last segment start', () => {
+      expect(computePhase(T0 + P + B + 9999 * 1000, segs)).toEqual({
         type: 'period',
         number: 2,
-        withinSeconds: 6699,
+        withinSeconds: 9999,
+      });
+    });
+
+    it('clamps withinSeconds to 0 when now is before first segment', () => {
+      expect(computePhase(T0 - 5000, segs)).toEqual({
+        type: 'period',
+        number: 1,
+        withinSeconds: 0,
       });
     });
   });
 
-  describe('segment actuals override planned durations', () => {
-    it('uses actual period duration instead of planned', () => {
-      // Period 1 extended to 50 min (3000s)
-      expect(computePhase(2900, 40, 2, 15, [3000])).toEqual({
-        type: 'period',
-        number: 1,
-        withinSeconds: 2900,
-      });
-    });
-
-    it('uses actual break duration instead of planned', () => {
-      // Period 1 = 2400s, break actual = 600s → break ends at 3000
-      expect(computePhase(2700, 40, 2, 15, [2400, 600])).toEqual({
+  describe('adjusting segment timestamps changes phase boundaries', () => {
+    it('break starts earlier when period 1 shortened', () => {
+      const segs: MatchSegment[] = [
+        { segmentType: 'period', startedAt: T0 },
+        { segmentType: 'break', startedAt: T0 + 1800 * 1000 }, // 30 min period
+        { segmentType: 'period', startedAt: T0 + 2700 * 1000 },
+      ];
+      expect(computePhase(T0 + 1800 * 1000, segs)).toEqual({
         type: 'break',
         after: 1,
-        withinSeconds: 300,
-      });
-    });
-
-    it('shifts period 2 start when break actual is shorter', () => {
-      // Period 1 = 2400, break actual = 600 → period 2 starts at 3000
-      expect(computePhase(3000, 40, 2, 15, [2400, 600])).toEqual({
-        type: 'period',
-        number: 2,
         withinSeconds: 0,
       });
     });
@@ -94,10 +96,11 @@ describe('computePhase', () => {
 
   describe('four-period match', () => {
     it('returns period 3 correctly', () => {
-      // P=1200, B=300 (20min periods, 5min breaks)
-      // seg0=1200, seg1=300, seg2=1200, seg3=300, seg4=1200
-      // period 3 starts at 1200+300+1200+300 = 3000
-      expect(computePhase(3000, 20, 4, 5, [])).toEqual({
+      // 20min periods, 5min breaks: P=1200s, B=300s
+      const segs = buildSegments(T0, 4, 20, 5);
+      // period 3 starts at T0 + (1200+300+1200+300)*1000
+      const period3Start = T0 + (1200 + 300 + 1200 + 300) * 1000;
+      expect(computePhase(period3Start, segs)).toEqual({
         type: 'period',
         number: 3,
         withinSeconds: 0,
@@ -106,56 +109,67 @@ describe('computePhase', () => {
   });
 });
 
+describe('buildSegments', () => {
+  it('builds correct segment count for 2 periods', () => {
+    const segs = buildSegments(T0, 2, 40, 15);
+    expect(segs).toHaveLength(3); // period, break, period
+    expect(segs[0]).toEqual({ segmentType: 'period', startedAt: T0 });
+    expect(segs[1]).toEqual({ segmentType: 'break', startedAt: T0 + 2400 * 1000 });
+    expect(segs[2]).toEqual({ segmentType: 'period', startedAt: T0 + 3300 * 1000 });
+  });
+
+  it('builds correct segment count for 4 periods', () => {
+    const segs = buildSegments(T0, 4, 20, 5);
+    expect(segs).toHaveLength(7); // p, b, p, b, p, b, p
+    expect(segs.filter((s) => s.segmentType === 'period')).toHaveLength(4);
+    expect(segs.filter((s) => s.segmentType === 'break')).toHaveLength(3);
+  });
+});
+
 describe('phaseLabel', () => {
+  const segs2 = twoPeriodsSegments();
+  const segs4 = buildSegments(T0, 4, 20, 5);
+
   it('labels period 1 as "1st Period"', () => {
-    expect(phaseLabel({ type: 'period', number: 1, withinSeconds: 0 }, 2)).toBe('1st Period');
+    expect(phaseLabel({ type: 'period', number: 1, withinSeconds: 0 }, segs2)).toBe('1st Period');
   });
 
   it('labels period 2 as "2nd Period"', () => {
-    expect(phaseLabel({ type: 'period', number: 2, withinSeconds: 0 }, 2)).toBe('2nd Period');
-  });
-
-  it('labels period 3 as "3rd Period"', () => {
-    expect(phaseLabel({ type: 'period', number: 3, withinSeconds: 0 }, 4)).toBe('3rd Period');
-  });
-
-  it('labels period 4 as "4th Period"', () => {
-    expect(phaseLabel({ type: 'period', number: 4, withinSeconds: 0 }, 4)).toBe('4th Period');
+    expect(phaseLabel({ type: 'period', number: 2, withinSeconds: 0 }, segs2)).toBe('2nd Period');
   });
 
   it('labels the break as "Half Time" in a 2-period match', () => {
-    expect(phaseLabel({ type: 'break', after: 1, withinSeconds: 0 }, 2)).toBe('Half Time');
+    expect(phaseLabel({ type: 'break', after: 1, withinSeconds: 0 }, segs2)).toBe('Half Time');
   });
 
   it('labels breaks as "Break" in a 4-period match', () => {
-    expect(phaseLabel({ type: 'break', after: 1, withinSeconds: 0 }, 4)).toBe('Break');
-    expect(phaseLabel({ type: 'break', after: 2, withinSeconds: 0 }, 4)).toBe('Break');
-    expect(phaseLabel({ type: 'break', after: 3, withinSeconds: 0 }, 4)).toBe('Break');
+    expect(phaseLabel({ type: 'break', after: 1, withinSeconds: 0 }, segs4)).toBe('Break');
+    expect(phaseLabel({ type: 'break', after: 2, withinSeconds: 0 }, segs4)).toBe('Break');
+  });
+
+  it('labels period 3 in a 4-period match', () => {
+    expect(phaseLabel({ type: 'period', number: 3, withinSeconds: 0 }, segs4)).toBe('3rd Period');
   });
 });
 
 describe('segmentLabel', () => {
+  const segs2 = twoPeriodsSegments();
+  const segs4 = buildSegments(T0, 4, 20, 5);
+
   it('labels index 0 as "1st Period"', () => {
-    expect(segmentLabel(0, 2)).toBe('1st Period');
+    expect(segmentLabel(segs2[0], 0, segs2)).toBe('1st Period');
   });
 
   it('labels index 1 as "Half Time" in a 2-period match', () => {
-    expect(segmentLabel(1, 2)).toBe('Half Time');
+    expect(segmentLabel(segs2[1], 1, segs2)).toBe('Half Time');
   });
 
   it('labels index 2 as "2nd Period"', () => {
-    expect(segmentLabel(2, 2)).toBe('2nd Period');
+    expect(segmentLabel(segs2[2], 2, segs2)).toBe('2nd Period');
   });
 
-  it('labels index 1 as "Break" in a 4-period match', () => {
-    expect(segmentLabel(1, 4)).toBe('Break');
-  });
-
-  it('labels index 3 as "Break" in a 4-period match', () => {
-    expect(segmentLabel(3, 4)).toBe('Break');
-  });
-
-  it('labels index 4 as "3rd Period"', () => {
-    expect(segmentLabel(4, 4)).toBe('3rd Period');
+  it('labels break in a 4-period match as "Break"', () => {
+    expect(segmentLabel(segs4[1], 1, segs4)).toBe('Break');
+    expect(segmentLabel(segs4[3], 3, segs4)).toBe('Break');
   });
 });

@@ -47,7 +47,7 @@ export default function MatchesListScreen({ navigation }: Props) {
           {resolveOpponent(item.opponentName)}
         </Text>
       </View>
-      <Text style={styles.dateText}>{formatDate(item.startedAt)}</Text>
+      <Text style={styles.dateText}>{formatDate(item.segments[0]?.startedAt ?? null)}</Text>
     </TouchableOpacity>
   );
 

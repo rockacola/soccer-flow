@@ -71,7 +71,7 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
 
   const handleStart = () => {
     try {
-      createAndStartMatch(homeTeamId, opponentName, periodDurationMinutes, breakDurationMinutes);
+      createAndStartMatch(homeTeamId, opponentName, 2, periodDurationMinutes, breakDurationMinutes);
       navigation.replace('MatchLive');
     } catch (e) {
       Alert.alert('Error', e instanceof Error ? e.message : 'Could not start match.');
