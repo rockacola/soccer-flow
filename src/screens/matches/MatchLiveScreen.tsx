@@ -56,7 +56,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
   const [capturedAt, setCapturedAt] = useState(0);
   const [editingActivity, setEditingActivity] = useState<MatchActivity | null>(null);
 
-  useEffect(() => {
+  useEffect(function startTicker() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, []);

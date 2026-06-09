@@ -104,23 +104,26 @@ export default function TimerAdjustModal({
   const breakDurationMinutesRef = useRef(breakDurationMinutes);
   breakDurationMinutesRef.current = breakDurationMinutes;
 
-  useEffect(() => {
-    if (visible) {
-      const segs = segmentsRef.current;
-      setDraftSegments([...segs]);
-      if (endedAtRef.current !== null) {
-        setDraftEndedAt(endedAtRef.current);
-      } else {
-        const lastSeg = segs[segs.length - 1];
-        const durationMs =
-          lastSeg.segmentType === 'period'
-            ? periodDurationMinutesRef.current * 60 * 1000
-            : breakDurationMinutesRef.current * 60 * 1000;
-        setDraftEndedAt(lastSeg.startedAt + durationMs);
+  useEffect(
+    function initialiseDraftOnOpen() {
+      if (visible) {
+        const segs = segmentsRef.current;
+        setDraftSegments([...segs]);
+        if (endedAtRef.current !== null) {
+          setDraftEndedAt(endedAtRef.current);
+        } else {
+          const lastSeg = segs[segs.length - 1];
+          const durationMs =
+            lastSeg.segmentType === 'period'
+              ? periodDurationMinutesRef.current * 60 * 1000
+              : breakDurationMinutesRef.current * 60 * 1000;
+          setDraftEndedAt(lastSeg.startedAt + durationMs);
+        }
+        setSelectedKey(null);
       }
-      setSelectedKey(null);
-    }
-  }, [visible]);
+    },
+    [visible],
+  );
 
   const toggle = (key: string) => setSelectedKey((prev) => (prev === key ? null : key));
 

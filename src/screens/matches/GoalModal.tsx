@@ -29,17 +29,20 @@ export default function GoalModal({
   const [side, setSide] = useState<'home' | 'away'>('home');
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null | undefined>(undefined);
 
-  useEffect(() => {
-    if (visible) {
-      if (editActivity) {
-        setSide(editActivity.side);
-        setSelectedPlayerId(editActivity.playerId);
-      } else {
-        setSide('home');
-        setSelectedPlayerId(undefined);
+  useEffect(
+    function resetFormOnOpen() {
+      if (visible) {
+        if (editActivity) {
+          setSide(editActivity.side);
+          setSelectedPlayerId(editActivity.playerId);
+        } else {
+          setSide('home');
+          setSelectedPlayerId(undefined);
+        }
       }
-    }
-  }, [visible, editActivity]);
+    },
+    [visible, editActivity],
+  );
 
   const scorerRows: ScorerRow[] = [
     { type: 'unknown' },

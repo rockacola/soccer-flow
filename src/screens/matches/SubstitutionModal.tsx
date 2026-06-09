@@ -24,17 +24,20 @@ export default function SubstitutionModal({
   const [playerOutId, setPlayerOutId] = useState<string | null>(null);
   const [playerInId, setPlayerInId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (visible) {
-      if (editActivity) {
-        setPlayerOutId(editActivity.playerOutId);
-        setPlayerInId(editActivity.playerInId);
-      } else {
-        setPlayerOutId(null);
-        setPlayerInId(null);
+  useEffect(
+    function resetFormOnOpen() {
+      if (visible) {
+        if (editActivity) {
+          setPlayerOutId(editActivity.playerOutId);
+          setPlayerInId(editActivity.playerInId);
+        } else {
+          setPlayerOutId(null);
+          setPlayerInId(null);
+        }
       }
-    }
-  }, [visible, editActivity]);
+    },
+    [visible, editActivity],
+  );
 
   const handleRecord = () => {
     if (!playerOutId || !playerInId) {

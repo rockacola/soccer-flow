@@ -24,33 +24,39 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const rootNav = useNavigation<NavigationProp<RootTabParamList>>();
 
-  useEffect(() => {
-    const parent = navigation.getParent();
-    if (!parent) {
-      return () => {};
-    }
-    const unsubscribe = parent.addListener('blur', () => {
-      navigation.popToTop();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  useEffect(
+    function dismissOnTabBlur() {
+      const parent = navigation.getParent();
+      if (!parent) {
+        return () => {};
+      }
+      const unsubscribe = parent.addListener('blur', () => {
+        navigation.popToTop();
+      });
+      return unsubscribe;
+    },
+    [navigation],
+  );
 
-  useEffect(() => {
-    if (!team) {
-      return;
-    }
-    navigation.setOptions({
-      headerTitle: () => (
-        <TouchableOpacity
-          onPress={() => setEditTeamModalVisible(true)}
-          style={styles.headerTitleContainer}
-        >
-          <View style={[styles.headerColourDot, { backgroundColor: team.colour }]} />
-          <Text style={styles.headerTitleText}>{team.name}</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, team]);
+  useEffect(
+    function syncHeaderTitle() {
+      if (!team) {
+        return;
+      }
+      navigation.setOptions({
+        headerTitle: () => (
+          <TouchableOpacity
+            onPress={() => setEditTeamModalVisible(true)}
+            style={styles.headerTitleContainer}
+          >
+            <View style={[styles.headerColourDot, { backgroundColor: team.colour }]} />
+            <Text style={styles.headerTitleText}>{team.name}</Text>
+          </TouchableOpacity>
+        ),
+      });
+    },
+    [navigation, team],
+  );
 
   const handleStartMatch = () => {
     rootNav.navigate('Matches', {

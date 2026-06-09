@@ -52,44 +52,48 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
   const [periodDurationMinutes, setPeriodDurationMinutes] = useState(40);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(15);
 
-  // Dismiss this screen when the user switches away from the Matches tab.
-  // parent.blur fires on tab switches only — not on replace() or back press.
-  useEffect(() => {
-    const parent = navigation.getParent();
-    if (!parent) {
-      return () => {};
-    }
-    const unsubscribe = parent.addListener('blur', () => {
-      navigation.popToTop();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  useEffect(
+    function dismissOnTabBlur() {
+      const parent = navigation.getParent();
+      if (!parent) {
+        return () => {};
+      }
+      const unsubscribe = parent.addListener('blur', () => {
+        navigation.popToTop();
+      });
+      return unsubscribe;
+    },
+    [navigation],
+  );
 
-  useEffect(() => {
-    if (!homeTeam) {
-      return;
-    }
-    navigation.setOptions({
-      headerLeft: () => (
-        <HeaderBackButton
-          onPress={() =>
-            rootNav.navigate('Teams', {
-              screen: 'TeamDetail',
-              params: { teamId: homeTeamId },
-            })
-          }
-        />
-      ),
-      headerTitle: () => (
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitleText}>New Match</Text>
-          <Text style={styles.headerTitleSeparator}>·</Text>
-          <View style={[styles.headerColourDot, { backgroundColor: homeTeam.colour }]} />
-          <Text style={styles.headerTitleText}>{homeTeam.name}</Text>
-        </View>
-      ),
-    });
-  }, [navigation, homeTeam, homeTeamId, rootNav]);
+  useEffect(
+    function syncHeaderOptions() {
+      if (!homeTeam) {
+        return;
+      }
+      navigation.setOptions({
+        headerLeft: () => (
+          <HeaderBackButton
+            onPress={() =>
+              rootNav.navigate('Teams', {
+                screen: 'TeamDetail',
+                params: { teamId: homeTeamId },
+              })
+            }
+          />
+        ),
+        headerTitle: () => (
+          <View style={styles.headerTitleContainer}>
+            <Text style={styles.headerTitleText}>New Match</Text>
+            <Text style={styles.headerTitleSeparator}>·</Text>
+            <View style={[styles.headerColourDot, { backgroundColor: homeTeam.colour }]} />
+            <Text style={styles.headerTitleText}>{homeTeam.name}</Text>
+          </View>
+        ),
+      });
+    },
+    [navigation, homeTeam, homeTeamId, rootNav],
+  );
 
   const adjustPeriod = (delta: number) => {
     setPeriodDurationMinutes((m) => Math.min(90, Math.max(1, m + delta)));
