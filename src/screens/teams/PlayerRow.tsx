@@ -28,7 +28,12 @@ export default function PlayerRow({ teamId, player, onPress }: Props) {
       renderRightActions={() => <DeleteAction onPress={handleDelete} />}
       overshootRight={false}
     >
-      <TouchableOpacity style={styles.playerRow} onPress={onPress} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.playerRow}
+        onPress={onPress}
+        activeOpacity={0.7}
+        accessibilityLabel={player.name}
+      >
         <JerseyBadge number={player.jerseyNumber} />
         <View style={styles.playerInfo}>
           <Text style={styles.playerName}>{player.name}</Text>

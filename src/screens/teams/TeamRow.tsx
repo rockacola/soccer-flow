@@ -41,7 +41,12 @@ export default function TeamRow({ team, openSwipeableRef }: Props) {
         openSwipeableRef.current = swipeableRef.current;
       }}
     >
-      <TouchableOpacity style={styles.row} onPress={handlePress} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.row}
+        onPress={handlePress}
+        activeOpacity={0.7}
+        accessibilityLabel={team.name}
+      >
         <View style={[styles.colourDot, { backgroundColor: team.colour }]} />
         <View style={styles.rowText}>
           <Text style={styles.teamName}>{team.name}</Text>

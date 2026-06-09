@@ -1,0 +1,61 @@
+appId: com.travaganza.soccerflow
+---
+- launchApp:
+    clearState: true
+
+- assertVisible: "No teams yet."
+
+# Create team
+- tapOn: "+"
+- assertVisible: "New Team"
+- tapOn: "e.g. Red Lions"
+- inputText: "Test Team"
+- tapOn: "Blue"
+- tapOn: "Save"
+
+- extendedWaitUntil:
+    visible:
+      text: "Test Team"
+    timeout: 5000
+- tapOn: "Test Team"
+
+# Player 1
+- tapOn: "+"
+- assertVisible: "New Player"
+- tapOn: "e.g. Alex Morgan"
+- inputText: "James"
+- tapOn: "e.g. 10"
+- inputText: "9"
+- tapOn: "Save"
+
+# Player 2
+- tapOn: "+"
+- assertVisible: "New Player"
+- tapOn: "e.g. Alex Morgan"
+- inputText: "Marcus"
+- tapOn: "e.g. 10"
+- inputText: "7"
+- tapOn: "Save"
+
+# Player 3
+- tapOn: "+"
+- assertVisible: "New Player"
+- tapOn: "e.g. Alex Morgan"
+- inputText: "Oliver"
+- tapOn: "e.g. 10"
+- inputText: "3"
+- tapOn: "Save"
+
+# Player 4
+- tapOn: "+"
+- assertVisible: "New Player"
+- tapOn: "e.g. Alex Morgan"
+- inputText: "Noah"
+- tapOn: "e.g. 10"
+- inputText: "11"
+- tapOn: "Save"
+
+- assertVisible: "James"
+- assertVisible: "Marcus"
+- assertVisible: "Oliver"
+- assertVisible: "Noah"
