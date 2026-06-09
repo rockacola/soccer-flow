@@ -19,14 +19,17 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
   const [position, setPosition] = useState<PlayerPosition | undefined>(player.position);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (visible) {
-      setName(player.name);
-      setJerseyInput(player.jerseyNumber?.toString() ?? '');
-      setPosition(player.position);
-      setError(null);
-    }
-  }, [visible, player]);
+  useEffect(
+    function resetFormOnOpen() {
+      if (visible) {
+        setName(player.name);
+        setJerseyInput(player.jerseyNumber?.toString() ?? '');
+        setPosition(player.position);
+        setError(null);
+      }
+    },
+    [visible, player],
+  );
 
   function handleSave() {
     const jerseyNumber = jerseyInput.trim() === '' ? undefined : parseInt(jerseyInput, 10);

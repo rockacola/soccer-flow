@@ -21,11 +21,14 @@ export default function RemarkModal({
 }: Props) {
   const [text, setText] = useState('');
 
-  useEffect(() => {
-    if (visible) {
-      setText(editActivity ? editActivity.text : '');
-    }
-  }, [visible, editActivity]);
+  useEffect(
+    function resetFormOnOpen() {
+      if (visible) {
+        setText(editActivity ? editActivity.text : '');
+      }
+    },
+    [visible, editActivity],
+  );
 
   const handleRecord = () => {
     if (text.trim().length === 0) {

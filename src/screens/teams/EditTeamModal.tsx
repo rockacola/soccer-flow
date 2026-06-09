@@ -43,13 +43,16 @@ export default function EditTeamModal({
   const [colour, setColour] = useState(initialColour);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (visible) {
-      setName(initialName);
-      setColour(initialColour);
-      setError(null);
-    }
-  }, [visible, initialName, initialColour]);
+  useEffect(
+    function resetFormOnOpen() {
+      if (visible) {
+        setName(initialName);
+        setColour(initialColour);
+        setError(null);
+      }
+    },
+    [visible, initialName, initialColour],
+  );
 
   function handleSave() {
     try {

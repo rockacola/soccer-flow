@@ -14,16 +14,22 @@ export default function SlideToConfirm({ onConfirm, label = 'Slide to end match'
   const maxTravelRef = useRef(0);
   const onConfirmRef = useRef(onConfirm);
 
-  useEffect(() => {
-    onConfirmRef.current = onConfirm;
-  }, [onConfirm]);
+  useEffect(
+    function syncOnConfirmRef() {
+      onConfirmRef.current = onConfirm;
+    },
+    [onConfirm],
+  );
 
-  useEffect(() => {
-    pan.setValue(0);
-    return () => {
+  useEffect(
+    function resetPan() {
       pan.setValue(0);
-    };
-  }, [pan]);
+      return () => {
+        pan.setValue(0);
+      };
+    },
+    [pan],
+  );
 
   const panResponder = useRef(
     PanResponder.create({
