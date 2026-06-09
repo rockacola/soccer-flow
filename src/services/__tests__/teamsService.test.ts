@@ -1,6 +1,17 @@
-import { addPlayer, createTeam, deletePlayer, deleteTeam, updatePlayer } from '../teamsService';
+import type { Team } from '../../types';
+import {
+  addPlayer,
+  createTeam,
+  deletePlayer,
+  deleteTeam,
+  updatePlayer,
+  updateTeam,
+} from '../teamsService';
+
+let mockTeams: Team[] = [];
 
 const mockAddTeam = jest.fn();
+const mockUpdateTeam = jest.fn();
 const mockDeleteTeam = jest.fn();
 const mockAddPlayer = jest.fn();
 const mockUpdatePlayer = jest.fn();
@@ -9,7 +20,11 @@ const mockDeletePlayer = jest.fn();
 jest.mock('../../stores/teamsStore', () => ({
   useTeamsStore: {
     getState: () => ({
+      get teams() {
+        return mockTeams;
+      },
       addTeam: mockAddTeam,
+      updateTeam: mockUpdateTeam,
       deleteTeam: mockDeleteTeam,
       addPlayer: mockAddPlayer,
       updatePlayer: mockUpdatePlayer,
@@ -24,6 +39,7 @@ jest.mock('../../utils/id', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockTeams = [];
 });
 
 // ── createTeam ────────────────────────────────────────────────────────────────
@@ -148,5 +164,42 @@ describe('deletePlayer', () => {
   it('calls deletePlayer on the store with teamId and playerId', () => {
     deletePlayer('t_abc', 'p_xyz');
     expect(mockDeletePlayer).toHaveBeenCalledWith('t_abc', 'p_xyz');
+  });
+});
+
+// ── updateTeam ────────────────────────────────────────────────────────────────
+
+describe('updateTeam', () => {
+  const existingTeam: Team = { id: 't_1', name: 'Red Lions', colour: '#E53935', players: [] };
+
+  it('throws when name is empty', () => {
+    expect(() => updateTeam('t_1', '', '#E53935')).toThrow('Team name cannot be empty.');
+  });
+
+  it('throws when name is only whitespace', () => {
+    expect(() => updateTeam('t_1', '   ', '#E53935')).toThrow('Team name cannot be empty.');
+  });
+
+  it('throws when team is not found', () => {
+    mockTeams = [];
+    expect(() => updateTeam('t_unknown', 'Red Lions', '#E53935')).toThrow('Team not found.');
+  });
+
+  it('returns the updated team with the correct shape', () => {
+    mockTeams = [existingTeam];
+    const result = updateTeam('t_1', 'Blue Eagles', '#1E88E5');
+    expect(result).toEqual({ id: 't_1', name: 'Blue Eagles', colour: '#1E88E5', players: [] });
+  });
+
+  it('trims whitespace from name', () => {
+    mockTeams = [existingTeam];
+    const result = updateTeam('t_1', '  Blue Eagles  ', '#1E88E5');
+    expect(result.name).toBe('Blue Eagles');
+  });
+
+  it('calls updateTeam on the store with the updated team', () => {
+    mockTeams = [existingTeam];
+    const result = updateTeam('t_1', 'Blue Eagles', '#1E88E5');
+    expect(mockUpdateTeam).toHaveBeenCalledWith(result);
   });
 });

@@ -1,5 +1,11 @@
 import type { MatchSegment } from '../../types';
-import { buildSegments, computePhase, phaseLabel, segmentLabel } from '../match';
+import {
+  buildSegments,
+  computePhase,
+  computeSegmentWindow,
+  phaseLabel,
+  segmentLabel,
+} from '../match';
 
 // Standard 2-period match: T0, P=40min (2400s), B=15min (900s)
 // Segment timeline:
@@ -124,6 +130,12 @@ describe('buildSegments', () => {
     expect(segs.filter((s) => s.segmentType === 'period')).toHaveLength(4);
     expect(segs.filter((s) => s.segmentType === 'break')).toHaveLength(3);
   });
+
+  it('builds a single period with no breaks for periodCount 1', () => {
+    const segs = buildSegments(T0, 1, 45, 15);
+    expect(segs).toHaveLength(1);
+    expect(segs[0]).toEqual({ segmentType: 'period', startedAt: T0 });
+  });
 });
 
 describe('phaseLabel', () => {
@@ -149,6 +161,41 @@ describe('phaseLabel', () => {
 
   it('labels period 3 in a 4-period match', () => {
     expect(phaseLabel({ type: 'period', number: 3, withinSeconds: 0 }, segs4)).toBe('3rd Period');
+  });
+});
+
+describe('computeSegmentWindow', () => {
+  const segs = twoPeriodsSegments(); // [period@T0, break@T0+P, period@T0+P+B]
+
+  it('uses the next segment startedAt as endAt when one exists', () => {
+    // During period 1, the next segment (break) defines the end
+    const result = computeSegmentWindow(T0 + 60 * 1000, segs, null, 40, 15);
+    expect(result.startedAt).toBe(T0);
+    expect(result.endAt).toBe(T0 + P);
+  });
+
+  it('uses endedAt as endAt when in the last segment and match is finished', () => {
+    const endedAt = T0 + P + B + 2400 * 1000;
+    const result = computeSegmentWindow(T0 + P + B + 1200 * 1000, segs, endedAt, 40, 15);
+    expect(result.startedAt).toBe(T0 + P + B);
+    expect(result.endAt).toBe(endedAt);
+  });
+
+  it('estimates endAt from periodDurationMinutes when last segment is a period and match is ongoing', () => {
+    const result = computeSegmentWindow(T0 + P + B + 1200 * 1000, segs, null, 40, 15);
+    expect(result.startedAt).toBe(T0 + P + B);
+    expect(result.endAt).toBe(T0 + P + B + P);
+  });
+
+  it('estimates endAt from breakDurationMinutes when last segment is a break and match is ongoing', () => {
+    // Single-period match where the break is the last segment
+    const segsBreakLast: MatchSegment[] = [
+      { segmentType: 'period', startedAt: T0 },
+      { segmentType: 'break', startedAt: T0 + P },
+    ];
+    const result = computeSegmentWindow(T0 + P + 100 * 1000, segsBreakLast, null, 40, 15);
+    expect(result.startedAt).toBe(T0 + P);
+    expect(result.endAt).toBe(T0 + P + B);
   });
 });
 

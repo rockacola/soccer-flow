@@ -1,12 +1,15 @@
-import type { Match, MatchSegment } from '../../types';
+import type { Match, MatchActivity, MatchSegment } from '../../types';
 import {
   adjustScore,
   adjustTimestamps,
   createAndStartMatch,
+  deleteActivity,
+  deletePastMatch,
   finishMatch,
   recordGoal,
   recordRemark,
   recordSubstitution,
+  updateActivity,
 } from '../matchService';
 
 // ── Mutable match state shared across mock calls ──────────────────────────────
@@ -18,6 +21,9 @@ const mockFinishMatch = jest.fn();
 const mockSetSegments = jest.fn();
 const mockSetScore = jest.fn();
 const mockAddActivity = jest.fn();
+const mockRemoveActivity = jest.fn();
+const mockUpdateActivity = jest.fn();
+const mockDeletePastMatch = jest.fn();
 
 jest.mock('../../stores/matchStore', () => ({
   useMatchStore: {
@@ -30,6 +36,9 @@ jest.mock('../../stores/matchStore', () => ({
       setSegments: mockSetSegments,
       setScore: mockSetScore,
       addActivity: mockAddActivity,
+      removeActivity: mockRemoveActivity,
+      updateActivity: mockUpdateActivity,
+      deletePastMatch: mockDeletePastMatch,
     }),
   },
 }));
@@ -141,6 +150,45 @@ describe('adjustTimestamps', () => {
     ];
     adjustTimestamps(newSegments);
     expect(mockSetSegments).toHaveBeenCalledWith(newSegments, undefined);
+  });
+
+  it('passes newEndedAt to the store when provided', () => {
+    const newEndedAt = T0 + 5000 * 1000;
+    adjustTimestamps(baseSegments, newEndedAt);
+    expect(mockSetSegments).toHaveBeenCalledWith(baseSegments, newEndedAt);
+  });
+});
+
+// ── deletePastMatch ───────────────────────────────────────────────────────────
+
+describe('deletePastMatch', () => {
+  it('delegates to the store', () => {
+    deletePastMatch('m_123');
+    expect(mockDeletePastMatch).toHaveBeenCalledWith('m_123');
+  });
+});
+
+// ── deleteActivity ────────────────────────────────────────────────────────────
+
+describe('deleteActivity', () => {
+  it('delegates to the store', () => {
+    deleteActivity('a_abc');
+    expect(mockRemoveActivity).toHaveBeenCalledWith('a_abc');
+  });
+});
+
+// ── updateActivity ────────────────────────────────────────────────────────────
+
+describe('updateActivity', () => {
+  it('delegates to the store with the activity id and updated activity', () => {
+    const activity: MatchActivity = {
+      id: 'a_1',
+      type: 'remark',
+      createdAt: T0,
+      text: 'Updated note',
+    };
+    updateActivity(activity);
+    expect(mockUpdateActivity).toHaveBeenCalledWith('a_1', activity);
   });
 });
 
