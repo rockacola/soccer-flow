@@ -55,6 +55,41 @@ export function segmentLabel(
   return periodCount === 2 && periodsUpTo === 1 ? 'Half Time' : 'Break';
 }
 
+export function computeSegmentWindow(
+  now: number,
+  segments: MatchSegment[],
+  endedAt: number | null,
+  periodDurationMinutes: number,
+  breakDurationMinutes: number,
+): { startedAt: number; endAt: number } {
+  let activeIdx = 0;
+  for (let i = 1; i < segments.length; i++) {
+    if (segments[i].startedAt <= now) {
+      activeIdx = i;
+    } else {
+      break;
+    }
+  }
+
+  const startedAt = segments[activeIdx].startedAt;
+
+  let endAt: number;
+  if (activeIdx + 1 < segments.length) {
+    endAt = segments[activeIdx + 1].startedAt;
+  } else if (endedAt !== null) {
+    endAt = endedAt;
+  } else {
+    const lastSeg = segments[segments.length - 1];
+    const durationMs =
+      lastSeg.segmentType === 'period'
+        ? periodDurationMinutes * 60 * 1000
+        : breakDurationMinutes * 60 * 1000;
+    endAt = lastSeg.startedAt + durationMs;
+  }
+
+  return { startedAt, endAt };
+}
+
 export function buildSegments(
   now: number,
   periodCount: number,

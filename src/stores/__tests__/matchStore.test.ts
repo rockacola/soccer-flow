@@ -21,6 +21,7 @@ const baseMatch: Match = {
   breakDurationMinutes: 15,
   status: 'live',
   segments: baseSegments,
+  endedAt: null,
   homeScore: 0,
   awayScore: 0,
   activities: [],
@@ -48,12 +49,15 @@ describe('finishMatch', () => {
     expect(useMatchStore.getState().currentMatch).toBeNull();
   });
 
-  it('adds the match to pastMatches with status finished', () => {
+  it('adds the match to pastMatches with status finished and stamps endedAt', () => {
+    const now = 9_000_000;
+    jest.spyOn(Date, 'now').mockReturnValue(now);
     useMatchStore.setState({ currentMatch: baseMatch, pastMatches: [] });
     useMatchStore.getState().finishMatch();
     const past = useMatchStore.getState().pastMatches;
     expect(past).toHaveLength(1);
-    expect(past[0]).toEqual({ ...baseMatch, status: 'finished' });
+    expect(past[0]).toEqual({ ...baseMatch, status: 'finished', endedAt: now });
+    jest.restoreAllMocks();
   });
 
   it('appends to existing pastMatches', () => {

@@ -3,49 +3,80 @@ import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 
 import type { MatchSegment } from '../../types';
 import { segmentLabel } from '../../utils/match';
-import { formatElapsed } from '../../utils/time';
+import { formatElapsed, formatWallClockFull } from '../../utils/time';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onApply: (newSegments: MatchSegment[]) => void;
+  onApply: (newSegments: MatchSegment[], newEndedAt?: number) => void;
   segments: MatchSegment[];
+  endedAt: number | null;
   periodDurationMinutes: number;
   breakDurationMinutes: number;
 };
 
-function formatWallClock(timestamp: number): string {
-  return new Date(timestamp).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
+// selectedKey format: "start-{i}" | "end-{i}"
+type SelectedKey = string | null;
+
+function formatDurationLabel(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  if (s === 0) {
+    return `${m}m`;
+  }
+  if (m === 0) {
+    return `${s}s`;
+  }
+  return `${m}m ${s}s`;
 }
 
-function StepperRow({
-  label,
-  value,
+function DeltaButtons({
+  durationSeconds,
   onAdjust,
 }: {
-  label: string;
-  value: number;
-  onAdjust: (delta: number) => void;
+  durationSeconds: number;
+  onAdjust: (deltaSeconds: number) => void;
 }) {
   return (
-    <View style={styles.stepperRow}>
-      <Text style={styles.stepperLabel}>{label}</Text>
-      <View style={styles.stepperControls}>
-        {([-5, -1] as const).map((d) => (
-          <TouchableOpacity key={d} style={styles.stepBtn} onPress={() => onAdjust(d)}>
-            <Text style={styles.stepBtnText}>{d}</Text>
+    <View style={styles.deltaContainer}>
+      <View style={styles.deltaSide}>
+        <View style={styles.deltaBtnRow}>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-5 * 60)}>
+            <Text style={styles.deltaBtnText}>-5m</Text>
           </TouchableOpacity>
-        ))}
-        <Text style={styles.stepValue}>{String(value).padStart(2, '0')}</Text>
-        {([1, 5] as const).map((d) => (
-          <TouchableOpacity key={d} style={styles.stepBtn} onPress={() => onAdjust(d)}>
-            <Text style={styles.stepBtnText}>+{d}</Text>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-1 * 60)}>
+            <Text style={styles.deltaBtnText}>-1m</Text>
           </TouchableOpacity>
-        ))}
+        </View>
+        <View style={styles.deltaBtnRow}>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-5)}>
+            <Text style={styles.deltaBtnText}>-5s</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-1)}>
+            <Text style={styles.deltaBtnText}>-1s</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <Text style={styles.durationCenter}>{formatElapsed(durationSeconds)}</Text>
+
+      <View style={styles.deltaSide}>
+        <View style={styles.deltaBtnRow}>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(1 * 60)}>
+            <Text style={styles.deltaBtnText}>+1m</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(5 * 60)}>
+            <Text style={styles.deltaBtnText}>+5m</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.deltaBtnRow}>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(1)}>
+            <Text style={styles.deltaBtnText}>+1s</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(5)}>
+            <Text style={styles.deltaBtnText}>+5s</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -56,45 +87,65 @@ export default function TimerAdjustModal({
   onClose,
   onApply,
   segments,
+  endedAt,
   periodDurationMinutes,
   breakDurationMinutes,
 }: Props) {
-  const [draft, setDraft] = useState<MatchSegment[]>([]);
+  const [draftSegments, setDraftSegments] = useState<MatchSegment[]>([]);
+  const [draftEndedAt, setDraftEndedAt] = useState(0);
+  const [selectedKey, setSelectedKey] = useState<SelectedKey>(null);
+
   const segmentsRef = useRef(segments);
   segmentsRef.current = segments;
+  const endedAtRef = useRef(endedAt);
+  endedAtRef.current = endedAt;
+  const periodDurationMinutesRef = useRef(periodDurationMinutes);
+  periodDurationMinutesRef.current = periodDurationMinutes;
+  const breakDurationMinutesRef = useRef(breakDurationMinutes);
+  breakDurationMinutesRef.current = breakDurationMinutes;
 
   useEffect(() => {
     if (visible) {
-      setDraft([...segmentsRef.current]);
+      const segs = segmentsRef.current;
+      setDraftSegments([...segs]);
+      if (endedAtRef.current !== null) {
+        setDraftEndedAt(endedAtRef.current);
+      } else {
+        const lastSeg = segs[segs.length - 1];
+        const durationMs =
+          lastSeg.segmentType === 'period'
+            ? periodDurationMinutesRef.current * 60 * 1000
+            : breakDurationMinutesRef.current * 60 * 1000;
+        setDraftEndedAt(lastSeg.startedAt + durationMs);
+      }
+      setSelectedKey(null);
     }
   }, [visible]);
 
-  // Shift all segments from startIdx onwards by deltaMs, keeping the first segment fixed.
-  const shiftFrom = (startIdx: number, deltaMs: number) => {
-    setDraft((prev) => {
+  const toggle = (key: string) => setSelectedKey((prev) => (prev === key ? null : key));
+
+  const adjustSegmentStart = (i: number, deltaSeconds: number) => {
+    setDraftSegments((prev) => {
       const next = [...prev];
-      for (let i = startIdx; i < next.length; i++) {
-        next[i] = { ...next[i], startedAt: next[i].startedAt + deltaMs };
-      }
+      next[i] = { ...next[i], startedAt: next[i].startedAt + deltaSeconds * 1000 };
       return next;
     });
   };
 
-  // Duration of segment i = start of segment i+1 minus start of segment i.
-  // Last segment has no defined end, so we use the planned duration for display.
-  const segmentDurationSeconds = (i: number): number | null => {
-    if (i + 1 < draft.length) {
-      return Math.round((draft[i + 1].startedAt - draft[i].startedAt) / 1000);
+  const adjustSegmentEnd = (i: number, deltaSeconds: number) => {
+    if (i + 1 < draftSegments.length) {
+      setDraftSegments((prev) => {
+        const next = [...prev];
+        next[i + 1] = { ...next[i + 1], startedAt: next[i + 1].startedAt + deltaSeconds * 1000 };
+        return next;
+      });
+    } else {
+      setDraftEndedAt((prev) => prev + deltaSeconds * 1000);
     }
-    return null;
   };
 
-  const adjustSegmentDuration = (i: number, deltaSeconds: number) => {
-    // Shifting segment i+1 (and all following) changes segment i's duration.
-    if (i + 1 < draft.length) {
-      shiftFrom(i + 1, deltaSeconds * 1000);
-    }
-  };
+  const segmentEnd = (i: number): number =>
+    i + 1 < draftSegments.length ? draftSegments[i + 1].startedAt : draftEndedAt;
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
@@ -107,40 +158,66 @@ export default function TimerAdjustModal({
         </View>
 
         <ScrollView contentContainerStyle={styles.list}>
-          {draft.map((seg, i) => {
-            const durationSeconds = segmentDurationSeconds(i);
-            const mins = durationSeconds !== null ? Math.floor(durationSeconds / 60) : null;
-            const secs = durationSeconds !== null ? durationSeconds % 60 : null;
-            const label = segmentLabel(seg, i, draft);
-            const isLast = i === draft.length - 1;
+          {draftSegments.map((seg, i) => {
+            const endTs = segmentEnd(i);
+            const durationSeconds = Math.round((endTs - seg.startedAt) / 1000);
+            const label = segmentLabel(seg, i, draftSegments);
+            const startKey = `start-${i}`;
+            const endKey = `end-${i}`;
 
             return (
               <View key={i} style={styles.card}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardTitle}>{label}</Text>
-                  <Text style={styles.clockText}>{formatWallClock(seg.startedAt)}</Text>
-                </View>
+                <Text style={styles.cardTitle}>
+                  {label}{' '}
+                  <Text style={styles.cardDuration}>({formatDurationLabel(durationSeconds)})</Text>
+                </Text>
 
-                {!isLast && durationSeconds !== null && mins !== null && secs !== null ? (
-                  <>
-                    <Text style={styles.durationText}>{formatElapsed(durationSeconds)}</Text>
-                    <StepperRow
-                      label="min"
-                      value={mins}
-                      onAdjust={(d) => adjustSegmentDuration(i, d * 60)}
-                    />
-                    <StepperRow
-                      label="sec"
-                      value={secs}
-                      onAdjust={(d) => adjustSegmentDuration(i, d)}
-                    />
-                  </>
-                ) : (
-                  <Text style={styles.openEndedText}>
-                    Planned{' '}
-                    {seg.segmentType === 'period' ? periodDurationMinutes : breakDurationMinutes}{' '}
-                    min
-                  </Text>
+                {/* Start row */}
+                <View style={styles.timeRow}>
+                  <Text style={styles.timeRowLabel}>Start</Text>
+                  <TouchableOpacity
+                    style={[styles.timeChip, selectedKey === startKey && styles.timeChipSelected]}
+                    onPress={() => toggle(startKey)}
+                  >
+                    <Text
+                      style={[
+                        styles.timeChipText,
+                        selectedKey === startKey && styles.timeChipTextSelected,
+                      ]}
+                    >
+                      {formatWallClockFull(seg.startedAt)}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {selectedKey === startKey && (
+                  <DeltaButtons
+                    durationSeconds={durationSeconds}
+                    onAdjust={(d) => adjustSegmentStart(i, d)}
+                  />
+                )}
+
+                {/* End row */}
+                <View style={styles.timeRow}>
+                  <Text style={styles.timeRowLabel}>End</Text>
+                  <TouchableOpacity
+                    style={[styles.timeChip, selectedKey === endKey && styles.timeChipSelected]}
+                    onPress={() => toggle(endKey)}
+                  >
+                    <Text
+                      style={[
+                        styles.timeChipText,
+                        selectedKey === endKey && styles.timeChipTextSelected,
+                      ]}
+                    >
+                      {formatWallClockFull(endTs)}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {selectedKey === endKey && (
+                  <DeltaButtons
+                    durationSeconds={durationSeconds}
+                    onAdjust={(d) => adjustSegmentEnd(i, d)}
+                  />
                 )}
               </View>
             );
@@ -150,7 +227,7 @@ export default function TimerAdjustModal({
         <TouchableOpacity
           style={styles.applyButton}
           onPress={() => {
-            onApply(draft);
+            onApply(draftSegments, draftEndedAt ?? undefined);
             onClose();
           }}
         >
@@ -193,66 +270,79 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    gap: 10,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 8,
   },
   cardTitle: {
     fontSize: 15,
     fontWeight: '600',
     color: '#000000',
+    marginBottom: 2,
   },
-  clockText: {
-    fontSize: 13,
-    color: '#8E8E93',
-  },
-  durationText: {
-    fontSize: 13,
-    color: '#8E8E93',
-    fontVariant: ['tabular-nums'],
-  },
-  openEndedText: {
-    fontSize: 13,
-    color: '#8E8E93',
-  },
-  stepperRow: {
+  timeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 10,
   },
-  stepperLabel: {
+  timeRowLabel: {
     fontSize: 13,
     color: '#8E8E93',
-    width: 28,
+    width: 36,
   },
-  stepperControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    flex: 1,
-  },
-  stepBtn: {
+  timeChip: {
     backgroundColor: '#F2F2F7',
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    minWidth: 40,
+  },
+  timeChipSelected: {
+    backgroundColor: '#007AFF',
+  },
+  timeChipText: {
+    fontSize: 14,
+    fontVariant: ['tabular-nums'],
+    color: '#3A3A3C',
+  },
+  timeChipTextSelected: {
+    color: '#FFFFFF',
+  },
+  cardDuration: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: '#8E8E93',
+  },
+  deltaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#F2F2F7',
+    borderRadius: 10,
+    padding: 12,
+  },
+  deltaSide: {
+    gap: 6,
+  },
+  deltaBtnRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  deltaBtn: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    paddingVertical: 7,
+    width: 44,
     alignItems: 'center',
   },
-  stepBtnText: {
+  deltaBtnText: {
     fontSize: 13,
     fontWeight: '500',
     color: '#007AFF',
   },
-  stepValue: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#000000',
-    minWidth: 32,
+  durationCenter: {
+    flex: 1,
     textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#000000',
     fontVariant: ['tabular-nums'],
   },
   applyButton: {

@@ -10,7 +10,7 @@ type MatchStore = {
   pastMatches: Match[];
   startMatch: (match: Match) => void;
   finishMatch: () => void;
-  setSegments: (segments: MatchSegment[]) => void;
+  setSegments: (segments: MatchSegment[], endedAt?: number) => void;
   setScore: (homeScore: number, awayScore: number) => void;
   addActivity: (activity: MatchActivity) => void;
   removeActivity: (activityId: string) => void;
@@ -27,12 +27,25 @@ export const useMatchStore = create<MatchStore>()(
           s.currentMatch
             ? {
                 currentMatch: null,
-                pastMatches: [...s.pastMatches, { ...s.currentMatch, status: 'finished' }],
+                pastMatches: [
+                  ...s.pastMatches,
+                  { ...s.currentMatch, status: 'finished', endedAt: Date.now() },
+                ],
               }
             : {},
         ),
-      setSegments: (segments) =>
-        set((s) => (s.currentMatch ? { currentMatch: { ...s.currentMatch, segments } } : {})),
+      setSegments: (segments, endedAt) =>
+        set((s) =>
+          s.currentMatch
+            ? {
+                currentMatch: {
+                  ...s.currentMatch,
+                  segments,
+                  ...(endedAt !== undefined ? { endedAt } : {}),
+                },
+              }
+            : {},
+        ),
       setScore: (homeScore, awayScore) =>
         set((s) =>
           s.currentMatch ? { currentMatch: { ...s.currentMatch, homeScore, awayScore } } : {},
