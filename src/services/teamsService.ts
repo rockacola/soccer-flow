@@ -3,14 +3,14 @@ import type { Player, PlayerPosition, Team } from '../types';
 import { generateId } from '../utils/id';
 
 export function createTeam(name: string, colour: string): Team {
-  const trimmed = name.trim();
-  if (trimmed.length === 0) {
+  const trimmedName = name.trim();
+  if (trimmedName.length === 0) {
     throw new Error('Team name cannot be empty.');
   }
 
   const team: Team = {
     id: generateId('t'),
-    name: trimmed,
+    name: trimmedName,
     colour,
     players: [],
   };
@@ -34,8 +34,8 @@ export function updatePlayer(
   jerseyNumber: number | undefined,
   position: PlayerPosition | undefined,
 ): Player {
-  const trimmed = name.trim();
-  if (trimmed.length === 0) {
+  const trimmedName = name.trim();
+  if (trimmedName.length === 0) {
     throw new Error('Player name cannot be empty.');
   }
   if (
@@ -47,7 +47,7 @@ export function updatePlayer(
 
   const player: Player = {
     id: playerId,
-    name: trimmed,
+    name: trimmedName,
     jerseyNumber,
     position,
   };
@@ -57,17 +57,17 @@ export function updatePlayer(
 }
 
 export function updateTeam(teamId: string, name: string, colour: string): Team {
-  const trimmed = name.trim();
-  if (trimmed.length === 0) {
+  const trimmedName = name.trim();
+  if (trimmedName.length === 0) {
     throw new Error('Team name cannot be empty.');
   }
-  const existing = useTeamsStore.getState().teams.find((t) => t.id === teamId);
-  if (!existing) {
+  const existingTeam = useTeamsStore.getState().teams.find((t) => t.id === teamId);
+  if (!existingTeam) {
     throw new Error('Team not found.');
   }
-  const updated: Team = { ...existing, name: trimmed, colour };
-  useTeamsStore.getState().updateTeam(updated);
-  return updated;
+  const updatedTeam: Team = { ...existingTeam, name: trimmedName, colour };
+  useTeamsStore.getState().updateTeam(updatedTeam);
+  return updatedTeam;
 }
 
 export function addPlayer(
@@ -76,8 +76,8 @@ export function addPlayer(
   jerseyNumber: number | undefined,
   position: PlayerPosition | undefined,
 ): Player {
-  const trimmed = name.trim();
-  if (trimmed.length === 0) {
+  const trimmedName = name.trim();
+  if (trimmedName.length === 0) {
     throw new Error('Player name cannot be empty.');
   }
   if (
@@ -89,7 +89,7 @@ export function addPlayer(
 
   const player: Player = {
     id: generateId('p'),
-    name: trimmed,
+    name: trimmedName,
     jerseyNumber,
     position,
   };
