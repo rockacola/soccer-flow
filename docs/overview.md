@@ -87,7 +87,6 @@ src/
   services/    — business logic per domain (introduced per feature)
   screens/     — one folder per feature (teams/, matches/)
   components/  — shared UI components
-  hooks/       — shared hooks
   utils/       — pure helper functions
   constants/   — AsyncStorage keys and app-wide constants
 assets/        — images, fonts, icons
