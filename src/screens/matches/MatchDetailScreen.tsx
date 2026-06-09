@@ -1,14 +1,68 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { MatchActivity, MatchesStackParamList } from '../../types';
+import type { Match, MatchActivity, MatchesStackParamList } from '../../types';
+import { segmentLabel } from '../../utils/match';
+import { formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchDetail'>;
+
+type SegmentGroup = {
+  segmentId: string;
+  label: string;
+  startedAt: number;
+  endedAt: number | null;
+  activities: MatchActivity[];
+  breakAfter: { label: string; durationMs: number } | null;
+};
+
+function buildSegmentGroups(match: Match): SegmentGroup[] {
+  const { segments, activities } = match;
+  const groups: SegmentGroup[] = [];
+
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i];
+    if (seg.segmentType !== 'period') {
+      continue;
+    }
+
+    const nextSegStart = segments[i + 1]?.startedAt ?? match.endedAt ?? null;
+    const periodActivities = activities.filter(
+      (a) => a.createdAt >= seg.startedAt && a.createdAt < (nextSegStart ?? Infinity),
+    );
+
+    let breakAfter: { label: string; durationMs: number } | null = null;
+    if (i + 1 < segments.length && segments[i + 1].segmentType === 'break') {
+      const breakSeg = segments[i + 1];
+      const afterBreakSeg = segments[i + 2];
+      const durationMs = afterBreakSeg
+        ? afterBreakSeg.startedAt - breakSeg.startedAt
+        : match.breakDurationMinutes * 60 * 1000;
+      breakAfter = { label: segmentLabel(breakSeg, i + 1, segments), durationMs };
+    }
+
+    groups.push({
+      segmentId: `seg-${i}`,
+      label: segmentLabel(seg, i, segments),
+      startedAt: seg.startedAt,
+      endedAt: nextSegStart,
+      activities: periodActivities,
+      breakAfter,
+    });
+  }
+
+  return groups;
+}
+
+function formatBreakDuration(ms: number): string {
+  const minutes = Math.round(ms / 60000);
+  return `${minutes} min`;
+}
 
 function formatDate(timestamp: number | null): string {
   if (timestamp === null) {
@@ -35,71 +89,80 @@ export default function MatchDetailScreen({ route }: Props) {
     );
   }
 
-  const homeTeam = teams.find((t) => t.id === match.homeTeamId);
+  const homeTeam = teams.find((t) => t.id === match.homeTeamId) ?? {
+    id: '',
+    name: 'Unknown',
+    colour: '#ccc',
+    players: [],
+  };
   const opponentName = match.opponentName.trim() || 'Opponent';
+  const groups = buildSegmentGroups(match);
 
   return (
-    <FlatList
-      style={styles.container}
-      data={match.activities}
-      keyExtractor={(item: MatchActivity) => item.id}
-      renderItem={({ item }) => (
-        <ActivityLogItem
-          activity={item}
-          homeTeam={homeTeam ?? { id: '', name: 'Unknown', colour: '#ccc', players: [] }}
-          opponentName={opponentName}
-          segments={match.segments}
-        />
-      )}
-      ListHeaderComponent={
-        <View>
-          {/* Score */}
-          <View style={styles.scoreCard}>
-            <Text style={styles.date}>{formatDate(match.segments[0]?.startedAt ?? null)}</Text>
-            <View style={styles.scoreRow}>
-              <Text style={styles.teamName} numberOfLines={2}>
-                {homeTeam?.name ?? 'Unknown'}
-              </Text>
-              <Text style={styles.score}>
-                {match.homeScore} – {match.awayScore}
-              </Text>
-              <Text style={styles.teamName} numberOfLines={2}>
-                {opponentName}
-              </Text>
-            </View>
-          </View>
-
-          {/* Match info */}
-          <View style={styles.infoCard}>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Periods</Text>
-              <Text style={styles.infoValue}>
-                {match.segments.filter((s) => s.segmentType === 'period').length}
-              </Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Period duration</Text>
-              <Text style={styles.infoValue}>{match.periodDurationMinutes} min</Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Break duration</Text>
-              <Text style={styles.infoValue}>{match.breakDurationMinutes} min</Text>
-            </View>
-          </View>
-
-          {/* Activity log heading */}
-          <Text style={styles.sectionHeading}>Activity</Text>
+    <ScrollView style={styles.container} contentContainerStyle={styles.listContent}>
+      {/* Score */}
+      <View style={styles.scoreCard}>
+        <Text style={styles.date}>{formatDate(match.segments[0]?.startedAt ?? null)}</Text>
+        <View style={styles.scoreRow}>
+          <Text style={styles.teamName} numberOfLines={2}>
+            {homeTeam.name}
+          </Text>
+          <Text style={styles.score}>
+            {match.homeScore} – {match.awayScore}
+          </Text>
+          <Text style={styles.teamName} numberOfLines={2}>
+            {opponentName}
+          </Text>
         </View>
-      }
-      ListEmptyComponent={
-        <View style={styles.emptyActivity}>
-          <Text style={styles.emptyText}>No activities recorded.</Text>
-        </View>
-      }
-      contentContainerStyle={styles.listContent}
-    />
+      </View>
+
+      {/* Segment groups */}
+      <View style={styles.segmentsContainer}>
+        {groups.map((group) => (
+          <React.Fragment key={group.segmentId}>
+            <View style={styles.periodHeader}>
+              <Text style={styles.periodLabel}>{group.label.toUpperCase()}</Text>
+              {group.endedAt !== null && (
+                <Text style={styles.periodMeta}>
+                  {formatWallClock(group.startedAt)}
+                  {' – '}
+                  {formatWallClock(group.endedAt)}
+                  {'  ·  '}
+                  {Math.round((group.endedAt - group.startedAt) / 60000)} min
+                </Text>
+              )}
+            </View>
+            <View style={styles.activityCard}>
+              {group.activities.length === 0 ? (
+                <View style={styles.emptyRow}>
+                  <Text style={styles.emptyRowText}>No activities</Text>
+                </View>
+              ) : (
+                group.activities.map((activity, aIdx) => (
+                  <ActivityLogItem
+                    key={activity.id}
+                    activity={activity}
+                    homeTeam={homeTeam}
+                    opponentName={opponentName}
+                    segments={match.segments}
+                    showBottomBorder={aIdx < group.activities.length - 1}
+                  />
+                ))
+              )}
+            </View>
+            {group.breakAfter !== null && (
+              <View style={styles.breakSeparator}>
+                <View style={styles.breakLine} />
+                <Text style={styles.breakText}>
+                  {group.breakAfter.label} · {formatBreakDuration(group.breakAfter.durationMs)}
+                </Text>
+                <View style={styles.breakLine} />
+              </View>
+            )}
+          </React.Fragment>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -109,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F2F7',
   },
   listContent: {
-    paddingBottom: 32,
+    paddingBottom: 40,
   },
   centred: {
     flex: 1,
@@ -149,45 +212,61 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontVariant: ['tabular-nums'],
   },
-  infoCard: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 16,
+  segmentsContainer: {
     marginTop: 20,
-    borderRadius: 12,
     paddingHorizontal: 16,
   },
-  infoRow: {
+  periodHeader: {
     flexDirection: 'row',
+    alignItems: 'baseline',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
+    marginBottom: 6,
+    marginLeft: 4,
+    marginRight: 4,
   },
-  infoLabel: {
-    fontSize: 15,
-    color: '#000000',
-  },
-  infoValue: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#8E8E93',
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#E5E5EA',
-  },
-  sectionHeading: {
+  periodLabel: {
     fontSize: 12,
     fontWeight: '600',
     color: '#8E8E93',
-    textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginTop: 28,
-    marginBottom: 0,
-    marginHorizontal: 16,
   },
-  emptyActivity: {
+  periodMeta: {
+    fontSize: 12,
+    color: '#AEAEB2',
+    fontVariant: ['tabular-nums'],
+  },
+  activityCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 4,
+  },
+  emptyRow: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     alignItems: 'center',
-    paddingTop: 24,
+  },
+  emptyRowText: {
+    fontSize: 14,
+    color: '#8E8E93',
+  },
+  breakSeparator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginVertical: 16,
+    paddingHorizontal: 4,
+  },
+  breakLine: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#C7C7CC',
+  },
+  breakText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#8E8E93',
+    letterSpacing: 0.3,
   },
   emptyText: {
     fontSize: 15,

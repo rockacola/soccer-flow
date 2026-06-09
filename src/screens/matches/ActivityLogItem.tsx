@@ -11,6 +11,7 @@ type Props = {
   homeTeam: Team;
   opponentName: string;
   segments: MatchSegment[];
+  showBottomBorder?: boolean;
 };
 
 function PlayerChip({ team, playerId }: { team: Team; playerId: string | null }) {
@@ -28,6 +29,7 @@ export default React.memo(function ActivityLogItem({
   homeTeam,
   opponentName,
   segments,
+  showBottomBorder = true,
 }: Props) {
   const sideLabel = (side: 'home' | 'away') =>
     side === 'home' ? homeTeam.name : opponentName.trim() || 'Opponent';
@@ -35,6 +37,8 @@ export default React.memo(function ActivityLogItem({
   const { withinSeconds } = computePhase(activity.createdAt, segments);
   const displayTime = formatElapsed(withinSeconds);
   const displayClock = formatWallClock(activity.createdAt);
+
+  const rowStyle = [styles.row, !showBottomBorder && { borderBottomWidth: 0 as const }];
 
   const timeColumn = (
     <View style={styles.timeColumn}>
@@ -45,7 +49,7 @@ export default React.memo(function ActivityLogItem({
 
   if (activity.type === 'goal') {
     return (
-      <View style={styles.row}>
+      <View style={rowStyle}>
         {timeColumn}
         <View style={styles.badge}>
           <Text style={styles.badgeText}>GOAL</Text>
@@ -63,7 +67,7 @@ export default React.memo(function ActivityLogItem({
 
   if (activity.type === 'substitution') {
     return (
-      <View style={styles.row}>
+      <View style={rowStyle}>
         {timeColumn}
         <View style={[styles.badge, styles.badgeSub]}>
           <Text style={styles.badgeText}>SUB</Text>
@@ -78,7 +82,7 @@ export default React.memo(function ActivityLogItem({
   }
 
   return (
-    <View style={styles.row}>
+    <View style={rowStyle}>
       {timeColumn}
       <View style={[styles.badge, styles.badgeNote]}>
         <Text style={styles.badgeText}>NOTE</Text>
