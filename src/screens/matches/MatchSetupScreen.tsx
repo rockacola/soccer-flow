@@ -1,10 +1,13 @@
+import { HeaderBackButton } from '@react-navigation/elements';
+import type { NavigationProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { createAndStartMatch } from '../../services/matchService';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { MatchesStackParamList } from '../../types';
+import type { MatchesStackParamList, RootTabParamList } from '../../types';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchSetup'>;
 
@@ -44,6 +47,7 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
   const teams = useTeamsStore((s) => s.teams);
   const homeTeam = teams.find((t) => t.id === homeTeamId);
 
+  const rootNav = useNavigation<NavigationProp<RootTabParamList>>();
   const [opponentName, setOpponentName] = useState('');
   const [periodDurationMinutes, setPeriodDurationMinutes] = useState(40);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(15);
@@ -60,6 +64,32 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
     });
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    if (!homeTeam) {
+      return;
+    }
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderBackButton
+          onPress={() =>
+            rootNav.navigate('Teams', {
+              screen: 'TeamDetail',
+              params: { teamId: homeTeamId },
+            })
+          }
+        />
+      ),
+      headerTitle: () => (
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitleText}>New Match</Text>
+          <Text style={styles.headerTitleSeparator}>·</Text>
+          <View style={[styles.headerColourDot, { backgroundColor: homeTeam.colour }]} />
+          <Text style={styles.headerTitleText}>{homeTeam.name}</Text>
+        </View>
+      ),
+    });
+  }, [navigation, homeTeam, homeTeamId, rootNav]);
 
   const adjustPeriod = (delta: number) => {
     setPeriodDurationMinutes((m) => Math.min(90, Math.max(1, m + delta)));
@@ -89,14 +119,6 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.label}>My Team</Text>
-        <View style={styles.teamDisplay}>
-          <View style={[styles.colourDot, { backgroundColor: homeTeam.colour }]} />
-          <Text style={styles.teamName}>{homeTeam.name}</Text>
-        </View>
-      </View>
-
-      <View style={styles.section}>
         <Text style={styles.label}>Opponent</Text>
         <TextInput
           style={styles.textInput}
@@ -109,8 +131,11 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
       </View>
 
       <Stepper label="Period duration" value={periodDurationMinutes} onAdjust={adjustPeriod} />
+      <Text style={styles.periodNote}>2 periods per match</Text>
 
       <Stepper label="Break duration" value={breakDurationMinutes} onAdjust={adjustBreak} />
+
+      <View style={styles.spacer} />
 
       <TouchableOpacity style={styles.startButton} onPress={handleStart}>
         <Text style={styles.startButtonText}>Start Match</Text>
@@ -133,6 +158,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#8E8E93',
   },
+  headerTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerTitleText: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  headerTitleSeparator: {
+    fontSize: 17,
+    color: '#C6C6C8',
+  },
+  headerColourDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
   section: {
     backgroundColor: '#FFFFFF',
     marginTop: 20,
@@ -147,21 +190,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
-  },
-  teamDisplay: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  colourDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-  },
-  teamName: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: '#000000',
   },
   textInput: {
     fontSize: 17,
@@ -194,8 +222,17 @@ const styles = StyleSheet.create({
     minWidth: 64,
     textAlign: 'center',
   },
+  periodNote: {
+    fontSize: 12,
+    color: '#8E8E93',
+    marginTop: 6,
+    marginHorizontal: 32,
+  },
+  spacer: {
+    flex: 1,
+  },
   startButton: {
-    marginTop: 32,
+    marginBottom: 32,
     marginHorizontal: 16,
     backgroundColor: '#34C759',
     borderRadius: 12,

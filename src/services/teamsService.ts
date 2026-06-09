@@ -56,6 +56,20 @@ export function updatePlayer(
   return player;
 }
 
+export function updateTeam(teamId: string, name: string, colour: string): Team {
+  const trimmed = name.trim();
+  if (trimmed.length === 0) {
+    throw new Error('Team name cannot be empty.');
+  }
+  const existing = useTeamsStore.getState().teams.find((t) => t.id === teamId);
+  if (!existing) {
+    throw new Error('Team not found.');
+  }
+  const updated: Team = { ...existing, name: trimmed, colour };
+  useTeamsStore.getState().updateTeam(updated);
+  return updated;
+}
+
 export function addPlayer(
   teamId: string,
   name: string,
