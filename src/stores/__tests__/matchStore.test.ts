@@ -87,6 +87,19 @@ describe('setSegments', () => {
     expect(useMatchStore.getState().currentMatch?.segments).toEqual(newSegments);
   });
 
+  it('also updates endedAt when provided', () => {
+    useMatchStore.setState({ currentMatch: baseMatch });
+    const newEndedAt = T0 + 5000 * 1000;
+    useMatchStore.getState().setSegments(baseSegments, newEndedAt);
+    expect(useMatchStore.getState().currentMatch?.endedAt).toBe(newEndedAt);
+  });
+
+  it('does not touch endedAt when omitted', () => {
+    useMatchStore.setState({ currentMatch: { ...baseMatch, endedAt: T0 + 1000 } });
+    useMatchStore.getState().setSegments(baseSegments);
+    expect(useMatchStore.getState().currentMatch?.endedAt).toBe(T0 + 1000);
+  });
+
   it('does nothing when there is no current match', () => {
     useMatchStore.getState().setSegments(baseSegments);
     expect(useMatchStore.getState().currentMatch).toBeNull();
@@ -152,5 +165,55 @@ describe('removeActivity', () => {
   it('does nothing when there is no current match', () => {
     useMatchStore.getState().removeActivity('a_1');
     expect(useMatchStore.getState().currentMatch).toBeNull();
+  });
+});
+
+// ── updateActivity ────────────────────────────────────────────────────────────
+
+describe('updateActivity', () => {
+  it('replaces the activity with the matching id', () => {
+    const a1 = { id: 'a_1', type: 'remark' as const, createdAt: T0, text: 'Original' };
+    const a2 = { id: 'a_2', type: 'remark' as const, createdAt: T0 + 10000, text: 'Other' };
+    useMatchStore.setState({ currentMatch: { ...baseMatch, activities: [a1, a2] } });
+    const updated = { ...a1, text: 'Updated' };
+    useMatchStore.getState().updateActivity('a_1', updated);
+    expect(useMatchStore.getState().currentMatch?.activities.find((a) => a.id === 'a_1')).toEqual(
+      updated,
+    );
+  });
+
+  it('leaves other activities unchanged', () => {
+    const a1 = { id: 'a_1', type: 'remark' as const, createdAt: T0, text: 'One' };
+    const a2 = { id: 'a_2', type: 'remark' as const, createdAt: T0 + 10000, text: 'Two' };
+    useMatchStore.setState({ currentMatch: { ...baseMatch, activities: [a1, a2] } });
+    useMatchStore.getState().updateActivity('a_1', { ...a1, text: 'Updated' });
+    expect(useMatchStore.getState().currentMatch?.activities.find((a) => a.id === 'a_2')).toEqual(
+      a2,
+    );
+  });
+
+  it('does nothing when there is no current match', () => {
+    const activity = { id: 'a_1', type: 'remark' as const, createdAt: T0, text: 'Hello' };
+    useMatchStore.getState().updateActivity('a_1', activity);
+    expect(useMatchStore.getState().currentMatch).toBeNull();
+  });
+});
+
+// ── deletePastMatch ───────────────────────────────────────────────────────────
+
+describe('deletePastMatch', () => {
+  it('removes the past match with the matching id', () => {
+    const m1: Match = { ...baseMatch, id: 'm_1', status: 'finished', endedAt: T0 + 10000 };
+    const m2: Match = { ...baseMatch, id: 'm_2', status: 'finished', endedAt: T0 + 20000 };
+    useMatchStore.setState({ pastMatches: [m1, m2] });
+    useMatchStore.getState().deletePastMatch('m_1');
+    expect(useMatchStore.getState().pastMatches).toEqual([m2]);
+  });
+
+  it('does nothing when the id does not exist', () => {
+    const m1: Match = { ...baseMatch, id: 'm_1', status: 'finished', endedAt: T0 + 10000 };
+    useMatchStore.setState({ pastMatches: [m1] });
+    useMatchStore.getState().deletePastMatch('m_unknown');
+    expect(useMatchStore.getState().pastMatches).toHaveLength(1);
   });
 });
