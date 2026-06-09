@@ -10,6 +10,7 @@ import type { Player, RootTabParamList, TeamsStackParamList } from '../../types'
 
 import AddPlayerModal from './AddPlayerModal';
 import EditPlayerModal from './EditPlayerModal';
+import EditTeamModal from './EditTeamModal';
 import PlayerRow from './PlayerRow';
 
 type Props = NativeStackScreenProps<TeamsStackParamList, 'TeamDetail'>;
@@ -19,6 +20,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
   const team = useTeamsStore((s) => s.teams.find((t) => t.id === teamId));
   const currentMatch = useMatchStore((s) => s.currentMatch);
   const [addModalVisible, setAddModalVisible] = useState(false);
+  const [editTeamModalVisible, setEditTeamModalVisible] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const rootNav = useNavigation<NavigationProp<RootTabParamList>>();
 
@@ -32,6 +34,23 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
     });
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    if (!team) {
+      return;
+    }
+    navigation.setOptions({
+      headerTitle: () => (
+        <TouchableOpacity
+          onPress={() => setEditTeamModalVisible(true)}
+          style={styles.headerTitleContainer}
+        >
+          <View style={[styles.headerColourDot, { backgroundColor: team.colour }]} />
+          <Text style={styles.headerTitleText}>{team.name}</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, team]);
 
   const handleStartMatch = () => {
     rootNav.navigate('Matches', {
@@ -92,6 +111,14 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
           onClose={() => setSelectedPlayer(null)}
         />
       )}
+
+      <EditTeamModal
+        teamId={teamId}
+        initialName={team.name}
+        initialColour={team.colour}
+        visible={editTeamModalVisible}
+        onClose={() => setEditTeamModalVisible(false)}
+      />
     </View>
   );
 }
@@ -99,6 +126,20 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerColourDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  headerTitleText: {
+    fontSize: 17,
+    fontWeight: '600',
   },
   centred: {
     flex: 1,

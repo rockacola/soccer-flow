@@ -19,11 +19,7 @@ export default function MatchesStackNavigator() {
         component={MatchesListScreen}
         options={{ headerTitle: () => <MatchesHeaderTitle /> }}
       />
-      <Stack.Screen
-        name="MatchSetup"
-        component={MatchSetupScreen}
-        options={{ title: 'New Match' }}
-      />
+      <Stack.Screen name="MatchSetup" component={MatchSetupScreen} />
       <Stack.Screen name="MatchLive" component={MatchLiveScreen} options={{ title: 'Live' }} />
       <Stack.Screen name="MatchDetail" component={MatchDetailScreen} options={{ title: 'Match' }} />
     </Stack.Navigator>

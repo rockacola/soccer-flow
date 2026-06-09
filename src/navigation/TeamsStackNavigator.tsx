@@ -17,11 +17,7 @@ export default function TeamsStackNavigator() {
         component={TeamsListScreen}
         options={{ headerTitle: () => <TeamsHeaderTitle /> }}
       />
-      <Stack.Screen
-        name="TeamDetail"
-        component={TeamDetailScreen}
-        options={{ title: 'Team Detail' }}
-      />
+      <Stack.Screen name="TeamDetail" component={TeamDetailScreen} />
     </Stack.Navigator>
   );
 }
