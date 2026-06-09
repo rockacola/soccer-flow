@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import type { Team } from '../../types';
+import type { SubstitutionActivity, Team } from '../../types';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   onRecord: (playerOutId: string, playerInId: string) => void;
   homeTeam: Team;
   capturedPhaseSeconds: number;
+  editActivity?: SubstitutionActivity;
 };
 
 export default function SubstitutionModal({
@@ -18,16 +19,22 @@ export default function SubstitutionModal({
   onRecord,
   homeTeam,
   capturedPhaseSeconds,
+  editActivity,
 }: Props) {
   const [playerOutId, setPlayerOutId] = useState<string | null>(null);
   const [playerInId, setPlayerInId] = useState<string | null>(null);
 
   useEffect(() => {
     if (visible) {
-      setPlayerOutId(null);
-      setPlayerInId(null);
+      if (editActivity) {
+        setPlayerOutId(editActivity.playerOutId);
+        setPlayerInId(editActivity.playerInId);
+      } else {
+        setPlayerOutId(null);
+        setPlayerInId(null);
+      }
     }
-  }, [visible]);
+  }, [visible, editActivity]);
 
   const handleRecord = () => {
     if (!playerOutId || !playerInId) {
@@ -45,7 +52,9 @@ export default function SubstitutionModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Substitution — {formatElapsed(capturedPhaseSeconds)}</Text>
+          <Text style={styles.title}>
+            {editActivity ? 'Edit ' : ''}Substitution — {formatElapsed(capturedPhaseSeconds)}
+          </Text>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
@@ -93,7 +102,9 @@ export default function SubstitutionModal({
         </ScrollView>
 
         <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
-          <Text style={styles.recordButtonText}>Record Substitution</Text>
+          <Text style={styles.recordButtonText}>
+            {editActivity ? 'Save' : 'Record Substitution'}
+          </Text>
         </TouchableOpacity>
       </View>
     </Modal>

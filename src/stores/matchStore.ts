@@ -14,6 +14,8 @@ type MatchStore = {
   setScore: (homeScore: number, awayScore: number) => void;
   addActivity: (activity: MatchActivity) => void;
   removeActivity: (activityId: string) => void;
+  updateActivity: (activityId: string, updated: MatchActivity) => void;
+  deletePastMatch: (matchId: string) => void;
 };
 
 export const useMatchStore = create<MatchStore>()(
@@ -72,6 +74,21 @@ export const useMatchStore = create<MatchStore>()(
               }
             : {},
         ),
+      updateActivity: (activityId, updated) =>
+        set((s) =>
+          s.currentMatch
+            ? {
+                currentMatch: {
+                  ...s.currentMatch,
+                  activities: s.currentMatch.activities.map((a) =>
+                    a.id === activityId ? updated : a,
+                  ),
+                },
+              }
+            : {},
+        ),
+      deletePastMatch: (matchId) =>
+        set((s) => ({ pastMatches: s.pastMatches.filter((m) => m.id !== matchId) })),
     }),
     {
       name: STORAGE_KEY_PAST_MATCHES,

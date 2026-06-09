@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import type { RemarkActivity } from '../../types';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -8,16 +9,23 @@ type Props = {
   onClose: () => void;
   onRecord: (text: string) => void;
   capturedPhaseSeconds: number;
+  editActivity?: RemarkActivity;
 };
 
-export default function RemarkModal({ visible, onClose, onRecord, capturedPhaseSeconds }: Props) {
+export default function RemarkModal({
+  visible,
+  onClose,
+  onRecord,
+  capturedPhaseSeconds,
+  editActivity,
+}: Props) {
   const [text, setText] = useState('');
 
   useEffect(() => {
     if (visible) {
-      setText('');
+      setText(editActivity ? editActivity.text : '');
     }
-  }, [visible]);
+  }, [visible, editActivity]);
 
   const handleRecord = () => {
     if (text.trim().length === 0) {
@@ -32,7 +40,9 @@ export default function RemarkModal({ visible, onClose, onRecord, capturedPhaseS
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Note — {formatElapsed(capturedPhaseSeconds)}</Text>
+          <Text style={styles.title}>
+            {editActivity ? 'Edit ' : ''}Note — {formatElapsed(capturedPhaseSeconds)}
+          </Text>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
@@ -49,7 +59,7 @@ export default function RemarkModal({ visible, onClose, onRecord, capturedPhaseS
         />
 
         <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
-          <Text style={styles.recordButtonText}>Record Note</Text>
+          <Text style={styles.recordButtonText}>{editActivity ? 'Save' : 'Record Note'}</Text>
         </TouchableOpacity>
       </View>
     </Modal>

@@ -1,55 +1,38 @@
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import type { Swipeable } from 'react-native-gesture-handler';
 
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { Match, MatchesStackParamList } from '../../types';
+import type { MatchesStackParamList } from '../../types';
 
-function resolveOpponent(opponentName: string): string {
-  return opponentName.trim() || 'Opponent';
-}
+import MatchRow from './MatchRow';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchesList'>;
 
-function formatDate(timestamp: number | null): string {
-  if (timestamp === null) {
-    return '';
-  }
-  return new Date(timestamp).toLocaleDateString(undefined, {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+function resolveOpponent(opponentName: string): string {
+  return opponentName.trim() || 'Opponent';
 }
 
 export default function MatchesListScreen({ navigation }: Props) {
   const currentMatch = useMatchStore((s) => s.currentMatch);
   const pastMatches = useMatchStore((s) => s.pastMatches);
   const teams = useTeamsStore((s) => s.teams);
+  const openSwipeableRef = useRef<Swipeable | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        openSwipeableRef.current?.close();
+        openSwipeableRef.current = null;
+      };
+    }, []),
+  );
 
   const resolveTeamName = (teamId: string): string =>
     teams.find((t) => t.id === teamId)?.name ?? 'Unknown';
-
-  const renderMatch = ({ item }: { item: Match }) => (
-    <TouchableOpacity
-      style={styles.matchRow}
-      onPress={() => navigation.navigate('MatchDetail', { matchId: item.id })}
-    >
-      <View style={styles.matchTeams}>
-        <Text style={styles.teamText} numberOfLines={1}>
-          {resolveTeamName(item.homeTeamId)}
-        </Text>
-        <Text style={styles.scoreText}>
-          {item.homeScore} – {item.awayScore}
-        </Text>
-        <Text style={styles.teamText} numberOfLines={1}>
-          {resolveOpponent(item.opponentName)}
-        </Text>
-      </View>
-      <Text style={styles.dateText}>{formatDate(item.segments[0]?.startedAt ?? null)}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={styles.container}>
@@ -72,7 +55,13 @@ export default function MatchesListScreen({ navigation }: Props) {
       <FlatList
         data={[...pastMatches].reverse()}
         keyExtractor={(item) => item.id}
-        renderItem={renderMatch}
+        renderItem={({ item }) => (
+          <MatchRow
+            match={item}
+            resolveTeamName={resolveTeamName}
+            openSwipeableRef={openSwipeableRef}
+          />
+        )}
         contentContainerStyle={pastMatches.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={
           <View style={styles.emptyContent}>
@@ -115,37 +104,6 @@ const styles = StyleSheet.create({
   resumeChevron: {
     fontSize: 24,
     color: '#FFFFFF',
-  },
-  matchRow: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 16,
-    marginTop: 12,
-    borderRadius: 12,
-    padding: 14,
-  },
-  matchTeams: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  teamText: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#000000',
-    flex: 1,
-  },
-  scoreText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#000000',
-    marginHorizontal: 12,
-    fontVariant: ['tabular-nums'],
-  },
-  dateText: {
-    fontSize: 12,
-    color: '#8E8E93',
-    textAlign: 'right',
   },
   emptyContainer: {
     flex: 1,

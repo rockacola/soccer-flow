@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import type { Swipeable } from 'react-native-gesture-handler';
 
 import { useTeamsStore } from '../../stores/teamsStore';
 
@@ -9,13 +11,23 @@ import TeamRow from './TeamRow';
 export default function TeamsListScreen() {
   const teams = useTeamsStore((s) => s.teams);
   const [modalVisible, setModalVisible] = useState(false);
+  const openSwipeableRef = useRef<Swipeable | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        openSwipeableRef.current?.close();
+        openSwipeableRef.current = null;
+      };
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
       <FlatList
         data={teams}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <TeamRow team={item} />}
+        renderItem={({ item }) => <TeamRow team={item} openSwipeableRef={openSwipeableRef} />}
         contentContainerStyle={teams.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={<Text style={styles.emptyText}>No teams yet.</Text>}
       />

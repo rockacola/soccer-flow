@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#34C759',
     borderRadius: 12,
     paddingVertical: 14,
+    paddingHorizontal: 32,
     alignItems: 'center',
   },
   matchButtonDisabled: {

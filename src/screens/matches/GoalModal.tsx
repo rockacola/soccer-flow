@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
-import type { Player, Team } from '../../types';
+import type { GoalActivity, Player, Team } from '../../types';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -12,6 +12,7 @@ type Props = {
   homeTeam: Team;
   opponentName: string;
   capturedPhaseSeconds: number;
+  editActivity?: GoalActivity;
 };
 
 type ScorerRow = { type: 'unknown' } | { type: 'player'; player: Player };
@@ -23,16 +24,22 @@ export default function GoalModal({
   homeTeam,
   opponentName,
   capturedPhaseSeconds,
+  editActivity,
 }: Props) {
   const [side, setSide] = useState<'home' | 'away'>('home');
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
     if (visible) {
-      setSide('home');
-      setSelectedPlayerId(undefined);
+      if (editActivity) {
+        setSide(editActivity.side);
+        setSelectedPlayerId(editActivity.playerId);
+      } else {
+        setSide('home');
+        setSelectedPlayerId(undefined);
+      }
     }
-  }, [visible]);
+  }, [visible, editActivity]);
 
   const scorerRows: ScorerRow[] = [
     { type: 'unknown' },
@@ -56,7 +63,9 @@ export default function GoalModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Goal — {formatElapsed(capturedPhaseSeconds)}</Text>
+          <Text style={styles.title}>
+            {editActivity ? 'Edit ' : ''}Goal — {formatElapsed(capturedPhaseSeconds)}
+          </Text>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
@@ -111,7 +120,7 @@ export default function GoalModal({
         </View>
 
         <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
-          <Text style={styles.recordButtonText}>Record Goal</Text>
+          <Text style={styles.recordButtonText}>{editActivity ? 'Save' : 'Record Goal'}</Text>
         </TouchableOpacity>
       </View>
     </Modal>

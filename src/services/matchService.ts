@@ -1,6 +1,6 @@
 import { useMatchStore } from '../stores/matchStore';
 import { useTeamsStore } from '../stores/teamsStore';
-import type { Match, MatchSegment } from '../types';
+import type { Match, MatchActivity, MatchSegment } from '../types';
 import { generateId } from '../utils/id';
 import { buildSegments } from '../utils/match';
 
@@ -36,6 +36,10 @@ export function createAndStartMatch(
 
 export function finishMatch(): void {
   useMatchStore.getState().finishMatch();
+}
+
+export function deletePastMatch(matchId: string): void {
+  useMatchStore.getState().deletePastMatch(matchId);
 }
 
 export function adjustTimestamps(newSegments: MatchSegment[], newEndedAt?: number): void {
@@ -79,6 +83,14 @@ export function recordSubstitution(
     playerOutId,
     playerInId,
   });
+}
+
+export function deleteActivity(activityId: string): void {
+  useMatchStore.getState().removeActivity(activityId);
+}
+
+export function updateActivity(activity: MatchActivity): void {
+  useMatchStore.getState().updateActivity(activity.id, activity);
 }
 
 export function recordRemark(text: string): void {
