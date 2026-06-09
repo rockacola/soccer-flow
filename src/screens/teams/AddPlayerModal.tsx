@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { PLAYER_POSITIONS } from '../../constants/player';
 import { addPlayer } from '../../services/teamsService';
 import type { PlayerPosition } from '../../types';
-
-const POSITIONS: PlayerPosition[] = ['GK', 'DEF', 'MID', 'FWD'];
 
 type Props = {
   teamId: string;
@@ -85,7 +84,7 @@ export default function AddPlayerModal({ teamId, visible, onClose }: Props) {
 
           <Text style={styles.label}>Position (optional)</Text>
           <View style={styles.positionRow}>
-            {POSITIONS.map((p) => (
+            {PLAYER_POSITIONS.map((p) => (
               <TouchableOpacity
                 key={p}
                 style={[styles.positionChip, position === p && styles.positionChipSelected]}

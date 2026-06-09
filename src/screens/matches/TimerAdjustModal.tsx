@@ -3,7 +3,9 @@ import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 
 import type { MatchSegment } from '../../types';
 import { segmentLabel } from '../../utils/match';
-import { formatElapsed, formatWallClockFull } from '../../utils/time';
+import { formatDurationLabel, formatWallClockFull } from '../../utils/time';
+
+import DeltaButtons from './DeltaButtons';
 
 type Props = {
   visible: boolean;
@@ -17,70 +19,6 @@ type Props = {
 
 // selectedKey format: "start-{i}" | "end-{i}"
 type SelectedKey = string | null;
-
-function formatDurationLabel(totalSeconds: number): string {
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  if (s === 0) {
-    return `${m}m`;
-  }
-  if (m === 0) {
-    return `${s}s`;
-  }
-  return `${m}m ${s}s`;
-}
-
-function DeltaButtons({
-  durationSeconds,
-  onAdjust,
-}: {
-  durationSeconds: number;
-  onAdjust: (deltaSeconds: number) => void;
-}) {
-  return (
-    <View style={styles.deltaContainer}>
-      <View style={styles.deltaSide}>
-        <View style={styles.deltaBtnRow}>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-5 * 60)}>
-            <Text style={styles.deltaBtnText}>-5m</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-1 * 60)}>
-            <Text style={styles.deltaBtnText}>-1m</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.deltaBtnRow}>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-5)}>
-            <Text style={styles.deltaBtnText}>-5s</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(-1)}>
-            <Text style={styles.deltaBtnText}>-1s</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <Text style={styles.durationCenter}>{formatElapsed(durationSeconds)}</Text>
-
-      <View style={styles.deltaSide}>
-        <View style={styles.deltaBtnRow}>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(1 * 60)}>
-            <Text style={styles.deltaBtnText}>+1m</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(5 * 60)}>
-            <Text style={styles.deltaBtnText}>+5m</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.deltaBtnRow}>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(1)}>
-            <Text style={styles.deltaBtnText}>+1s</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.deltaBtn} onPress={() => onAdjust(5)}>
-            <Text style={styles.deltaBtnText}>+5s</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-}
 
 export default function TimerAdjustModal({
   visible,
@@ -312,41 +250,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '400',
     color: '#8E8E93',
-  },
-  deltaContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#F2F2F7',
-    borderRadius: 10,
-    padding: 12,
-  },
-  deltaSide: {
-    gap: 6,
-  },
-  deltaBtnRow: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  deltaBtn: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    paddingVertical: 7,
-    width: 44,
-    alignItems: 'center',
-  },
-  deltaBtnText: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#007AFF',
-  },
-  durationCenter: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#000000',
-    fontVariant: ['tabular-nums'],
   },
   applyButton: {
     marginHorizontal: 16,

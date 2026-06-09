@@ -9,20 +9,8 @@ import {
   View,
 } from 'react-native';
 
+import { TEAM_COLOUR_OPTIONS } from '../../constants/team';
 import { createTeam } from '../../services/teamsService';
-
-const COLOUR_OPTIONS: { hex: string; label: string }[] = [
-  { hex: '#E53935', label: 'Red' },
-  { hex: '#D81B60', label: 'Pink' },
-  { hex: '#8E24AA', label: 'Purple' },
-  { hex: '#1E88E5', label: 'Blue' },
-  { hex: '#00897B', label: 'Teal' },
-  { hex: '#43A047', label: 'Green' },
-  { hex: '#FB8C00', label: 'Orange' },
-  { hex: '#6D4C41', label: 'Brown' },
-  { hex: '#757575', label: 'Grey' },
-  { hex: '#1A1A1A', label: 'Black' },
-];
 
 type Props = {
   visible: boolean;
@@ -31,14 +19,14 @@ type Props = {
 
 export default function CreateTeamModal({ visible, onClose }: Props) {
   const [name, setName] = useState('');
-  const [colour, setColour] = useState(COLOUR_OPTIONS[0].hex);
+  const [colour, setColour] = useState(TEAM_COLOUR_OPTIONS[0].hex);
   const [error, setError] = useState<string | null>(null);
 
   function handleSave() {
     try {
       createTeam(name, colour);
       setName('');
-      setColour(COLOUR_OPTIONS[0].hex);
+      setColour(TEAM_COLOUR_OPTIONS[0].hex);
       setError(null);
       onClose();
     } catch (e) {
@@ -48,7 +36,7 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
 
   function handleClose() {
     setName('');
-    setColour(COLOUR_OPTIONS[0].hex);
+    setColour(TEAM_COLOUR_OPTIONS[0].hex);
     setError(null);
     onClose();
   }
@@ -84,7 +72,7 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
 
           <Text style={styles.label}>Colour</Text>
           <View style={styles.colourGrid}>
-            {COLOUR_OPTIONS.map(({ hex, label }) => (
+            {TEAM_COLOUR_OPTIONS.map(({ hex, label }) => (
               <Pressable
                 key={hex}
                 accessibilityLabel={label}

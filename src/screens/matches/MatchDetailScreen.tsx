@@ -4,77 +4,13 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { Match, MatchActivity, MatchesStackParamList } from '../../types';
-import { segmentLabel } from '../../utils/match';
-import { formatWallClock } from '../../utils/time';
+import type { MatchesStackParamList } from '../../types';
+import { buildSegmentGroups } from '../../utils/match';
+import { formatBreakDuration, formatMatchDateLong, formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchDetail'>;
-
-type SegmentGroup = {
-  segmentId: string;
-  label: string;
-  startedAt: number;
-  endedAt: number | null;
-  activities: MatchActivity[];
-  breakAfter: { label: string; durationMs: number } | null;
-};
-
-function buildSegmentGroups(match: Match): SegmentGroup[] {
-  const { segments, activities } = match;
-  const groups: SegmentGroup[] = [];
-
-  for (let i = 0; i < segments.length; i++) {
-    const seg = segments[i];
-    if (seg.segmentType !== 'period') {
-      continue;
-    }
-
-    const nextSegStart = segments[i + 1]?.startedAt ?? match.endedAt ?? null;
-    const periodActivities = activities.filter(
-      (a) => a.createdAt >= seg.startedAt && a.createdAt < (nextSegStart ?? Infinity),
-    );
-
-    let breakAfter: { label: string; durationMs: number } | null = null;
-    if (i + 1 < segments.length && segments[i + 1].segmentType === 'break') {
-      const breakSeg = segments[i + 1];
-      const afterBreakSeg = segments[i + 2];
-      const durationMs = afterBreakSeg
-        ? afterBreakSeg.startedAt - breakSeg.startedAt
-        : match.breakDurationMinutes * 60 * 1000;
-      breakAfter = { label: segmentLabel(breakSeg, i + 1, segments), durationMs };
-    }
-
-    groups.push({
-      segmentId: `seg-${i}`,
-      label: segmentLabel(seg, i, segments),
-      startedAt: seg.startedAt,
-      endedAt: nextSegStart,
-      activities: periodActivities,
-      breakAfter,
-    });
-  }
-
-  return groups;
-}
-
-function formatBreakDuration(ms: number): string {
-  const minutes = Math.round(ms / 60000);
-  return `${minutes} min`;
-}
-
-function formatDate(timestamp: number | null): string {
-  if (timestamp === null) {
-    return '';
-  }
-  return new Date(timestamp).toLocaleDateString(undefined, {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
 
 export default function MatchDetailScreen({ route }: Props) {
   const { matchId } = route.params;
@@ -102,7 +38,7 @@ export default function MatchDetailScreen({ route }: Props) {
     <ScrollView style={styles.container} contentContainerStyle={styles.listContent}>
       {/* Score */}
       <View style={styles.scoreCard}>
-        <Text style={styles.date}>{formatDate(match.segments[0]?.startedAt ?? null)}</Text>
+        <Text style={styles.date}>{formatMatchDateLong(match.segments[0]?.startedAt ?? null)}</Text>
         <View style={styles.scoreRow}>
           <Text style={styles.teamName} numberOfLines={2}>
             {homeTeam.name}

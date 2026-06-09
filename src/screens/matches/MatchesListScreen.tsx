@@ -7,14 +7,11 @@ import type { Swipeable } from 'react-native-gesture-handler';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList } from '../../types';
+import { resolveOpponent, resolveTeamName } from '../../utils/match';
 
 import MatchRow from './MatchRow';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchesList'>;
-
-function resolveOpponent(opponentName: string): string {
-  return opponentName.trim() || 'Opponent';
-}
 
 export default function MatchesListScreen({ navigation }: Props) {
   const currentMatch = useMatchStore((s) => s.currentMatch);
@@ -31,9 +28,6 @@ export default function MatchesListScreen({ navigation }: Props) {
     }, []),
   );
 
-  const resolveTeamName = (teamId: string): string =>
-    teams.find((t) => t.id === teamId)?.name ?? 'Unknown';
-
   return (
     <View style={styles.container}>
       {currentMatch !== null && (
@@ -44,7 +38,7 @@ export default function MatchesListScreen({ navigation }: Props) {
           <View>
             <Text style={styles.resumeLabel}>Match in progress</Text>
             <Text style={styles.resumeTeams}>
-              {resolveTeamName(currentMatch.homeTeamId)} vs{' '}
+              {resolveTeamName(teams, currentMatch.homeTeamId)} vs{' '}
               {resolveOpponent(currentMatch.opponentName)}
             </Text>
           </View>
@@ -58,7 +52,7 @@ export default function MatchesListScreen({ navigation }: Props) {
         renderItem={({ item }) => (
           <MatchRow
             match={item}
-            resolveTeamName={resolveTeamName}
+            resolveTeamName={(teamId) => resolveTeamName(teams, teamId)}
             openSwipeableRef={openSwipeableRef}
           />
         )}
