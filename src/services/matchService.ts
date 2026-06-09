@@ -25,6 +25,7 @@ export function createAndStartMatch(
     breakDurationMinutes,
     status: 'live',
     segments: buildSegments(now, periodCount, periodDurationMinutes, breakDurationMinutes),
+    endedAt: null,
     homeScore: 0,
     awayScore: 0,
     activities: [],
@@ -37,8 +38,8 @@ export function finishMatch(): void {
   useMatchStore.getState().finishMatch();
 }
 
-export function adjustTimestamps(newSegments: MatchSegment[]): void {
-  useMatchStore.getState().setSegments(newSegments);
+export function adjustTimestamps(newSegments: MatchSegment[], newEndedAt?: number): void {
+  useMatchStore.getState().setSegments(newSegments, newEndedAt);
 }
 
 export function adjustScore(side: 'home' | 'away', delta: number): void {

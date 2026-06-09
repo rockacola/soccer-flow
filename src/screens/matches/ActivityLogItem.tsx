@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import JerseyBadge from '../../components/JerseyBadge';
 import type { MatchActivity, MatchSegment, Team } from '../../types';
 import { computePhase } from '../../utils/match';
-import { formatElapsed } from '../../utils/time';
+import { formatElapsed, formatWallClock } from '../../utils/time';
 
 type Props = {
   activity: MatchActivity;
@@ -34,11 +34,19 @@ export default React.memo(function ActivityLogItem({
 
   const { withinSeconds } = computePhase(activity.createdAt, segments);
   const displayTime = formatElapsed(withinSeconds);
+  const displayClock = formatWallClock(activity.createdAt);
+
+  const timeColumn = (
+    <View style={styles.timeColumn}>
+      <Text style={styles.minute}>{displayTime}</Text>
+      <Text style={styles.clock}>{displayClock}</Text>
+    </View>
+  );
 
   if (activity.type === 'goal') {
     return (
       <View style={styles.row}>
-        <Text style={styles.minute}>{displayTime}</Text>
+        {timeColumn}
         <View style={styles.badge}>
           <Text style={styles.badgeText}>GOAL</Text>
         </View>
@@ -56,7 +64,7 @@ export default React.memo(function ActivityLogItem({
   if (activity.type === 'substitution') {
     return (
       <View style={styles.row}>
-        <Text style={styles.minute}>{displayTime}</Text>
+        {timeColumn}
         <View style={[styles.badge, styles.badgeSub]}>
           <Text style={styles.badgeText}>SUB</Text>
         </View>
@@ -71,7 +79,7 @@ export default React.memo(function ActivityLogItem({
 
   return (
     <View style={styles.row}>
-      <Text style={styles.minute}>{displayTime}</Text>
+      {timeColumn}
       <View style={[styles.badge, styles.badgeNote]}>
         <Text style={styles.badgeText}>NOTE</Text>
       </View>
@@ -92,12 +100,20 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E5EA',
     gap: 8,
   },
+  timeColumn: {
+    alignItems: 'flex-start',
+    gap: 2,
+  },
   minute: {
     fontSize: 13,
     fontWeight: '600',
     color: '#8E8E93',
-    minWidth: 32,
-    paddingTop: 2,
+    minWidth: 40,
+  },
+  clock: {
+    fontSize: 11,
+    color: '#AEAEB2',
+    minWidth: 40,
   },
   badge: {
     backgroundColor: '#34C759',

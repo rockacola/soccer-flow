@@ -76,6 +76,7 @@ export type Match = {
   breakDurationMinutes: number;
   status: MatchStatus;
   segments: MatchSegment[];
+  endedAt: number | null;
   homeScore: number;
   awayScore: number;
   activities: MatchActivity[];

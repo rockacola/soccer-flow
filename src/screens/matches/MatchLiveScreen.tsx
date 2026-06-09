@@ -22,8 +22,8 @@ import {
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchActivity, MatchesStackParamList } from '../../types';
-import { computePhase, phaseLabel } from '../../utils/match';
-import { formatElapsed } from '../../utils/time';
+import { computePhase, computeSegmentWindow, phaseLabel } from '../../utils/match';
+import { formatElapsed, formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
 import GoalModal from './GoalModal';
@@ -73,6 +73,13 @@ export default function MatchLiveScreen({ navigation }: Props) {
   const now = Date.now();
   const phase = computePhase(now, currentMatch.segments);
   const capturedPhase = capturedAt > 0 ? computePhase(capturedAt, currentMatch.segments) : phase;
+  const segmentWindow = computeSegmentWindow(
+    now,
+    currentMatch.segments,
+    currentMatch.endedAt,
+    currentMatch.periodDurationMinutes,
+    currentMatch.breakDurationMinutes,
+  );
 
   const reversedActivities = [...currentMatch.activities].reverse();
 
@@ -130,7 +137,11 @@ export default function MatchLiveScreen({ navigation }: Props) {
           onPress={() => setTimerAdjustVisible(true)}
           activeOpacity={0.7}
         >
-          <Text style={styles.periodLabel}>{phaseLabel(phase, currentMatch.segments)}</Text>
+          <Text style={styles.periodInfo}>
+            {phaseLabel(phase, currentMatch.segments)}
+            {' | '}
+            {formatWallClock(segmentWindow.startedAt)} – {formatWallClock(segmentWindow.endAt)}
+          </Text>
           <Text style={styles.timer}>{formatElapsed(phase.withinSeconds)}</Text>
         </TouchableOpacity>
 
@@ -238,8 +249,9 @@ export default function MatchLiveScreen({ navigation }: Props) {
       <TimerAdjustModal
         visible={timerAdjustVisible}
         onClose={() => setTimerAdjustVisible(false)}
-        onApply={adjustTimestamps}
+        onApply={(segs, newEndedAt) => adjustTimestamps(segs, newEndedAt)}
         segments={currentMatch.segments}
+        endedAt={currentMatch.endedAt}
         periodDurationMinutes={currentMatch.periodDurationMinutes}
         breakDurationMinutes={currentMatch.breakDurationMinutes}
       />
@@ -289,18 +301,14 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   timerRow: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
+    gap: 4,
     marginBottom: 16,
   },
-  periodLabel: {
+  periodInfo: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#8E8E93',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
   timer: {
     fontSize: 28,

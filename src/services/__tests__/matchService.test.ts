@@ -62,6 +62,7 @@ const baseLiveMatch: Match = {
   breakDurationMinutes: 15,
   status: 'live',
   segments: baseSegments,
+  endedAt: null,
   homeScore: 0,
   awayScore: 0,
   activities: [],
@@ -139,7 +140,7 @@ describe('adjustTimestamps', () => {
       { segmentType: 'period', startedAt: T0 + 3900 * 1000 },
     ];
     adjustTimestamps(newSegments);
-    expect(mockSetSegments).toHaveBeenCalledWith(newSegments);
+    expect(mockSetSegments).toHaveBeenCalledWith(newSegments, undefined);
   });
 });
 
