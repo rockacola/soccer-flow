@@ -48,15 +48,17 @@ export default function RemarkModal({
           </TouchableOpacity>
         </View>
 
-        <TextInput
-          style={styles.input}
-          placeholder="What happened?"
-          placeholderTextColor="#8E8E93"
-          value={text}
-          onChangeText={setText}
-          multiline
-          autoFocus
-        />
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.input}
+            placeholder="What happened?"
+            placeholderTextColor="#8E8E93"
+            value={text}
+            onChangeText={setText}
+            multiline
+            autoFocus
+          />
+        </View>
 
         <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
           <Text style={styles.recordButtonText}>{editActivity ? 'Save' : 'Record Note'}</Text>
@@ -88,7 +90,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#007AFF',
   },
+  inputWrapper: {
+    flex: 1,
+  },
   input: {
+    flex: 1,
     margin: 16,
     padding: 12,
     backgroundColor: '#F2F2F7',
