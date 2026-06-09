@@ -14,8 +14,7 @@ build/
 .env.local
 
 # iOS
-ios/Pods/
-ios/build/
+ios/
 
 # Android
 android/build/
@@ -29,3 +28,6 @@ android/.gradle/
 
 # Claude Code
 .claude/
+
+# Maestro recordings
+recordings/*.mp4

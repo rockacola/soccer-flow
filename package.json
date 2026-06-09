@@ -5,8 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
-    "ios": "expo start --ios",
-    "android": "expo start --android",
+    "ios": "expo run:ios",
+    "android": "expo run:android",
     "web": "expo start --web",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"*.{ts,tsx,json}\" \"{docs,journal,config}/**/*.md\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"*.{ts,tsx,json}\" \"{docs,journal,config}/**/*.md\"",
@@ -16,7 +16,8 @@
     "check": "npm run format && npm run lint:fix && npm run typecheck",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "maestro:create_team": "maestro record --local .maestro/create_team.yaml \"recordings/$(date +%Y%m%d_%H%M%S)_create_team.mp4\""
   },
   "jest": {
     "preset": "jest-expo",
