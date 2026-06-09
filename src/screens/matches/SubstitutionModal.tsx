@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import type { SubstitutionActivity, Team } from '../../types';
+import { formatPlayerLabel } from '../../utils/player';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -48,9 +49,6 @@ export default function SubstitutionModal({
     onClose();
   };
 
-  const playerLabel = (p: { name: string; jerseyNumber?: number }) =>
-    p.jerseyNumber !== undefined ? `#${p.jerseyNumber} ${p.name}` : p.name;
-
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
@@ -82,7 +80,7 @@ export default function SubstitutionModal({
                     }
                   }}
                 >
-                  <Text style={styles.playerText}>{playerLabel(p)}</Text>
+                  <Text style={styles.playerText}>{formatPlayerLabel(p)}</Text>
                   {playerOutId === p.id && <Text style={styles.checkmark}>✓</Text>}
                 </TouchableOpacity>
               ))}
@@ -96,7 +94,7 @@ export default function SubstitutionModal({
                     style={styles.playerRow}
                     onPress={() => setPlayerInId(p.id)}
                   >
-                    <Text style={styles.playerText}>{playerLabel(p)}</Text>
+                    <Text style={styles.playerText}>{formatPlayerLabel(p)}</Text>
                     {playerInId === p.id && <Text style={styles.checkmark}>✓</Text>}
                   </TouchableOpacity>
                 ))}

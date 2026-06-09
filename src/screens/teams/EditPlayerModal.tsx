@@ -4,6 +4,7 @@ import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import { PLAYER_POSITIONS } from '../../constants/player';
 import { updatePlayer } from '../../services/teamsService';
 import type { Player, PlayerPosition } from '../../types';
+import { parseJerseyNumber } from '../../utils/player';
 
 type Props = {
   teamId: string;
@@ -31,7 +32,7 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
   );
 
   function handleSave() {
-    const jerseyNumber = jerseyInput.trim() === '' ? undefined : parseInt(jerseyInput, 10);
+    const jerseyNumber = parseJerseyNumber(jerseyInput);
     try {
       updatePlayer(teamId, player.id, name, jerseyNumber, position);
       onClose();
