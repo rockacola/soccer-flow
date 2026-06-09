@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import JerseyBadge from '../../components/JerseyBadge';
 import type { MatchActivity, MatchSegment, Team } from '../../types';
 import { computePhase } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
+
+import PlayerChip from './PlayerChip';
 
 type Props = {
   activity: MatchActivity;
@@ -13,16 +14,6 @@ type Props = {
   segments: MatchSegment[];
   showBottomBorder?: boolean;
 };
-
-function PlayerChip({ team, playerId }: { team: Team; playerId: string | null }) {
-  const player = playerId !== null ? team.players.find((p) => p.id === playerId) : undefined;
-  return (
-    <View style={styles.playerChip}>
-      <JerseyBadge size="sm" number={player?.jerseyNumber} />
-      <Text style={styles.playerName}>{player?.name ?? 'Unknown'}</Text>
-    </View>
-  );
-}
 
 export default React.memo(function ActivityLogItem({
   activity,
@@ -144,15 +135,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 6,
     paddingTop: 1,
-  },
-  playerChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  playerName: {
-    fontSize: 14,
-    color: '#000000',
   },
   arrow: {
     fontSize: 14,

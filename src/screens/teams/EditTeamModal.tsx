@@ -9,20 +9,8 @@ import {
   View,
 } from 'react-native';
 
+import { TEAM_COLOUR_OPTIONS } from '../../constants/team';
 import { updateTeam } from '../../services/teamsService';
-
-const COLOUR_OPTIONS = [
-  '#E53935',
-  '#D81B60',
-  '#8E24AA',
-  '#1E88E5',
-  '#00897B',
-  '#43A047',
-  '#FB8C00',
-  '#6D4C41',
-  '#757575',
-  '#1A1A1A',
-];
 
 type Props = {
   teamId: string;
@@ -98,15 +86,16 @@ export default function EditTeamModal({
 
           <Text style={styles.label}>Colour</Text>
           <View style={styles.colourGrid}>
-            {COLOUR_OPTIONS.map((c) => (
+            {TEAM_COLOUR_OPTIONS.map(({ hex, label }) => (
               <Pressable
-                key={c}
+                key={hex}
+                accessibilityLabel={label}
                 style={[
                   styles.colourSwatch,
-                  { backgroundColor: c },
-                  colour === c && styles.colourSwatchSelected,
+                  { backgroundColor: hex },
+                  colour === hex && styles.colourSwatchSelected,
                 ]}
-                onPress={() => setColour(c)}
+                onPress={() => setColour(hex)}
               />
             ))}
           </View>

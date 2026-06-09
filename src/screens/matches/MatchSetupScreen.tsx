@@ -9,38 +9,9 @@ import { createAndStartMatch } from '../../services/matchService';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList, RootTabParamList } from '../../types';
 
-type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchSetup'>;
+import Stepper from './Stepper';
 
-function Stepper({
-  label,
-  value,
-  onAdjust,
-}: {
-  label: string;
-  value: number;
-  onAdjust: (delta: number) => void;
-}) {
-  return (
-    <View style={styles.section}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.stepperRow}>
-        <TouchableOpacity style={styles.stepperButton} onPress={() => onAdjust(-5)}>
-          <Text style={styles.stepperButtonText}>−5</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.stepperButton} onPress={() => onAdjust(-1)}>
-          <Text style={styles.stepperButtonText}>−1</Text>
-        </TouchableOpacity>
-        <Text style={styles.stepperValue}>{value} min</Text>
-        <TouchableOpacity style={styles.stepperButton} onPress={() => onAdjust(1)}>
-          <Text style={styles.stepperButtonText}>+1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.stepperButton} onPress={() => onAdjust(5)}>
-          <Text style={styles.stepperButtonText}>+5</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
+type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchSetup'>;
 
 export default function MatchSetupScreen({ route, navigation }: Props) {
   const { homeTeamId } = route.params;
@@ -199,32 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#000000',
     paddingVertical: 0,
-  },
-  stepperRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  stepperButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#E5E5EA',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepperButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#8E8E93',
-    lineHeight: 24,
-  },
-  stepperValue: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#000000',
-    minWidth: 64,
-    textAlign: 'center',
   },
   periodNote: {
     fontSize: 12,

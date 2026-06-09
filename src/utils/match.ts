@@ -1,4 +1,4 @@
-import type { MatchSegment } from '../types';
+import type { Match, MatchActivity, MatchSegment, Team } from '../types';
 
 export type Phase =
   | { type: 'period'; number: number; withinSeconds: number }
@@ -88,6 +88,61 @@ export function computeSegmentWindow(
   }
 
   return { startedAt, endAt };
+}
+
+export function resolveOpponent(opponentName: string): string {
+  return opponentName.trim() || 'Opponent';
+}
+
+export function resolveTeamName(teams: Team[], teamId: string): string {
+  return teams.find((t) => t.id === teamId)?.name ?? 'Unknown';
+}
+
+export type SegmentGroup = {
+  segmentId: string;
+  label: string;
+  startedAt: number;
+  endedAt: number | null;
+  activities: MatchActivity[];
+  breakAfter: { label: string; durationMs: number } | null;
+};
+
+export function buildSegmentGroups(match: Match): SegmentGroup[] {
+  const { segments, activities } = match;
+  const groups: SegmentGroup[] = [];
+
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i];
+    if (seg.segmentType !== 'period') {
+      continue;
+    }
+
+    const nextSegStart = segments[i + 1]?.startedAt ?? match.endedAt ?? null;
+    const periodActivities = activities.filter(
+      (a) => a.createdAt >= seg.startedAt && a.createdAt < (nextSegStart ?? Infinity),
+    );
+
+    let breakAfter: { label: string; durationMs: number } | null = null;
+    if (i + 1 < segments.length && segments[i + 1].segmentType === 'break') {
+      const breakSeg = segments[i + 1];
+      const afterBreakSeg = segments[i + 2];
+      const durationMs = afterBreakSeg
+        ? afterBreakSeg.startedAt - breakSeg.startedAt
+        : match.breakDurationMinutes * 60 * 1000;
+      breakAfter = { label: segmentLabel(breakSeg, i + 1, segments), durationMs };
+    }
+
+    groups.push({
+      segmentId: `seg-${i}`,
+      label: segmentLabel(seg, i, segments),
+      startedAt: seg.startedAt,
+      endedAt: nextSegStart,
+      activities: periodActivities,
+      breakAfter,
+    });
+  }
+
+  return groups;
 }
 
 export function buildSegments(

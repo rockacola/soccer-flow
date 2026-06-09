@@ -6,6 +6,8 @@ import { Swipeable } from 'react-native-gesture-handler';
 
 import { deletePastMatch } from '../../services/matchService';
 import type { Match, MatchesStackParamList } from '../../types';
+import { resolveOpponent } from '../../utils/match';
+import { formatMatchDate } from '../../utils/time';
 import DeleteAction from '../teams/DeleteAction';
 
 type Nav = NativeStackNavigationProp<MatchesStackParamList, 'MatchesList'>;
@@ -15,21 +17,6 @@ type Props = {
   resolveTeamName: (teamId: string) => string;
   openSwipeableRef: React.MutableRefObject<Swipeable | null>;
 };
-
-function resolveOpponent(opponentName: string): string {
-  return opponentName.trim() || 'Opponent';
-}
-
-function formatDate(timestamp: number | null): string {
-  if (timestamp === null) {
-    return '';
-  }
-  return new Date(timestamp).toLocaleDateString(undefined, {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
 
 export default function MatchRow({ match, resolveTeamName, openSwipeableRef }: Props) {
   const navigation = useNavigation<Nav>();
@@ -68,7 +55,7 @@ export default function MatchRow({ match, resolveTeamName, openSwipeableRef }: P
             {resolveOpponent(match.opponentName)}
           </Text>
         </View>
-        <Text style={styles.dateText}>{formatDate(match.segments[0]?.startedAt ?? null)}</Text>
+        <Text style={styles.dateText}>{formatMatchDate(match.segments[0]?.startedAt ?? null)}</Text>
       </TouchableOpacity>
     </Swipeable>
   );
