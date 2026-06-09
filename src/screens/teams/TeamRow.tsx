@@ -13,9 +13,10 @@ type Nav = NativeStackNavigationProp<TeamsStackParamList, 'TeamsList'>;
 
 type Props = {
   team: Team;
+  openSwipeableRef: React.MutableRefObject<Swipeable | null>;
 };
 
-export default function TeamRow({ team }: Props) {
+export default function TeamRow({ team, openSwipeableRef }: Props) {
   const navigation = useNavigation<Nav>();
   const swipeableRef = useRef<Swipeable>(null);
 
@@ -33,6 +34,12 @@ export default function TeamRow({ team }: Props) {
       ref={swipeableRef}
       renderRightActions={() => <DeleteAction onPress={handleDelete} />}
       overshootRight={false}
+      onSwipeableOpen={() => {
+        if (openSwipeableRef.current !== swipeableRef.current) {
+          openSwipeableRef.current?.close();
+        }
+        openSwipeableRef.current = swipeableRef.current;
+      }}
     >
       <TouchableOpacity style={styles.row} onPress={handlePress} activeOpacity={0.7}>
         <View style={[styles.colourDot, { backgroundColor: team.colour }]} />

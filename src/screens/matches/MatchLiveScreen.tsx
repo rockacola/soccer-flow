@@ -10,18 +10,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import {
   adjustScore,
   adjustTimestamps,
+  deleteActivity,
   finishMatch,
   recordGoal,
   recordRemark,
   recordSubstitution,
+  updateActivity,
 } from '../../services/matchService';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
-import type { MatchActivity, MatchesStackParamList } from '../../types';
+import type {
+  GoalActivity,
+  MatchActivity,
+  MatchesStackParamList,
+  RemarkActivity,
+  SubstitutionActivity,
+} from '../../types';
 import { computePhase, computeSegmentWindow, phaseLabel } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
 
@@ -45,6 +54,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [timerAdjustVisible, setTimerAdjustVisible] = useState(false);
   const [capturedAt, setCapturedAt] = useState(0);
+  const [editingActivity, setEditingActivity] = useState<MatchActivity | null>(null);
 
   useEffect(() => {
     const id = setInterval(tick, 1000);
@@ -101,10 +111,19 @@ export default function MatchLiveScreen({ navigation }: Props) {
   const doFinish = () => {
     setConfirmVisible(false);
     finishMatch();
-    navigation.navigate('MatchesList');
+    navigation.popToTop();
   };
 
   const handleGoal = (side: 'home' | 'away', playerId: string | null) => {
+    if (editingActivity && editingActivity.type === 'goal') {
+      try {
+        updateActivity({ ...editingActivity, side, playerId });
+      } catch (e) {
+        Alert.alert('Error', e instanceof Error ? e.message : 'Could not update goal.');
+      }
+      setEditingActivity(null);
+      return;
+    }
     try {
       recordGoal(side, playerId);
     } catch (e) {
@@ -113,6 +132,15 @@ export default function MatchLiveScreen({ navigation }: Props) {
   };
 
   const handleSub = (outId: string, inId: string) => {
+    if (editingActivity && editingActivity.type === 'substitution') {
+      try {
+        updateActivity({ ...editingActivity, playerOutId: outId, playerInId: inId });
+      } catch (e) {
+        Alert.alert('Error', e instanceof Error ? e.message : 'Could not update substitution.');
+      }
+      setEditingActivity(null);
+      return;
+    }
     try {
       recordSubstitution('home', outId, inId);
     } catch (e) {
@@ -121,11 +149,36 @@ export default function MatchLiveScreen({ navigation }: Props) {
   };
 
   const handleRemark = (text: string) => {
+    if (editingActivity && editingActivity.type === 'remark') {
+      try {
+        updateActivity({ ...editingActivity, text });
+      } catch (e) {
+        Alert.alert('Error', e instanceof Error ? e.message : 'Could not update note.');
+      }
+      setEditingActivity(null);
+      return;
+    }
     try {
       recordRemark(text);
     } catch (e) {
       Alert.alert('Error', e instanceof Error ? e.message : 'Could not record note.');
     }
+  };
+
+  const handleEditActivity = (activity: MatchActivity) => {
+    setCapturedAt(activity.createdAt);
+    setEditingActivity(activity);
+    if (activity.type === 'goal') {
+      setGoalModalVisible(true);
+    } else if (activity.type === 'substitution') {
+      setSubModalVisible(true);
+    } else {
+      setRemarkModalVisible(true);
+    }
+  };
+
+  const handleDeleteActivity = (activityId: string) => {
+    deleteActivity(activityId);
   };
 
   return (
@@ -213,12 +266,25 @@ export default function MatchLiveScreen({ navigation }: Props) {
         data={reversedActivities}
         keyExtractor={(item: MatchActivity) => item.id}
         renderItem={({ item }) => (
-          <ActivityLogItem
-            activity={item}
-            homeTeam={homeTeam}
-            opponentName={currentMatch.opponentName}
-            segments={currentMatch.segments}
-          />
+          <Swipeable
+            renderRightActions={() => (
+              <TouchableOpacity
+                style={styles.deleteAction}
+                onPress={() => handleDeleteActivity(item.id)}
+              >
+                <Text style={styles.deleteActionText}>Delete</Text>
+              </TouchableOpacity>
+            )}
+          >
+            <TouchableOpacity activeOpacity={0.7} onPress={() => handleEditActivity(item)}>
+              <ActivityLogItem
+                activity={item}
+                homeTeam={homeTeam}
+                opponentName={currentMatch.opponentName}
+                segments={currentMatch.segments}
+              />
+            </TouchableOpacity>
+          </Swipeable>
         )}
         contentContainerStyle={reversedActivities.length === 0 ? styles.emptyLog : undefined}
         ListEmptyComponent={<Text style={styles.emptyLogText}>No activity yet.</Text>}
@@ -226,24 +292,44 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
       <GoalModal
         visible={goalModalVisible}
-        onClose={() => setGoalModalVisible(false)}
+        onClose={() => {
+          setGoalModalVisible(false);
+          setEditingActivity(null);
+        }}
         onRecord={handleGoal}
         homeTeam={homeTeam}
         opponentName={currentMatch.opponentName}
         capturedPhaseSeconds={capturedPhase.withinSeconds}
+        editActivity={
+          editingActivity?.type === 'goal' ? (editingActivity as GoalActivity) : undefined
+        }
       />
       <SubstitutionModal
         visible={subModalVisible}
-        onClose={() => setSubModalVisible(false)}
+        onClose={() => {
+          setSubModalVisible(false);
+          setEditingActivity(null);
+        }}
         onRecord={handleSub}
         homeTeam={homeTeam}
         capturedPhaseSeconds={capturedPhase.withinSeconds}
+        editActivity={
+          editingActivity?.type === 'substitution'
+            ? (editingActivity as SubstitutionActivity)
+            : undefined
+        }
       />
       <RemarkModal
         visible={remarkModalVisible}
-        onClose={() => setRemarkModalVisible(false)}
+        onClose={() => {
+          setRemarkModalVisible(false);
+          setEditingActivity(null);
+        }}
         onRecord={handleRemark}
         capturedPhaseSeconds={capturedPhase.withinSeconds}
+        editActivity={
+          editingActivity?.type === 'remark' ? (editingActivity as RemarkActivity) : undefined
+        }
       />
 
       <TimerAdjustModal
@@ -414,6 +500,17 @@ const styles = StyleSheet.create({
   emptyLogText: {
     fontSize: 15,
     color: '#8E8E93',
+  },
+  deleteAction: {
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+  },
+  deleteActionText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
   confirmOverlay: {
     flex: 1,
