@@ -94,14 +94,14 @@ export function updateActivity(activity: MatchActivity): void {
 }
 
 export function recordRemark(text: string): void {
-  const trimmed = text.trim();
-  if (trimmed.length === 0) {
+  const trimmedText = text.trim();
+  if (trimmedText.length === 0) {
     throw new Error('Remark cannot be empty.');
   }
   useMatchStore.getState().addActivity({
     id: generateId('a'),
     type: 'remark',
     createdAt: Date.now(),
-    text: trimmed,
+    text: trimmedText,
   });
 }
