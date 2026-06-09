@@ -31,7 +31,7 @@ import type {
   RemarkActivity,
   SubstitutionActivity,
 } from '../../types';
-import { computePhase, computeSegmentWindow, phaseLabel } from '../../utils/match';
+import { computePhase, computeSegmentWindow, phaseLabel, resolveOpponent } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
@@ -79,7 +79,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
     );
   }
 
-  const opponentLabel = currentMatch.opponentName.trim() || 'Opponent';
+  const opponentLabel = resolveOpponent(currentMatch.opponentName);
   const now = Date.now();
   const phase = computePhase(now, currentMatch.segments);
   const capturedPhase = capturedAt > 0 ? computePhase(capturedAt, currentMatch.segments) : phase;

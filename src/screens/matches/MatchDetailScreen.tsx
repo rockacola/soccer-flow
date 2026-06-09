@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList } from '../../types';
-import { buildSegmentGroups } from '../../utils/match';
+import { buildSegmentGroups, resolveOpponent } from '../../utils/match';
 import { formatBreakDuration, formatMatchDateLong, formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
@@ -31,7 +31,7 @@ export default function MatchDetailScreen({ route }: Props) {
     colour: '#ccc',
     players: [],
   };
-  const opponentName = match.opponentName.trim() || 'Opponent';
+  const opponentName = resolveOpponent(match.opponentName);
   const groups = buildSegmentGroups(match);
 
   return (

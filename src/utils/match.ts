@@ -1,4 +1,4 @@
-import type { Match, MatchActivity, MatchSegment, Team } from '../types';
+import type { Match, MatchActivity, MatchSegment, Player, Team } from '../types';
 
 export type Phase =
   | { type: 'period'; number: number; withinSeconds: number }
@@ -143,6 +143,30 @@ export function buildSegmentGroups(match: Match): SegmentGroup[] {
   }
 
   return groups;
+}
+
+export type ScorerRow = { type: 'unknown' } | { type: 'player'; player: Player };
+
+export function buildScorerRows(players: Player[]): ScorerRow[] {
+  return [{ type: 'unknown' }, ...players.map((p): ScorerRow => ({ type: 'player', player: p }))];
+}
+
+export function scorerRowId(row: ScorerRow): string {
+  return row.type === 'unknown' ? '__none__' : row.player.id;
+}
+
+export function scorerRowPlayerId(row: ScorerRow): string | null {
+  return row.type === 'player' ? row.player.id : null;
+}
+
+export function resolveGoalPlayerId(
+  side: 'home' | 'away',
+  selectedPlayerId: string | null | undefined,
+): string | null {
+  if (side === 'away') {
+    return null;
+  }
+  return selectedPlayerId === undefined ? null : selectedPlayerId;
 }
 
 export function buildSegments(

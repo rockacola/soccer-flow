@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
-import type { GoalActivity, Player, Team } from '../../types';
+import type { GoalActivity, Team } from '../../types';
+import {
+  buildScorerRows,
+  resolveGoalPlayerId,
+  resolveOpponent,
+  scorerRowId,
+  scorerRowPlayerId,
+} from '../../utils/match';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -14,8 +21,6 @@ type Props = {
   capturedPhaseSeconds: number;
   editActivity?: GoalActivity;
 };
-
-type ScorerRow = { type: 'unknown' } | { type: 'player'; player: Player };
 
 export default function GoalModal({
   visible,
@@ -44,23 +49,14 @@ export default function GoalModal({
     [visible, editActivity],
   );
 
-  const scorerRows: ScorerRow[] = [
-    { type: 'unknown' },
-    ...homeTeam.players.map((p): ScorerRow => ({ type: 'player', player: p })),
-  ];
-
-  const rowId = (row: ScorerRow) => (row.type === 'unknown' ? '__none__' : row.player.id);
-  const rowPlayerId = (row: ScorerRow): string | null =>
-    row.type === 'player' ? row.player.id : null;
+  const scorerRows = buildScorerRows(homeTeam.players);
 
   const handleRecord = () => {
-    const playerId =
-      side === 'home' ? (selectedPlayerId === undefined ? null : selectedPlayerId) : null;
-    onRecord(side, playerId);
+    onRecord(side, resolveGoalPlayerId(side, selectedPlayerId));
     onClose();
   };
 
-  const opponentLabel = opponentName.trim() || 'Opponent';
+  const opponentLabel = resolveOpponent(opponentName);
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
@@ -98,11 +94,11 @@ export default function GoalModal({
               <Text style={styles.sectionLabel}>Scorer</Text>
               <FlatList
                 data={scorerRows}
-                keyExtractor={rowId}
+                keyExtractor={scorerRowId}
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     style={styles.playerRow}
-                    onPress={() => setSelectedPlayerId(rowPlayerId(item))}
+                    onPress={() => setSelectedPlayerId(scorerRowPlayerId(item))}
                   >
                     {item.type === 'player' ? (
                       <>
@@ -112,7 +108,7 @@ export default function GoalModal({
                     ) : (
                       <Text style={styles.unknownLabel}>Unknown scorer</Text>
                     )}
-                    {selectedPlayerId === rowPlayerId(item) && (
+                    {selectedPlayerId === scorerRowPlayerId(item) && (
                       <Text style={styles.checkmark}>✓</Text>
                     )}
                   </TouchableOpacity>
