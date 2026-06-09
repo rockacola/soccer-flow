@@ -14,8 +14,7 @@ appId: com.travaganza.soccerflow
 - tapOn: "Save"
 
 - extendedWaitUntil:
-    visible:
-      text: "Test Team"
+    visible: "Test Team"
     timeout: 5000
 - tapOn: "Test Team"
 
