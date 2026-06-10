@@ -1,3 +1,4 @@
+import palette from '../../constants/palette';
 import type { Team } from '../../types';
 import {
   addPlayer,
@@ -46,26 +47,31 @@ beforeEach(() => {
 
 describe('createTeam', () => {
   it('returns a team with the correct shape', () => {
-    const team = createTeam('Red Lions', '#E53935');
-    expect(team).toEqual({ id: 't_test', name: 'Red Lions', colour: '#E53935', players: [] });
+    const team = createTeam('Red Lions', palette.red[500]);
+    expect(team).toEqual({
+      id: 't_test',
+      name: 'Red Lions',
+      colour: palette.red[500],
+      players: [],
+    });
   });
 
   it('trims whitespace from name', () => {
-    const team = createTeam('  Red Lions  ', '#E53935');
+    const team = createTeam('  Red Lions  ', palette.red[500]);
     expect(team.name).toBe('Red Lions');
   });
 
   it('calls addTeam on the store', () => {
-    const team = createTeam('Red Lions', '#E53935');
+    const team = createTeam('Red Lions', palette.red[500]);
     expect(mockAddTeam).toHaveBeenCalledWith(team);
   });
 
   it('throws when name is empty', () => {
-    expect(() => createTeam('', '#E53935')).toThrow('Team name cannot be empty.');
+    expect(() => createTeam('', palette.red[500])).toThrow('Team name cannot be empty.');
   });
 
   it('throws when name is only whitespace', () => {
-    expect(() => createTeam('   ', '#E53935')).toThrow('Team name cannot be empty.');
+    expect(() => createTeam('   ', palette.red[500])).toThrow('Team name cannot be empty.');
   });
 });
 
@@ -170,36 +176,46 @@ describe('deletePlayer', () => {
 // ── updateTeam ────────────────────────────────────────────────────────────────
 
 describe('updateTeam', () => {
-  const existingTeam: Team = { id: 't_1', name: 'Red Lions', colour: '#E53935', players: [] };
+  const existingTeam: Team = {
+    id: 't_1',
+    name: 'Red Lions',
+    colour: palette.red[500],
+    players: [],
+  };
 
   it('throws when name is empty', () => {
-    expect(() => updateTeam('t_1', '', '#E53935')).toThrow('Team name cannot be empty.');
+    expect(() => updateTeam('t_1', '', palette.red[500])).toThrow('Team name cannot be empty.');
   });
 
   it('throws when name is only whitespace', () => {
-    expect(() => updateTeam('t_1', '   ', '#E53935')).toThrow('Team name cannot be empty.');
+    expect(() => updateTeam('t_1', '   ', palette.red[500])).toThrow('Team name cannot be empty.');
   });
 
   it('throws when team is not found', () => {
     mockTeams = [];
-    expect(() => updateTeam('t_unknown', 'Red Lions', '#E53935')).toThrow('Team not found.');
+    expect(() => updateTeam('t_unknown', 'Red Lions', palette.red[500])).toThrow('Team not found.');
   });
 
   it('returns the updated team with the correct shape', () => {
     mockTeams = [existingTeam];
-    const result = updateTeam('t_1', 'Blue Eagles', '#1E88E5');
-    expect(result).toEqual({ id: 't_1', name: 'Blue Eagles', colour: '#1E88E5', players: [] });
+    const result = updateTeam('t_1', 'Blue Eagles', palette.blue[500]);
+    expect(result).toEqual({
+      id: 't_1',
+      name: 'Blue Eagles',
+      colour: palette.blue[500],
+      players: [],
+    });
   });
 
   it('trims whitespace from name', () => {
     mockTeams = [existingTeam];
-    const result = updateTeam('t_1', '  Blue Eagles  ', '#1E88E5');
+    const result = updateTeam('t_1', '  Blue Eagles  ', palette.blue[500]);
     expect(result.name).toBe('Blue Eagles');
   });
 
   it('calls updateTeam on the store with the updated team', () => {
     mockTeams = [existingTeam];
-    const result = updateTeam('t_1', 'Blue Eagles', '#1E88E5');
+    const result = updateTeam('t_1', 'Blue Eagles', palette.blue[500]);
     expect(mockUpdateTeam).toHaveBeenCalledWith(result);
   });
 });

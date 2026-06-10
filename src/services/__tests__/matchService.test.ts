@@ -43,13 +43,16 @@ jest.mock('../../stores/matchStore', () => ({
   },
 }));
 
-jest.mock('../../stores/teamsStore', () => ({
-  useTeamsStore: {
-    getState: () => ({
-      teams: [{ id: 't_home', name: 'Home FC', colour: '#FF0000', players: [] }],
-    }),
-  },
-}));
+jest.mock('../../stores/teamsStore', () => {
+  const pal = require('../../constants/palette').default;
+  return {
+    useTeamsStore: {
+      getState: () => ({
+        teams: [{ id: 't_home', name: 'Home FC', colour: pal.red[500], players: [] }],
+      }),
+    },
+  };
+});
 
 jest.mock('../../utils/id', () => ({
   generateId: (prefix?: string) => (prefix ? `${prefix}_test` : 'test'),

@@ -1,3 +1,4 @@
+import palette from '../../constants/palette';
 import type { Player, Team } from '../../types';
 import { useTeamsStore } from '../teamsStore';
 
@@ -8,8 +9,8 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 const player1: Player = { id: 'p_1', name: 'Alice', jerseyNumber: 7, position: 'FWD' };
 const player2: Player = { id: 'p_2', name: 'Bob', jerseyNumber: 10, position: 'MID' };
 
-const team1: Team = { id: 't_1', name: 'Red Lions', colour: '#E53935', players: [player1] };
-const team2: Team = { id: 't_2', name: 'Blue Eagles', colour: '#1E88E5', players: [] };
+const team1: Team = { id: 't_1', name: 'Red Lions', colour: palette.red[500], players: [player1] };
+const team2: Team = { id: 't_2', name: 'Blue Eagles', colour: palette.blue[500], players: [] };
 
 beforeEach(() => {
   useTeamsStore.setState({ teams: [] });
