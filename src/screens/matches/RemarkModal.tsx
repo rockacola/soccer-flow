@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
 import type { RemarkActivity } from '../../types';
 import { formatElapsed } from '../../utils/time';
 
@@ -59,11 +60,12 @@ export default function RemarkModal({
           <TextInput
             style={styles.input}
             placeholder="What happened?"
-            placeholderTextColor="#8E8E93"
+            placeholderTextColor={colors.textSecondary}
             value={text}
             onChangeText={setText}
             multiline
             autoFocus
+            keyboardAppearance="dark"
             accessibilityLabel="Match note"
           />
         </View>
@@ -84,7 +86,7 @@ export default function RemarkModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -93,15 +95,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
+    borderBottomColor: colors.separator,
   },
   title: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   cancel: {
     fontSize: 15,
-    color: '#007AFF',
+    color: colors.accent,
   },
   inputWrapper: {
     flex: 1,
@@ -110,16 +113,16 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 16,
     padding: 12,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
     fontSize: 16,
-    color: '#000000',
+    color: colors.textPrimary,
     minHeight: 100,
     textAlignVertical: 'top',
   },
   recordButton: {
     marginHorizontal: 16,
-    backgroundColor: '#FF9500',
+    backgroundColor: colors.warning,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -127,6 +130,6 @@ const styles = StyleSheet.create({
   recordButtonText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
 });

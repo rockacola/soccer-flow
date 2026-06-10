@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
+import { colors } from '../../constants/theme';
 import { deletePastMatch } from '../../services/matchService';
 import type { Match, MatchesStackParamList } from '../../types';
 import { resolveOpponent } from '../../utils/match';
@@ -69,7 +70,7 @@ export default function MatchRow({ match, resolveTeamName, openSwipeableRef }: P
 
 const styles = StyleSheet.create({
   row: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     marginHorizontal: 16,
     marginTop: 12,
     borderRadius: 12,
@@ -84,19 +85,19 @@ const styles = StyleSheet.create({
   teamText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#000000',
+    color: colors.textPrimary,
     flex: 1,
   },
   scoreText: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#000000',
+    color: colors.textPrimary,
     marginHorizontal: 12,
     fontVariant: ['tabular-nums'],
   },
   dateText: {
     fontSize: 12,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     textAlign: 'right',
   },
 });

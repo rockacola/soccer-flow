@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
+import { colors } from '../../constants/theme';
 import type { GoalActivity, Team } from '../../types';
 import {
   buildScorerRows,
@@ -147,7 +148,7 @@ export default function GoalModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   content: {
     flex: 1,
@@ -159,20 +160,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
+    borderBottomColor: colors.separator,
   },
   title: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   cancel: {
     fontSize: 15,
-    color: '#007AFF',
+    color: colors.accent,
   },
   sectionLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginTop: 20,
@@ -184,25 +186,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#D1D1D6',
+    borderColor: colors.separator,
     overflow: 'hidden',
   },
   teamTab: {
     flex: 1,
     paddingVertical: 10,
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surfaceElevated,
   },
   teamTabActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
   },
   teamTabText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#000000',
+    color: colors.textPrimary,
   },
   teamTabTextActive: {
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   playerRow: {
     flexDirection: 'row',
@@ -210,27 +212,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#E5E5EA',
+    borderBottomColor: colors.separator,
     gap: 12,
   },
   playerName: {
     fontSize: 16,
-    color: '#000000',
+    color: colors.textPrimary,
     flex: 1,
   },
   unknownLabel: {
     fontSize: 16,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     flex: 1,
   },
   checkmark: {
     fontSize: 16,
-    color: '#007AFF',
+    color: colors.accent,
     fontWeight: '600',
   },
   recordButton: {
     margin: 16,
-    backgroundColor: '#34C759',
+    backgroundColor: colors.positive,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -238,6 +240,6 @@ const styles = StyleSheet.create({
   recordButtonText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
 });

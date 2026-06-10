@@ -3,6 +3,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Swipeable } from 'react-native-gesture-handler';
 
+import { colors } from '../../constants/theme';
 import { useTeamsStore } from '../../stores/teamsStore';
 
 import CreateTeamModal from './CreateTeamModal';
@@ -49,6 +50,7 @@ export default function TeamsListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   emptyContainer: {
     flex: 1,
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   fab: {
     position: 'absolute',
@@ -66,18 +68,18 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 5,
   },
   fabLabel: {
     fontSize: 30,
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     lineHeight: 34,
   },
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
+import { colors } from '../../constants/theme';
 import type { Team } from '../../types';
 
 type Props = {
@@ -27,6 +28,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 14,
-    color: '#000000',
+    color: colors.textPrimary,
   },
 });

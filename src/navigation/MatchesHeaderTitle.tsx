@@ -2,10 +2,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { colors } from '../constants/theme';
+
 export default function MatchesHeaderTitle() {
   return (
     <View style={styles.headerTitle}>
-      <MaterialCommunityIcons name="scoreboard-outline" size={20} color="#000000" />
+      <MaterialCommunityIcons name="scoreboard-outline" size={20} color={colors.textPrimary} />
       <Text style={styles.headerTitleText}>Matches</Text>
     </View>
   );
@@ -20,6 +22,6 @@ const styles = StyleSheet.create({
   headerTitleText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#000000',
+    color: colors.textPrimary,
   },
 });
