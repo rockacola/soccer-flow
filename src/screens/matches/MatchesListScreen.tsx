@@ -4,7 +4,9 @@ import React, { useCallback, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Swipeable } from 'react-native-gesture-handler';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList } from '../../types';
@@ -81,11 +83,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.positive,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
   },
   resumeLabel: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textPrimary,
     opacity: 0.85,
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   resumeTeams: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     fontWeight: '600',
     color: colors.textPrimary,
   },
@@ -113,13 +115,13 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
   emptyTitle: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
     marginBottom: 6,
   },
   emptySubtitle: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     color: colors.textSecondary,
     textAlign: 'center',
   },

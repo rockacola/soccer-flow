@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -91,10 +93,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.sm,
     backgroundColor: colors.surface,
     borderRadius: 10,
-    padding: 12,
+    padding: spacing.md,
   },
   side: {
     gap: 6,
@@ -105,20 +107,20 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: colors.surfaceElevated,
-    borderRadius: 8,
+    borderRadius: spacing.sm,
     paddingVertical: 7,
     width: 44,
     alignItems: 'center',
   },
   btnText: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '500',
     color: colors.accent,
   },
   duration: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: typeScale.lg,
     fontWeight: '700',
     color: colors.textPrimary,
     fontVariant: ['tabular-nums'],

@@ -3,7 +3,9 @@ import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Swipeable } from 'react-native-gesture-handler';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { useTeamsStore } from '../../stores/teamsStore';
 
 import CreateTeamModal from './CreateTeamModal';
@@ -58,13 +60,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   fab: {
     position: 'absolute',
     bottom: 32,
-    right: 24,
+    right: spacing.xxl,
     width: 56,
     height: 56,
     borderRadius: 28,

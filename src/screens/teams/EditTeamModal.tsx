@@ -9,8 +9,10 @@ import {
   View,
 } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { TEAM_COLOUR_OPTIONS } from '../../constants/team';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { updateTeam } from '../../services/teamsService';
 
 type Props = {
@@ -127,57 +129,57 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
     backgroundColor: colors.surfaceElevated,
   },
   title: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   cancelButton: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.accent,
   },
   saveButton: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.accent,
     fontWeight: '600',
   },
   body: {
-    padding: 16,
+    padding: spacing.lg,
   },
   label: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginBottom: 8,
-    marginTop: 20,
+    marginBottom: spacing.sm,
+    marginTop: spacing.xl,
   },
   input: {
     backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
     paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
+    paddingVertical: spacing.md,
+    fontSize: typeScale.input,
     color: colors.textPrimary,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.separator,
   },
   errorText: {
     marginTop: 6,
-    fontSize: 13,
+    fontSize: typeScale.base,
     color: colors.destructive,
   },
   colourGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: spacing.md,
   },
   colourSwatch: {
     width: 44,

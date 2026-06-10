@@ -4,7 +4,9 @@ import React, { useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { deletePastMatch } from '../../services/matchService';
 import type { Match, MatchesStackParamList } from '../../types';
 import { resolveOpponent } from '../../utils/match';
@@ -71,19 +73,19 @@ export default function MatchRow({ match, resolveTeamName, openSwipeableRef }: P
 const styles = StyleSheet.create({
   row: {
     backgroundColor: colors.surface,
-    marginHorizontal: 16,
-    marginTop: 12,
-    borderRadius: 12,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.md,
+    borderRadius: spacing.md,
     padding: 14,
   },
   rowTeams: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   teamText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     fontWeight: '500',
     color: colors.textPrimary,
     flex: 1,
@@ -92,11 +94,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginHorizontal: 12,
+    marginHorizontal: spacing.md,
     fontVariant: ['tabular-nums'],
   },
   dateText: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     color: colors.textSecondary,
     textAlign: 'right',
   },

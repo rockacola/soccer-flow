@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 
 type Props = {
   label: string;
@@ -55,23 +57,23 @@ export default function Stepper({ label, value, onAdjust }: Props) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
-    marginTop: 20,
-    marginHorizontal: 16,
-    borderRadius: 12,
-    padding: 16,
+    marginTop: spacing.xl,
+    marginHorizontal: spacing.lg,
+    borderRadius: spacing.md,
+    padding: spacing.lg,
   },
   label: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: spacing.lg,
   },
   button: {
     width: 36,
@@ -82,13 +84,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontWeight: '500',
     color: colors.textSecondary,
     lineHeight: 24,
   },
   value: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
     minWidth: 64,

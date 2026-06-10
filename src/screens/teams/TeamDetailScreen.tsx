@@ -2,7 +2,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { TeamsStackParamList } from '../../types';
 
 import AddPlayerModal from './AddPlayerModal';
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
   headerTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.sm,
   },
   headerColourDot: {
     width: 12,
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   headerTitleText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
@@ -146,15 +148,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   missingText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   matchButton: {
-    marginHorizontal: 16,
-    marginTop: 16,
-    marginBottom: 8,
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
     backgroundColor: colors.positive,
-    borderRadius: 12,
+    borderRadius: spacing.md,
     paddingVertical: 14,
     paddingHorizontal: 32,
     alignItems: 'center',
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceHigh,
   },
   matchButtonText: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     fontWeight: '600',
     color: colors.textPrimary,
   },
@@ -176,13 +178,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   fab: {
     position: 'absolute',
     bottom: 32,
-    right: 24,
+    right: spacing.xxl,
     width: 56,
     height: 56,
     borderRadius: 28,

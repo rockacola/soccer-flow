@@ -4,7 +4,9 @@ import React, { useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { deleteTeam } from '../../services/teamsService';
 import type { Team, TeamsStackParamList } from '../../types';
 
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
@@ -74,23 +76,23 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    marginRight: 12,
+    marginRight: spacing.md,
   },
   rowText: {
     flex: 1,
   },
   teamName: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   playerCount: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     color: colors.textSecondary,
     marginTop: 2,
   },
   chevron: {
-    fontSize: 20,
+    fontSize: typeScale.lg,
     color: colors.separator,
   },
 });

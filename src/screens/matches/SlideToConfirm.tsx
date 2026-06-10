@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, PanResponder, StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 
 const THUMB_SIZE = 56;
 const TRACK_PADDING = 4;
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontWeight: '600',
     color: 'rgba(255,255,255,0.5)',
     letterSpacing: 0.3,

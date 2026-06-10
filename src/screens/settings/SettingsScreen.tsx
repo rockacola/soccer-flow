@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 
 import { useSettingsScreen } from './useSettingsScreen';
 
@@ -43,29 +45,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingTop: 24,
+    paddingTop: spacing.xxl,
   },
   section: {
     marginBottom: 32,
   },
   sectionLabel: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textSecondary,
     letterSpacing: 0.5,
-    marginBottom: 4,
-    paddingHorizontal: 20,
+    marginBottom: spacing.xs,
+    paddingHorizontal: spacing.xl,
   },
   row: {
     backgroundColor: colors.surface,
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.separator,
   },
   rowLabel: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.textPrimary,
   },
   destructiveLabel: {

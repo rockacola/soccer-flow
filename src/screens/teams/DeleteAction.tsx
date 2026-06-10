@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 
 type Props = {
   onPress: () => void;
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
   },
   deleteActionText: {
     color: colors.textPrimary,
-    fontSize: 15,
+    fontSize: typeScale.body,
     fontWeight: '600',
   },
 });

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { MatchSegment } from '../../types';
 import { segmentLabel } from '../../utils/match';
 import { formatDurationLabel, formatWallClockFull } from '../../utils/time';
@@ -202,33 +204,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colors.surface,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
   },
   title: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   cancel: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.accent,
   },
   list: {
-    padding: 16,
-    gap: 12,
+    padding: spacing.lg,
+    gap: spacing.md,
   },
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderRadius: spacing.md,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
-    gap: 8,
+    gap: spacing.sm,
   },
   cardTitle: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     fontWeight: '600',
     color: colors.textPrimary,
     marginBottom: 2,
@@ -239,13 +241,13 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   timeRowLabel: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     color: colors.textSecondary,
     width: 36,
   },
   timeChip: {
     backgroundColor: colors.surfaceElevated,
-    borderRadius: 8,
+    borderRadius: spacing.sm,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
   },
   timeChipText: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontVariant: ['tabular-nums'],
     color: colors.textPrimary,
   },
@@ -261,20 +263,20 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   cardDuration: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '400',
     color: colors.textSecondary,
   },
   applyButton: {
-    marginHorizontal: 16,
-    marginVertical: 20,
+    marginHorizontal: spacing.lg,
+    marginVertical: spacing.xl,
     backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: spacing.md,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   applyButtonText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },

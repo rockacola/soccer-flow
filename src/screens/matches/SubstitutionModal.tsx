@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { SubstitutionActivity, Team } from '../../types';
 import { formatPlayerLabel } from '../../utils/player';
 import { formatElapsed } from '../../utils/time';
@@ -137,65 +139,65 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
   },
   title: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   cancel: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.accent,
   },
   sectionLabel: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginTop: 20,
+    marginTop: spacing.xl,
     marginBottom: 6,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
   },
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
   },
   playerText: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.textPrimary,
     flex: 1,
   },
   checkmark: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.accent,
     fontWeight: '600',
   },
   emptyNotice: {
-    paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   recordButton: {
-    margin: 16,
+    margin: spacing.lg,
     backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: spacing.md,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   recordButtonText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },

@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 
 import { useOnboardingScreen } from './useOnboardingScreen';
 
@@ -54,37 +56,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 40,
+    fontSize: typeScale.xxxl,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 20,
+    marginBottom: spacing.xl,
   },
   description: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     lineHeight: 26,
     color: colors.textSecondary,
   },
   actions: {
-    gap: 12,
+    gap: spacing.md,
   },
   primaryButton: {
     backgroundColor: colors.accent,
     borderRadius: 14,
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   primaryButtonLabel: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   secondaryButton: {
     borderRadius: 14,
-    paddingVertical: 16,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   secondaryButtonLabel: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.textSecondary,
   },
 });
