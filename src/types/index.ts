@@ -17,6 +17,13 @@ export type RootTabParamList = {
   Matches: NavigatorScreenParams<MatchesStackParamList>;
 };
 
+export type RootStackParamList = {
+  Onboarding: undefined;
+  Main: NavigatorScreenParams<RootTabParamList>;
+};
+
+export type DataSource = 'user' | 'sample';
+
 export type PlayerPosition = 'GK' | 'DEF' | 'MID' | 'FWD';
 
 export type Player = {
@@ -31,6 +38,7 @@ export type Team = {
   name: string;
   colour: string;
   players: Player[];
+  source?: DataSource;
 };
 
 export type MatchActivityType = 'goal' | 'substitution' | 'remark';
@@ -80,4 +88,5 @@ export type Match = {
   homeScore: number;
   awayScore: number;
   activities: MatchActivity[];
+  source?: DataSource;
 };

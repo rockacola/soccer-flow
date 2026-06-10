@@ -2,13 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import RootTabNavigator from './navigation/RootTabNavigator';
+import RootStackNavigator from './navigation/RootStackNavigator';
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <RootTabNavigator />
+        <RootStackNavigator />
       </NavigationContainer>
     </GestureHandlerRootView>
   );
