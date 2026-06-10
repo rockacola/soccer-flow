@@ -1,14 +1,16 @@
+import palette from './palette';
+
 export const colors = {
-  background: '#000000',
-  surface: '#1C1C1E',
-  surfaceElevated: '#2C2C2E',
-  surfaceHigh: '#3A3A3C',
-  accent: '#007AFF',
-  positive: '#34C759',
-  warning: '#FF9500',
-  destructive: '#FF3B30',
-  textPrimary: '#FFFFFF',
-  textSecondary: '#8E8E93',
-  textTertiary: '#636366',
-  separator: '#38383A',
-};
+  background: palette.gray[950],
+  surface: palette.gray[900],
+  surfaceElevated: palette.gray[800],
+  surfaceHigh: palette.gray[700],
+  separator: palette.gray[600],
+  textPrimary: palette.white,
+  textSecondary: palette.gray[400],
+  textTertiary: palette.gray[500],
+  accent: palette.blue[500],
+  positive: palette.green[500],
+  warning: palette.orange[500],
+  destructive: palette.red[500],
+} as const;

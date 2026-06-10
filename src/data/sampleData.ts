@@ -1,3 +1,4 @@
+import palette from '../constants/palette';
 import type { Match, Team } from '../types';
 
 const PERIOD = 45 * 60 * 1000;
@@ -9,7 +10,7 @@ export const SAMPLE_TEAMS: Team[] = [
   {
     id: 'smp_t1',
     name: 'Phoenix FC',
-    colour: '#C0392B',
+    colour: palette.red[500],
     source: 'sample',
     players: [
       { id: 'smp_p1_01', name: 'Oliver Hayes', jerseyNumber: 1, position: 'GK' },
@@ -30,7 +31,7 @@ export const SAMPLE_TEAMS: Team[] = [
   {
     id: 'smp_t2',
     name: 'Blue Waves',
-    colour: '#2980B9',
+    colour: palette.blue[500],
     source: 'sample',
     players: [
       { id: 'smp_p2_01', name: 'Tyler Brooks', jerseyNumber: 1, position: 'GK' },
