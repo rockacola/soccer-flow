@@ -3,6 +3,7 @@ import React from 'react';
 import { FlatList, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
+import { colors } from '../../constants/theme';
 import type {
   GoalActivity,
   MatchActivity,
@@ -293,7 +294,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.background,
   },
   centred: {
     flex: 1,
@@ -302,10 +303,10 @@ const styles = StyleSheet.create({
   },
   noMatchText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   scoreboard: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: colors.surface,
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 16,
@@ -318,12 +319,12 @@ const styles = StyleSheet.create({
   periodInfo: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   timer: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     fontVariant: ['tabular-nums'],
     fontFamily: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
   },
@@ -340,8 +341,7 @@ const styles = StyleSheet.create({
   teamNameLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#EBEBF5',
-    opacity: 0.6,
+    color: colors.textSecondary,
     marginBottom: 6,
   },
   scoreControl: {
@@ -353,26 +353,26 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#3A3A3C',
+    backgroundColor: colors.surfaceHigh,
     alignItems: 'center',
     justifyContent: 'center',
   },
   scoreButtonText: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     lineHeight: 24,
   },
   scoreDigit: {
     fontSize: 40,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     minWidth: 48,
     textAlign: 'center',
     fontVariant: ['tabular-nums'],
   },
   scoreDivider: {
     fontSize: 32,
-    color: '#636366',
+    color: colors.textTertiary,
     paddingTop: 18,
   },
   controlRow: {
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   },
   finishButton: {
     flex: 1,
-    backgroundColor: '#FF3B30',
+    backgroundColor: colors.destructive,
     borderRadius: 10,
     paddingVertical: 10,
     alignItems: 'center',
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   finishButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   activityButtons: {
     flexDirection: 'row',
@@ -403,18 +403,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   goalButton: {
-    backgroundColor: '#34C759',
+    backgroundColor: colors.positive,
   },
   subButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
   },
   noteButton: {
-    backgroundColor: '#FF9500',
+    backgroundColor: colors.warning,
   },
   activityButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   emptyLog: {
     flex: 1,
@@ -423,16 +423,16 @@ const styles = StyleSheet.create({
   },
   emptyLogText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   deleteAction: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: colors.destructive,
     justifyContent: 'center',
     alignItems: 'center',
     width: 80,
   },
   deleteActionText: {
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     fontSize: 14,
     fontWeight: '600',
   },
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   confirmPanel: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: colors.surface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: 24,
@@ -456,12 +456,12 @@ const styles = StyleSheet.create({
   confirmTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     textAlign: 'center',
   },
   confirmSubtitle: {
     fontSize: 13,
-    color: 'rgba(255,255,255,0.4)',
+    color: colors.textTertiary,
     textAlign: 'center',
     marginTop: -8,
   },
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   },
   confirmCancelText: {
     fontSize: 16,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     fontWeight: '500',
   },
 });

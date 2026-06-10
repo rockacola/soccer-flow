@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, PanResponder, StyleSheet, Text, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
+
 const THUMB_SIZE = 56;
 const TRACK_PADDING = 4;
 
@@ -83,7 +85,7 @@ export default function SlideToConfirm({ onConfirm, label = 'Slide to end match'
 const styles = StyleSheet.create({
   track: {
     height: THUMB_SIZE + TRACK_PADDING * 2,
-    backgroundColor: '#2C2C2E',
+    backgroundColor: colors.surfaceElevated,
     borderRadius: (THUMB_SIZE + TRACK_PADDING * 2) / 2,
     justifyContent: 'center',
     alignItems: 'center',
@@ -100,13 +102,13 @@ const styles = StyleSheet.create({
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: '#FF3B30',
+    backgroundColor: colors.destructive,
     alignItems: 'center',
     justifyContent: 'center',
   },
   thumbArrow: {
     fontSize: 24,
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     fontWeight: '600',
     lineHeight: 28,
   },

@@ -1,3 +1,4 @@
+import { colors } from '../../constants/theme';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { Match, Team } from '../../types';
@@ -25,7 +26,7 @@ export function useMatchDetailScreen(matchId: string): MatchDetailScreenState {
   const homeTeam = teams.find((t) => t.id === match.homeTeamId) ?? {
     id: '',
     name: 'Unknown',
-    colour: '#ccc',
+    colour: colors.separator,
     players: [],
   };
 

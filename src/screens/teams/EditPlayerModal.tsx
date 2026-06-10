@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { PLAYER_POSITIONS } from '../../constants/player';
+import { colors } from '../../constants/theme';
 import { updatePlayer } from '../../services/teamsService';
 import type { Player, PlayerPosition } from '../../types';
 import { parseJerseyNumber } from '../../utils/player';
@@ -76,7 +77,9 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
               setError(null);
             }}
             placeholder="e.g. Alex Morgan"
+            placeholderTextColor={colors.textSecondary}
             autoFocus
+            keyboardAppearance="dark"
             returnKeyType="next"
             accessibilityLabel="Player name"
           />
@@ -90,7 +93,9 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
               setError(null);
             }}
             placeholder="e.g. 10"
+            placeholderTextColor={colors.textSecondary}
             keyboardType="number-pad"
+            keyboardAppearance="dark"
             returnKeyType="done"
             onSubmitEditing={handleSave}
             accessibilityLabel="Jersey number"
@@ -129,7 +134,7 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -138,20 +143,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
-    backgroundColor: '#FFFFFF',
+    borderBottomColor: colors.separator,
+    backgroundColor: colors.surfaceElevated,
   },
   title: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   cancelButton: {
     fontSize: 17,
-    color: '#007AFF',
+    color: colors.accent,
   },
   saveButton: {
     fontSize: 17,
-    color: '#007AFF',
+    color: colors.accent,
     fontWeight: '600',
   },
   body: {
@@ -160,25 +166,26 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#6C6C70',
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
     marginTop: 20,
   },
   input: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
+    color: colors.textPrimary,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#C6C6C8',
+    borderColor: colors.separator,
   },
   errorText: {
     marginTop: 6,
     fontSize: 13,
-    color: '#FF3B30',
+    color: colors.destructive,
   },
   positionRow: {
     flexDirection: 'row',
@@ -188,20 +195,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surfaceElevated,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#C6C6C8',
+    borderColor: colors.separator,
   },
   positionChipSelected: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: colors.accent,
+    borderColor: colors.accent,
   },
   positionChipText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1C1C1E',
+    color: colors.textPrimary,
   },
   positionChipTextSelected: {
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
 });

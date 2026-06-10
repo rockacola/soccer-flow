@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
 import type { MatchActivity, MatchSegment, Team } from '../../types';
 import { computePhase } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#E5E5EA',
+    borderBottomColor: colors.separator,
     gap: 8,
   },
   timeColumn: {
@@ -102,30 +103,30 @@ const styles = StyleSheet.create({
   minute: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: colors.textSecondary,
     minWidth: 40,
   },
   clock: {
     fontSize: 11,
-    color: '#AEAEB2',
+    color: colors.textSecondary,
     minWidth: 40,
   },
   badge: {
-    backgroundColor: '#34C759',
+    backgroundColor: colors.positive,
     borderRadius: 4,
     paddingHorizontal: 5,
     paddingVertical: 2,
   },
   badgeSub: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
   },
   badgeNote: {
-    backgroundColor: '#FF9500',
+    backgroundColor: colors.warning,
   },
   badgeText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     letterSpacing: 0.3,
   },
   detail: {
@@ -138,11 +139,11 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: 14,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   noteText: {
     fontSize: 14,
-    color: '#000000',
+    color: colors.textPrimary,
     flex: 1,
   },
 });

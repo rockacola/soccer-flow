@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { TEAM_COLOUR_OPTIONS } from '../../constants/team';
+import { colors } from '../../constants/theme';
 import { createTeam } from '../../services/teamsService';
 
 type Props = {
@@ -72,7 +73,9 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
               setError(null);
             }}
             placeholder="e.g. Red Lions"
+            placeholderTextColor={colors.textSecondary}
             autoFocus
+            keyboardAppearance="dark"
             returnKeyType="done"
             onSubmitEditing={handleSave}
             accessibilityLabel="Team name"
@@ -105,7 +108,7 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -114,20 +117,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
-    backgroundColor: '#FFFFFF',
+    borderBottomColor: colors.separator,
+    backgroundColor: colors.surfaceElevated,
   },
   title: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   cancelButton: {
     fontSize: 17,
-    color: '#007AFF',
+    color: colors.accent,
   },
   saveButton: {
     fontSize: 17,
-    color: '#007AFF',
+    color: colors.accent,
     fontWeight: '600',
   },
   body: {
@@ -136,25 +140,26 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#6C6C70',
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
     marginTop: 20,
   },
   input: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
+    color: colors.textPrimary,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#C6C6C8',
+    borderColor: colors.separator,
   },
   errorText: {
     marginTop: 6,
     fontSize: 13,
-    color: '#FF3B30',
+    color: colors.destructive,
   },
   colourGrid: {
     flexDirection: 'row',
@@ -168,6 +173,6 @@ const styles = StyleSheet.create({
   },
   colourSwatchSelected: {
     borderWidth: 3,
-    borderColor: '#007AFF',
+    borderColor: colors.accent,
   },
 });

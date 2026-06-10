@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
 import type { MatchesStackParamList, RootTabParamList } from '../../types';
 
 import Stepper from './Stepper';
@@ -72,9 +73,10 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
         <TextInput
           style={styles.textInput}
           placeholder="Opponent name (optional)"
-          placeholderTextColor="#8E8E93"
+          placeholderTextColor={colors.textSecondary}
           value={opponentName}
           onChangeText={setOpponentName}
+          keyboardAppearance="dark"
           returnKeyType="done"
           accessibilityLabel="Opponent name"
         />
@@ -102,7 +104,7 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.background,
   },
   centred: {
     flex: 1,
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   headerTitleContainer: {
     flexDirection: 'row',
@@ -121,10 +123,11 @@ const styles = StyleSheet.create({
   headerTitleText: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   headerTitleSeparator: {
     fontSize: 17,
-    color: '#C6C6C8',
+    color: colors.separator,
   },
   headerColourDot: {
     width: 12,
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   section: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     marginTop: 20,
     marginHorizontal: 16,
     borderRadius: 12,
@@ -141,19 +144,19 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
   },
   textInput: {
     fontSize: 17,
-    color: '#000000',
+    color: colors.textPrimary,
     paddingVertical: 0,
   },
   periodNote: {
     fontSize: 12,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     marginTop: 6,
     marginHorizontal: 32,
   },
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
   startButton: {
     marginBottom: 32,
     marginHorizontal: 16,
-    backgroundColor: '#34C759',
+    backgroundColor: colors.positive,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -171,6 +174,6 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
 });

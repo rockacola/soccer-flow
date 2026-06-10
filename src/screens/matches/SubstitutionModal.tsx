@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
 import type { SubstitutionActivity, Team } from '../../types';
 import { formatPlayerLabel } from '../../utils/player';
 import { formatElapsed } from '../../utils/time';
@@ -130,7 +131,7 @@ export default function SubstitutionModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -139,20 +140,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
+    borderBottomColor: colors.separator,
   },
   title: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   cancel: {
     fontSize: 15,
-    color: '#007AFF',
+    color: colors.accent,
   },
   sectionLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginTop: 20,
@@ -165,16 +167,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#E5E5EA',
+    borderBottomColor: colors.separator,
   },
   playerText: {
     fontSize: 16,
-    color: '#000000',
+    color: colors.textPrimary,
     flex: 1,
   },
   checkmark: {
     fontSize: 16,
-    color: '#007AFF',
+    color: colors.accent,
     fontWeight: '600',
   },
   emptyNotice: {
@@ -183,11 +185,11 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   recordButton: {
     margin: 16,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -195,6 +197,6 @@ const styles = StyleSheet.create({
   recordButtonText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
 });

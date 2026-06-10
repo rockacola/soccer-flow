@@ -4,6 +4,7 @@ import React, { useCallback, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Swipeable } from 'react-native-gesture-handler';
 
+import { colors } from '../../constants/theme';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList } from '../../types';
@@ -73,20 +74,20 @@ export default function MatchesListScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.background,
   },
   resumeBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#34C759',
+    backgroundColor: colors.positive,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   resumeLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     opacity: 0.85,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
@@ -95,11 +96,11 @@ const styles = StyleSheet.create({
   resumeTeams: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   resumeChevron: {
     fontSize: 24,
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   emptyContainer: {
     flex: 1,
@@ -114,12 +115,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#000000',
+    color: colors.textPrimary,
     marginBottom: 6,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     textAlign: 'center',
   },
 });

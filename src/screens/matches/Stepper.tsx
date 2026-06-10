@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
+
 type Props = {
   label: string;
   value: number;
@@ -52,7 +54,7 @@ export default function Stepper({ label, value, onAdjust }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     marginTop: 20,
     marginHorizontal: 16,
     borderRadius: 12,
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 8,
@@ -75,20 +77,20 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#E5E5EA',
+    backgroundColor: colors.surfaceHigh,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#8E8E93',
+    color: colors.textSecondary,
     lineHeight: 24,
   },
   value: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#000000',
+    color: colors.textPrimary,
     minWidth: 64,
     textAlign: 'center',
   },

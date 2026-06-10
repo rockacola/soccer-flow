@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
 import type { MatchSegment } from '../../types';
 import { segmentLabel } from '../../utils/match';
 import { formatDurationLabel, formatWallClockFull } from '../../utils/time';
@@ -194,32 +195,33 @@ export default function TimerAdjustModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
+    borderBottomColor: colors.separator,
   },
   title: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   cancel: {
     fontSize: 15,
-    color: '#007AFF',
+    color: colors.accent,
   },
   list: {
     padding: 16,
     gap: 12,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#000000',
+    color: colors.textPrimary,
     marginBottom: 2,
   },
   timeRow: {
@@ -238,35 +240,35 @@ const styles = StyleSheet.create({
   },
   timeRowLabel: {
     fontSize: 13,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     width: 36,
   },
   timeChip: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   timeChipSelected: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
   },
   timeChipText: {
     fontSize: 14,
     fontVariant: ['tabular-nums'],
-    color: '#3A3A3C',
+    color: colors.textPrimary,
   },
   timeChipTextSelected: {
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   cardDuration: {
     fontSize: 13,
     fontWeight: '400',
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   applyButton: {
     marginHorizontal: 16,
     marginVertical: 20,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -274,6 +276,6 @@ const styles = StyleSheet.create({
   applyButtonText: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
 });

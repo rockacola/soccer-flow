@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { colors } from '../../constants/theme';
 import type { TeamsStackParamList } from '../../types';
 
 import AddPlayerModal from './AddPlayerModal';
@@ -122,6 +123,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   headerTitleContainer: {
     flexDirection: 'row',
@@ -136,6 +138,7 @@ const styles = StyleSheet.create({
   headerTitleText: {
     fontSize: 17,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   centred: {
     flex: 1,
@@ -144,28 +147,28 @@ const styles = StyleSheet.create({
   },
   missingText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   matchButton: {
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 8,
-    backgroundColor: '#34C759',
+    backgroundColor: colors.positive,
     borderRadius: 12,
     paddingVertical: 14,
     paddingHorizontal: 32,
     alignItems: 'center',
   },
   matchButtonDisabled: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: colors.surfaceHigh,
   },
   matchButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: colors.textPrimary,
   },
   matchButtonTextDisabled: {
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   emptyContainer: {
     flex: 1,
@@ -174,7 +177,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 15,
-    color: '#8E8E93',
+    color: colors.textSecondary,
   },
   fab: {
     position: 'absolute',
@@ -183,18 +186,18 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 5,
   },
   fabLabel: {
     fontSize: 30,
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     lineHeight: 34,
   },
 });

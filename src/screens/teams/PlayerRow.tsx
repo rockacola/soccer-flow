@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
 import JerseyBadge from '../../components/JerseyBadge';
+import { colors } from '../../constants/theme';
 import { deletePlayer } from '../../services/teamsService';
 import type { Player } from '../../types';
 
@@ -54,8 +55,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#C6C6C8',
-    backgroundColor: '#FFFFFF',
+    borderBottomColor: colors.separator,
+    backgroundColor: colors.background,
     gap: 12,
   },
   playerInfo: {
@@ -64,14 +65,15 @@ const styles = StyleSheet.create({
   playerName: {
     fontSize: 16,
     fontWeight: '500',
+    color: colors.textPrimary,
   },
   playerPosition: {
     fontSize: 13,
-    color: '#8E8E93',
+    color: colors.textSecondary,
     marginTop: 2,
   },
   chevron: {
     fontSize: 20,
-    color: '#C6C6C8',
+    color: colors.separator,
   },
 });

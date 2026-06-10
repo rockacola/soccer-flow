@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { colors } from '../constants/theme';
+
 type Props = {
   number?: number;
   size?: 'sm' | 'md';
@@ -19,14 +21,14 @@ export default function JerseyBadge({ number, size = 'md' }: Props) {
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: '#F2F2F7',
+    backgroundColor: colors.surfaceElevated,
     borderWidth: 1,
-    borderColor: '#D1D1D6',
+    borderColor: colors.separator,
     alignItems: 'center',
     justifyContent: 'center',
   },
   number: {
     fontWeight: '700',
-    color: '#1C1C1E',
+    color: colors.textPrimary,
   },
 });
