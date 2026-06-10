@@ -46,7 +46,11 @@ export default function RemarkModal({
           <Text style={styles.title}>
             {editActivity ? 'Edit ' : ''}Note — {formatElapsed(capturedPhaseSeconds)}
           </Text>
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -60,10 +64,16 @@ export default function RemarkModal({
             onChangeText={setText}
             multiline
             autoFocus
+            accessibilityLabel="Match note"
           />
         </View>
 
-        <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
+        <TouchableOpacity
+          style={styles.recordButton}
+          onPress={handleRecord}
+          accessibilityRole="button"
+          accessibilityLabel={editActivity ? 'Save note' : 'Record note'}
+        >
           <Text style={styles.recordButtonText}>{editActivity ? 'Save' : 'Record Note'}</Text>
         </TouchableOpacity>
       </View>

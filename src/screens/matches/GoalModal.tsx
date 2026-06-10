@@ -10,6 +10,7 @@ import {
   scorerRowId,
   scorerRowPlayerId,
 } from '../../utils/match';
+import { formatPlayerLabel } from '../../utils/player';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -65,7 +66,11 @@ export default function GoalModal({
           <Text style={styles.title}>
             {editActivity ? 'Edit ' : ''}Goal — {formatElapsed(capturedPhaseSeconds)}
           </Text>
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -81,6 +86,9 @@ export default function GoalModal({
                   setSide(s);
                   setSelectedPlayerId(undefined);
                 }}
+                accessibilityRole="button"
+                accessibilityLabel={s === 'home' ? homeTeam.name : opponentLabel}
+                accessibilityState={{ selected: side === s }}
               >
                 <Text style={[styles.teamTabText, side === s && styles.teamTabTextActive]}>
                   {s === 'home' ? homeTeam.name : opponentLabel}
@@ -99,6 +107,11 @@ export default function GoalModal({
                   <TouchableOpacity
                     style={styles.playerRow}
                     onPress={() => setSelectedPlayerId(scorerRowPlayerId(item))}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      item.type === 'player' ? formatPlayerLabel(item.player) : 'Unknown scorer'
+                    }
+                    accessibilityState={{ selected: selectedPlayerId === scorerRowPlayerId(item) }}
                   >
                     {item.type === 'player' ? (
                       <>
@@ -118,7 +131,12 @@ export default function GoalModal({
           )}
         </View>
 
-        <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
+        <TouchableOpacity
+          style={styles.recordButton}
+          onPress={handleRecord}
+          accessibilityRole="button"
+          accessibilityLabel={editActivity ? 'Save goal' : 'Record goal'}
+        >
           <Text style={styles.recordButtonText}>{editActivity ? 'Save' : 'Record Goal'}</Text>
         </TouchableOpacity>
       </View>

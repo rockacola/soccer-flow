@@ -93,7 +93,11 @@ export default function TimerAdjustModal({
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Adjust Segments</Text>
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -119,6 +123,9 @@ export default function TimerAdjustModal({
                   <TouchableOpacity
                     style={[styles.timeChip, selectedKey === startKey && styles.timeChipSelected]}
                     onPress={() => toggle(startKey)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${label} start, ${formatWallClockFull(seg.startedAt)}`}
+                    accessibilityState={{ selected: selectedKey === startKey }}
                   >
                     <Text
                       style={[
@@ -143,6 +150,9 @@ export default function TimerAdjustModal({
                   <TouchableOpacity
                     style={[styles.timeChip, selectedKey === endKey && styles.timeChipSelected]}
                     onPress={() => toggle(endKey)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${label} end, ${formatWallClockFull(endTs)}`}
+                    accessibilityState={{ selected: selectedKey === endKey }}
                   >
                     <Text
                       style={[
@@ -171,6 +181,8 @@ export default function TimerAdjustModal({
             onApply(draftSegments, draftEndedAt ?? undefined);
             onClose();
           }}
+          accessibilityRole="button"
+          accessibilityLabel="Apply timer adjustments"
         >
           <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>

@@ -56,13 +56,21 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
   } = vm;
 
   const matchButton = hasActiveMatch ? (
-    <View style={[styles.matchButton, styles.matchButtonDisabled]}>
+    <View
+      style={[styles.matchButton, styles.matchButtonDisabled]}
+      accessible
+      accessibilityLabel="A match is already in progress"
+    >
       <Text style={[styles.matchButtonText, styles.matchButtonTextDisabled]}>
         A match is already in progress
       </Text>
     </View>
   ) : (
-    <TouchableOpacity style={styles.matchButton} onPress={handleStartMatch}>
+    <TouchableOpacity
+      style={styles.matchButton}
+      onPress={handleStartMatch}
+      accessibilityRole="button"
+    >
       <Text style={styles.matchButtonText}>Start Match</Text>
     </TouchableOpacity>
   );
@@ -80,7 +88,12 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
         ListEmptyComponent={<Text style={styles.emptyText}>No players yet.</Text>}
       />
 
-      <TouchableOpacity style={styles.fab} onPress={openAddModal}>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={openAddModal}
+        accessibilityRole="button"
+        accessibilityLabel="Add player"
+      >
         <Text style={styles.fabLabel}>+</Text>
       </TouchableOpacity>
 

@@ -45,6 +45,7 @@ export default function TeamRow({ team, openSwipeableRef }: Props) {
         style={styles.row}
         onPress={handlePress}
         activeOpacity={0.7}
+        accessibilityRole="button"
         accessibilityLabel={team.name}
       >
         <View style={[styles.colourDot, { backgroundColor: team.colour }]} />

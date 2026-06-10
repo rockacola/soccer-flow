@@ -43,7 +43,13 @@ export default function MatchRow({ match, resolveTeamName, openSwipeableRef }: P
         openSwipeableRef.current = swipeableRef.current;
       }}
     >
-      <TouchableOpacity style={styles.row} onPress={handlePress} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={styles.row}
+        onPress={handlePress}
+        activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel={`${resolveTeamName(match.homeTeamId)} vs ${resolveOpponent(match.opponentName)}, ${match.homeScore} to ${match.awayScore}`}
+      >
         <View style={styles.rowTeams}>
           <Text style={styles.teamText} numberOfLines={1}>
             {resolveTeamName(match.homeTeamId)}

@@ -34,6 +34,8 @@ export default function MatchesListScreen({ navigation }: Props) {
         <TouchableOpacity
           style={styles.resumeBanner}
           onPress={() => navigation.navigate('MatchLive')}
+          accessibilityRole="button"
+          accessibilityLabel={`Match in progress: ${resolveTeamName(teams, currentMatch.homeTeamId)} vs ${resolveOpponent(currentMatch.opponentName)}. Tap to resume.`}
         >
           <View>
             <Text style={styles.resumeLabel}>Match in progress</Text>

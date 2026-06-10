@@ -49,11 +49,19 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Edit Player</Text>
-          <TouchableOpacity onPress={handleSave}>
+          <TouchableOpacity
+            onPress={handleSave}
+            accessibilityRole="button"
+            accessibilityLabel="Save player"
+          >
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -70,6 +78,7 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
             placeholder="e.g. Alex Morgan"
             autoFocus
             returnKeyType="next"
+            accessibilityLabel="Player name"
           />
 
           <Text style={styles.label}>Jersey Number (optional)</Text>
@@ -84,6 +93,7 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
             keyboardType="number-pad"
             returnKeyType="done"
             onSubmitEditing={handleSave}
+            accessibilityLabel="Jersey number"
           />
 
           {error !== null && <Text style={styles.errorText}>{error}</Text>}
@@ -95,6 +105,9 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
                 key={p}
                 style={[styles.positionChip, position === p && styles.positionChipSelected]}
                 onPress={() => handlePositionPress(p)}
+                accessibilityRole="button"
+                accessibilityLabel={p}
+                accessibilityState={{ selected: position === p }}
               >
                 <Text
                   style={[
