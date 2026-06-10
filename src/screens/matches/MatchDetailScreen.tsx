@@ -2,22 +2,19 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { useMatchStore } from '../../stores/matchStore';
-import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList } from '../../types';
-import { buildSegmentGroups, resolveOpponent } from '../../utils/match';
 import { formatBreakDuration, formatMatchDateLong, formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
+import { useMatchDetailScreen } from './useMatchDetailScreen';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchDetail'>;
 
 export default function MatchDetailScreen({ route }: Props) {
   const { matchId } = route.params;
-  const match = useMatchStore((s) => s.pastMatches.find((m) => m.id === matchId));
-  const teams = useTeamsStore((s) => s.teams);
+  const vm = useMatchDetailScreen(matchId);
 
-  if (!match) {
+  if (vm.status === 'not-found') {
     return (
       <View style={styles.centred}>
         <Text style={styles.emptyText}>Match not found.</Text>
@@ -25,14 +22,7 @@ export default function MatchDetailScreen({ route }: Props) {
     );
   }
 
-  const homeTeam = teams.find((t) => t.id === match.homeTeamId) ?? {
-    id: '',
-    name: 'Unknown',
-    colour: '#ccc',
-    players: [],
-  };
-  const opponentName = resolveOpponent(match.opponentName);
-  const groups = buildSegmentGroups(match);
+  const { match, homeTeam, opponentName, groups } = vm;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.listContent}>
