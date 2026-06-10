@@ -80,7 +80,13 @@ export default function MatchLiveScreen({ navigation }: Props) {
     <View style={styles.container}>
       {/* Scoreboard */}
       <View style={styles.scoreboard}>
-        <TouchableOpacity style={styles.timerRow} onPress={openTimerAdjust} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={styles.timerRow}
+          onPress={openTimerAdjust}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel="Adjust match timer"
+        >
           <Text style={styles.periodInfo}>
             {phaseLabel(phase, currentMatch.segments)}
             {' | '}
@@ -99,6 +105,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
               <TouchableOpacity
                 style={styles.scoreButton}
                 onPress={() => handleAdjustScore('home', -1)}
+                accessibilityRole="button"
+                accessibilityLabel="Decrease home score"
               >
                 <Text style={styles.scoreButtonText}>−</Text>
               </TouchableOpacity>
@@ -106,6 +114,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
               <TouchableOpacity
                 style={styles.scoreButton}
                 onPress={() => handleAdjustScore('home', 1)}
+                accessibilityRole="button"
+                accessibilityLabel="Increase home score"
               >
                 <Text style={styles.scoreButtonText}>+</Text>
               </TouchableOpacity>
@@ -123,6 +133,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
               <TouchableOpacity
                 style={styles.scoreButton}
                 onPress={() => handleAdjustScore('away', -1)}
+                accessibilityRole="button"
+                accessibilityLabel="Decrease away score"
               >
                 <Text style={styles.scoreButtonText}>−</Text>
               </TouchableOpacity>
@@ -130,6 +142,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
               <TouchableOpacity
                 style={styles.scoreButton}
                 onPress={() => handleAdjustScore('away', 1)}
+                accessibilityRole="button"
+                accessibilityLabel="Increase away score"
               >
                 <Text style={styles.scoreButtonText}>+</Text>
               </TouchableOpacity>
@@ -139,7 +153,12 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
         {/* Controls */}
         <View style={styles.controlRow}>
-          <TouchableOpacity style={styles.finishButton} onPress={openConfirm}>
+          <TouchableOpacity
+            style={styles.finishButton}
+            onPress={openConfirm}
+            accessibilityRole="button"
+            accessibilityLabel="Finish match"
+          >
             <Text style={styles.finishButtonText}>Finish</Text>
           </TouchableOpacity>
         </View>
@@ -150,15 +169,24 @@ export default function MatchLiveScreen({ navigation }: Props) {
         <TouchableOpacity
           style={[styles.activityButton, styles.goalButton]}
           onPress={openGoalModal}
+          accessibilityRole="button"
+          accessibilityLabel="Record goal"
         >
           <Text style={styles.activityButtonText}>Goal</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.activityButton, styles.subButton]} onPress={openSubModal}>
+        <TouchableOpacity
+          style={[styles.activityButton, styles.subButton]}
+          onPress={openSubModal}
+          accessibilityRole="button"
+          accessibilityLabel="Record substitution"
+        >
           <Text style={styles.activityButtonText}>Sub</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.activityButton, styles.noteButton]}
           onPress={openRemarkModal}
+          accessibilityRole="button"
+          accessibilityLabel="Record note"
         >
           <Text style={styles.activityButtonText}>Note</Text>
         </TouchableOpacity>
@@ -247,7 +275,12 @@ export default function MatchLiveScreen({ navigation }: Props) {
             <Text style={styles.confirmTitle}>End match?</Text>
             <Text style={styles.confirmSubtitle}>Slide to confirm</Text>
             <SlideToConfirm onConfirm={doFinish} />
-            <TouchableOpacity style={styles.confirmCancelButton} onPress={closeConfirm}>
+            <TouchableOpacity
+              style={styles.confirmCancelButton}
+              onPress={closeConfirm}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel finish"
+            >
               <Text style={styles.confirmCancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>

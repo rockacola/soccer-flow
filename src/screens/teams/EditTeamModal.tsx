@@ -60,11 +60,19 @@ export default function EditTeamModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose}>
+          <TouchableOpacity
+            onPress={handleClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Edit Team</Text>
-          <TouchableOpacity onPress={handleSave}>
+          <TouchableOpacity
+            onPress={handleSave}
+            accessibilityRole="button"
+            accessibilityLabel="Save team"
+          >
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -81,6 +89,7 @@ export default function EditTeamModal({
             autoFocus
             returnKeyType="done"
             onSubmitEditing={handleSave}
+            accessibilityLabel="Team name"
           />
           {error !== null && <Text style={styles.errorText}>{error}</Text>}
 
@@ -89,7 +98,9 @@ export default function EditTeamModal({
             {TEAM_COLOUR_OPTIONS.map(({ hex, label }) => (
               <Pressable
                 key={hex}
+                accessibilityRole="button"
                 accessibilityLabel={label}
+                accessibilityState={{ selected: colour === hex }}
                 style={[
                   styles.colourSwatch,
                   { backgroundColor: hex },

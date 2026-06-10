@@ -45,11 +45,19 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleClose}>
+          <TouchableOpacity
+            onPress={handleClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>New Team</Text>
-          <TouchableOpacity onPress={handleSave}>
+          <TouchableOpacity
+            onPress={handleSave}
+            accessibilityRole="button"
+            accessibilityLabel="Save team"
+          >
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -67,6 +75,7 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
             autoFocus
             returnKeyType="done"
             onSubmitEditing={handleSave}
+            accessibilityLabel="Team name"
           />
           {error !== null && <Text style={styles.errorText}>{error}</Text>}
 
@@ -75,7 +84,9 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
             {TEAM_COLOUR_OPTIONS.map(({ hex, label }) => (
               <Pressable
                 key={hex}
+                accessibilityRole="button"
                 accessibilityLabel={label}
+                accessibilityState={{ selected: colour === hex }}
                 style={[
                   styles.colourSwatch,
                   { backgroundColor: hex },

@@ -32,7 +32,12 @@ export default function TeamsListScreen() {
         ListEmptyComponent={<Text style={styles.emptyText}>No teams yet.</Text>}
       />
 
-      <TouchableOpacity style={styles.fab} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setModalVisible(true)}
+        accessibilityRole="button"
+        accessibilityLabel="Create team"
+      >
         <Text style={styles.fabLabel}>+</Text>
       </TouchableOpacity>
 

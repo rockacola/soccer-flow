@@ -13,18 +13,34 @@ export default function DeltaButtons({ durationSeconds, onAdjust }: Props) {
     <View style={styles.container}>
       <View style={styles.side}>
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(-5 * 60)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(-5 * 60)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>-5m</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(-1 * 60)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(-1 * 60)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>-1m</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(-5)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(-5)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>-5s</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(-1)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(-1)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>-1s</Text>
           </TouchableOpacity>
         </View>
@@ -34,18 +50,34 @@ export default function DeltaButtons({ durationSeconds, onAdjust }: Props) {
 
       <View style={styles.side}>
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(1 * 60)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(1 * 60)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>+1m</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(5 * 60)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(5 * 60)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>+5m</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(1)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(1)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>+1s</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => onAdjust(5)}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => onAdjust(5)}
+            accessibilityRole="button"
+          >
             <Text style={styles.btnText}>+5s</Text>
           </TouchableOpacity>
         </View>

@@ -56,7 +56,11 @@ export default function SubstitutionModal({
           <Text style={styles.title}>
             {editActivity ? 'Edit ' : ''}Substitution — {formatElapsed(capturedPhaseSeconds)}
           </Text>
-          <TouchableOpacity onPress={onClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+          >
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -79,6 +83,9 @@ export default function SubstitutionModal({
                       setPlayerInId(null);
                     }
                   }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Off: ${formatPlayerLabel(p)}`}
+                  accessibilityState={{ selected: playerOutId === p.id }}
                 >
                   <Text style={styles.playerText}>{formatPlayerLabel(p)}</Text>
                   {playerOutId === p.id && <Text style={styles.checkmark}>✓</Text>}
@@ -93,6 +100,9 @@ export default function SubstitutionModal({
                     key={p.id}
                     style={styles.playerRow}
                     onPress={() => setPlayerInId(p.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`On: ${formatPlayerLabel(p)}`}
+                    accessibilityState={{ selected: playerInId === p.id }}
                   >
                     <Text style={styles.playerText}>{formatPlayerLabel(p)}</Text>
                     {playerInId === p.id && <Text style={styles.checkmark}>✓</Text>}
@@ -102,7 +112,12 @@ export default function SubstitutionModal({
           )}
         </ScrollView>
 
-        <TouchableOpacity style={styles.recordButton} onPress={handleRecord}>
+        <TouchableOpacity
+          style={styles.recordButton}
+          onPress={handleRecord}
+          accessibilityRole="button"
+          accessibilityLabel={editActivity ? 'Save substitution' : 'Record substitution'}
+        >
           <Text style={styles.recordButtonText}>
             {editActivity ? 'Save' : 'Record Substitution'}
           </Text>

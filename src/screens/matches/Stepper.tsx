@@ -12,17 +12,37 @@ export default function Stepper({ label, value, onAdjust }: Props) {
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.row}>
-        <TouchableOpacity style={styles.button} onPress={() => onAdjust(-5)}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onAdjust(-5)}
+          accessibilityRole="button"
+          accessibilityLabel={`Decrease ${label.toLowerCase()} by 5 minutes`}
+        >
           <Text style={styles.buttonText}>−5</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => onAdjust(-1)}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onAdjust(-1)}
+          accessibilityRole="button"
+          accessibilityLabel={`Decrease ${label.toLowerCase()} by 1 minute`}
+        >
           <Text style={styles.buttonText}>−1</Text>
         </TouchableOpacity>
         <Text style={styles.value}>{value} min</Text>
-        <TouchableOpacity style={styles.button} onPress={() => onAdjust(1)}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onAdjust(1)}
+          accessibilityRole="button"
+          accessibilityLabel={`Increase ${label.toLowerCase()} by 1 minute`}
+        >
           <Text style={styles.buttonText}>+1</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => onAdjust(5)}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onAdjust(5)}
+          accessibilityRole="button"
+          accessibilityLabel={`Increase ${label.toLowerCase()} by 5 minutes`}
+        >
           <Text style={styles.buttonText}>+5</Text>
         </TouchableOpacity>
       </View>

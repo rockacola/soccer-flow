@@ -76,6 +76,7 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
           value={opponentName}
           onChangeText={setOpponentName}
           returnKeyType="done"
+          accessibilityLabel="Opponent name"
         />
       </View>
 
@@ -86,7 +87,12 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
 
       <View style={styles.spacer} />
 
-      <TouchableOpacity style={styles.startButton} onPress={handleStart}>
+      <TouchableOpacity
+        style={styles.startButton}
+        onPress={handleStart}
+        accessibilityRole="button"
+        accessibilityLabel="Start match"
+      >
         <Text style={styles.startButtonText}>Start Match</Text>
       </TouchableOpacity>
     </View>
