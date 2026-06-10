@@ -16,6 +16,8 @@ type MatchStore = {
   removeActivity: (activityId: string) => void;
   updateActivity: (activityId: string, updated: MatchActivity) => void;
   deletePastMatch: (matchId: string) => void;
+  addPastMatch: (match: Match) => void;
+  removePastMatchesByIds: (ids: string[]) => void;
 };
 
 export const useMatchStore = create<MatchStore>()(
@@ -89,6 +91,9 @@ export const useMatchStore = create<MatchStore>()(
         ),
       deletePastMatch: (matchId) =>
         set((s) => ({ pastMatches: s.pastMatches.filter((m) => m.id !== matchId) })),
+      addPastMatch: (match) => set((s) => ({ pastMatches: [...s.pastMatches, match] })),
+      removePastMatchesByIds: (ids) =>
+        set((s) => ({ pastMatches: s.pastMatches.filter((m) => !ids.includes(m.id)) })),
     }),
     {
       name: STORAGE_KEY_PAST_MATCHES,

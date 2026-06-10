@@ -61,15 +61,15 @@
 ## Part 6 — UI redesign and feature review
 
 - [ ] Audit and simplify existing features (e.g. team colour)
-- [ ] Onboarding / empty states — guide first-time user to create a team and start a match
+- [x] Onboarding / empty states — guide first-time user to create a team and start a match
 - [ ] Redesign screens with a primitive, functional UI — no decorative polish
-- [ ] Reconsider NativeWind adoption
+- [x] Reconsider NativeWind adoption — deferred to SDK 56 (requires reanimated, peer deps not clean enough yet)
 - [ ] Define which style affordances (swipe gestures, transitions) are deferred add-ons
 
 ## Part 7 — Developer tooling
 
 - [ ] Introduce Storybook for screen-level evaluation with mock data (screen level, not component level)
-- [ ] Sample data seeder — populate app with realistic fixture data for manual and automated testing
+- [x] Sample data seeder — populate app with realistic fixture data for manual and automated testing
 - [ ] Accessibility labels across all interactive elements
 
 ## Part 8 — Testing
