@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../constants/theme';
+import { typeScale } from '../constants/typography';
 
 export default function TeamsHeaderTitle() {
   return (
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   headerTitleText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },

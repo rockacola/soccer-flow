@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { GoalActivity, Team } from '../../types';
 import {
   buildScorerRows,
@@ -157,34 +159,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
   },
   title: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   cancel: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.accent,
   },
   sectionLabel: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginTop: 20,
+    marginTop: spacing.xl,
     marginBottom: 6,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
   },
   teamToggle: {
     flexDirection: 'row',
-    marginHorizontal: 16,
-    borderRadius: 8,
+    marginHorizontal: spacing.lg,
+    borderRadius: spacing.sm,
     borderWidth: 1,
     borderColor: colors.separator,
     overflow: 'hidden',
@@ -199,7 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
   },
   teamTabText: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontWeight: '500',
     color: colors.textPrimary,
   },
@@ -209,36 +211,36 @@ const styles = StyleSheet.create({
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
-    gap: 12,
+    gap: spacing.md,
   },
   playerName: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.textPrimary,
     flex: 1,
   },
   unknownLabel: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.textSecondary,
     flex: 1,
   },
   checkmark: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.accent,
     fontWeight: '600',
   },
   recordButton: {
-    margin: 16,
+    margin: spacing.lg,
     backgroundColor: colors.positive,
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: spacing.md,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   recordButtonText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },

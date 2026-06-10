@@ -2,7 +2,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { MatchesStackParamList } from '../../types';
 import { formatBreakDuration, formatMatchDateLong, formatWallClock } from '../../utils/time';
 
@@ -109,13 +111,13 @@ const styles = StyleSheet.create({
   },
   scoreCard: {
     backgroundColor: colors.surface,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.sm,
   },
   date: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     color: colors.textTertiary,
     fontWeight: '500',
     textTransform: 'uppercase',
@@ -124,24 +126,24 @@ const styles = StyleSheet.create({
   scoreRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: spacing.md,
   },
   teamName: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontWeight: '600',
     color: colors.textSecondary,
     flex: 1,
     textAlign: 'center',
   },
   score: {
-    fontSize: 36,
+    fontSize: typeScale.xxl,
     fontWeight: '700',
     color: colors.textPrimary,
     fontVariant: ['tabular-nums'],
   },
   segmentsContainer: {
-    marginTop: 20,
-    paddingHorizontal: 16,
+    marginTop: spacing.xl,
+    paddingHorizontal: spacing.lg,
   },
   periodHeader: {
     flexDirection: 'row',
@@ -152,36 +154,36 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   periodLabel: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textSecondary,
     letterSpacing: 0.5,
   },
   periodMeta: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     color: colors.textSecondary,
     fontVariant: ['tabular-nums'],
   },
   activityCard: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: spacing.md,
     overflow: 'hidden',
     marginBottom: 4,
   },
   emptyRow: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.lg,
     alignItems: 'center',
   },
   emptyRowText: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     color: colors.textSecondary,
   },
   breakSeparator: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginVertical: 16,
+    marginVertical: spacing.lg,
     paddingHorizontal: 4,
   },
   breakLine: {
@@ -190,13 +192,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.separator,
   },
   breakText: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '500',
     color: colors.textSecondary,
     letterSpacing: 0.3,
   },
   emptyText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
 });

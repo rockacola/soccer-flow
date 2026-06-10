@@ -3,7 +3,9 @@ import React from 'react';
 import { FlatList, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type {
   GoalActivity,
   MatchActivity,
@@ -302,27 +304,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   noMatchText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   scoreboard: {
     backgroundColor: colors.surface,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
   },
   timerRow: {
     alignItems: 'center',
     gap: 4,
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   periodInfo: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '500',
     color: colors.textSecondary,
   },
   timer: {
-    fontSize: 28,
+    fontSize: typeScale.xl,
     fontWeight: '700',
     color: colors.textPrimary,
     fontVariant: ['tabular-nums'],
@@ -332,14 +334,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   scoreTeam: {
     alignItems: 'center',
     flex: 1,
   },
   teamNameLabel: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '600',
     color: colors.textSecondary,
     marginBottom: 6,
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
   scoreControl: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: spacing.md,
   },
   scoreButton: {
     width: 32,
@@ -358,12 +360,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scoreButtonText: {
-    fontSize: 20,
+    fontSize: typeScale.lg,
     color: colors.textPrimary,
     lineHeight: 24,
   },
   scoreDigit: {
-    fontSize: 40,
+    fontSize: typeScale.xxxl,
     fontWeight: '700',
     color: colors.textPrimary,
     minWidth: 48,
@@ -386,20 +388,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   finishButtonText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   activityButtons: {
     flexDirection: 'row',
     gap: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
   activityButton: {
     flex: 1,
     borderRadius: 10,
-    paddingVertical: 12,
+    paddingVertical: spacing.md,
     alignItems: 'center',
   },
   goalButton: {
@@ -412,7 +414,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.warning,
   },
   activityButtonText: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontWeight: '600',
     color: colors.textPrimary,
   },
@@ -422,7 +424,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyLogText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   deleteAction: {
@@ -433,7 +435,7 @@ const styles = StyleSheet.create({
   },
   deleteActionText: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: typeScale.md,
     fontWeight: '600',
   },
   confirmOverlay: {
@@ -446,31 +448,31 @@ const styles = StyleSheet.create({
   },
   confirmPanel: {
     backgroundColor: colors.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 24,
-    paddingTop: 24,
+    borderTopLeftRadius: spacing.xl,
+    borderTopRightRadius: spacing.xl,
+    paddingHorizontal: spacing.xxl,
+    paddingTop: spacing.xxl,
     paddingBottom: 40,
-    gap: 16,
+    gap: spacing.lg,
   },
   confirmTitle: {
-    fontSize: 20,
+    fontSize: typeScale.lg,
     fontWeight: '700',
     color: colors.textPrimary,
     textAlign: 'center',
   },
   confirmSubtitle: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     color: colors.textTertiary,
     textAlign: 'center',
     marginTop: -8,
   },
   confirmCancelButton: {
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: spacing.sm,
   },
   confirmCancelText: {
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.textSecondary,
     fontWeight: '500',
   },

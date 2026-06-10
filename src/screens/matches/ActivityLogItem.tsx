@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { MatchActivity, MatchSegment, Team } from '../../types';
 import { computePhase } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
@@ -90,18 +92,18 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
-    gap: 8,
+    gap: spacing.sm,
   },
   timeColumn: {
     alignItems: 'flex-start',
     gap: 2,
   },
   minute: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '600',
     color: colors.textSecondary,
     minWidth: 40,
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.warning,
   },
   badgeText: {
-    fontSize: 10,
+    fontSize: typeScale.xs,
     fontWeight: '700',
     color: colors.textPrimary,
     letterSpacing: 0.3,
@@ -138,11 +140,11 @@ const styles = StyleSheet.create({
     paddingTop: 1,
   },
   arrow: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     color: colors.textSecondary,
   },
   noteText: {
-    fontSize: 14,
+    fontSize: typeScale.md,
     color: colors.textPrimary,
     flex: 1,
   },

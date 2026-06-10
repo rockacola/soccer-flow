@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { PLAYER_POSITIONS } from '../../constants/player';
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import { updatePlayer } from '../../services/teamsService';
 import type { Player, PlayerPosition } from '../../types';
 import { parseJerseyNumber } from '../../utils/player';
@@ -140,51 +142,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
     backgroundColor: colors.surfaceElevated,
   },
   title: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   cancelButton: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.accent,
   },
   saveButton: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.accent,
     fontWeight: '600',
   },
   body: {
-    padding: 16,
+    padding: spacing.lg,
   },
   label: {
-    fontSize: 13,
+    fontSize: typeScale.base,
     fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginBottom: 8,
-    marginTop: 20,
+    marginBottom: spacing.sm,
+    marginTop: spacing.xl,
   },
   input: {
     backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
     paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
+    paddingVertical: spacing.md,
+    fontSize: typeScale.input,
     color: colors.textPrimary,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.separator,
   },
   errorText: {
     marginTop: 6,
-    fontSize: 13,
+    fontSize: typeScale.base,
     color: colors.destructive,
   },
   positionRow: {
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   positionChip: {
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
     paddingVertical: 10,
     borderRadius: 20,
     backgroundColor: colors.surfaceElevated,
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     borderColor: colors.accent,
   },
   positionChipText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     fontWeight: '600',
     color: colors.textPrimary,
   },

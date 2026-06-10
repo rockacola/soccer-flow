@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { RemarkActivity } from '../../types';
 import { formatElapsed } from '../../utils/time';
 
@@ -92,18 +94,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
   },
   title: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   cancel: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.accent,
   },
   inputWrapper: {
@@ -111,24 +113,24 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    margin: 16,
-    padding: 12,
+    margin: spacing.lg,
+    padding: spacing.md,
     backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
-    fontSize: 16,
+    fontSize: typeScale.input,
     color: colors.textPrimary,
     minHeight: 100,
     textAlignVertical: 'top',
   },
   recordButton: {
-    marginHorizontal: 16,
+    marginHorizontal: spacing.lg,
     backgroundColor: colors.warning,
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: spacing.md,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   recordButtonText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },

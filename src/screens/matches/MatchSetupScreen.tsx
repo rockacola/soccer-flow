@@ -5,7 +5,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
+import { typeScale } from '../../constants/typography';
 import type { MatchesStackParamList, RootTabParamList } from '../../types';
 
 import Stepper from './Stepper';
@@ -112,21 +114,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   errorText: {
-    fontSize: 15,
+    fontSize: typeScale.body,
     color: colors.textSecondary,
   },
   headerTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.sm,
   },
   headerTitleText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
   headerTitleSeparator: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.separator,
   },
   headerColourDot: {
@@ -136,26 +138,26 @@ const styles = StyleSheet.create({
   },
   section: {
     backgroundColor: colors.surface,
-    marginTop: 20,
-    marginHorizontal: 16,
-    borderRadius: 12,
-    padding: 16,
+    marginTop: spacing.xl,
+    marginHorizontal: spacing.lg,
+    borderRadius: spacing.md,
+    padding: spacing.lg,
   },
   label: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   textInput: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     color: colors.textPrimary,
     paddingVertical: 0,
   },
   periodNote: {
-    fontSize: 12,
+    fontSize: typeScale.sm,
     color: colors.textSecondary,
     marginTop: 6,
     marginHorizontal: 32,
@@ -165,14 +167,14 @@ const styles = StyleSheet.create({
   },
   startButton: {
     marginBottom: 32,
-    marginHorizontal: 16,
+    marginHorizontal: spacing.lg,
     backgroundColor: colors.positive,
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: spacing.md,
+    paddingVertical: spacing.lg,
     alignItems: 'center',
   },
   startButtonText: {
-    fontSize: 17,
+    fontSize: typeScale.title,
     fontWeight: '600',
     color: colors.textPrimary,
   },
