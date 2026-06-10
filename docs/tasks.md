@@ -101,8 +101,8 @@
 **Settings screen**
 
 - [ ] Display current app version
-- [ ] Toggle sample data (populate or remove fixture records)
-- [ ] Full data reset (flush all local storage)
+- [x] Toggle sample data (populate or remove fixture records)
+- [x] Full data reset (flush all local storage)
 
 **Release**
 

@@ -14,6 +14,7 @@ type TeamsStore = {
   addPlayer: (teamId: string, player: Player) => void;
   updatePlayer: (teamId: string, player: Player) => void;
   deletePlayer: (teamId: string, playerId: string) => void;
+  reset: () => void;
 };
 
 export const useTeamsStore = create<TeamsStore>()(
@@ -26,6 +27,7 @@ export const useTeamsStore = create<TeamsStore>()(
       deleteTeam: (teamId) => set((s) => ({ teams: s.teams.filter((t) => t.id !== teamId) })),
       removeTeamsByIds: (ids) =>
         set((s) => ({ teams: s.teams.filter((t) => !ids.includes(t.id)) })),
+      reset: () => set({ teams: [] }),
       addPlayer: (teamId, player) =>
         set((s) => ({
           teams: s.teams.map((t) =>
