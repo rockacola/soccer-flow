@@ -205,7 +205,7 @@ export function useMatchLiveScreen(navigation: Navigation): MatchLiveScreenState
     doFinish: () => {
       setConfirmVisible(false);
       finishMatch();
-      navigation.popToTop();
+      navigation.navigate('MatchesList');
     },
     handleGoal,
     handleSub,
