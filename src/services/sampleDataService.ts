@@ -4,7 +4,9 @@ import { useMatchStore } from '../stores/matchStore';
 import { useTeamsStore } from '../stores/teamsStore';
 
 export function loadSampleData(): void {
-  if (useAppStore.getState().hasSampleData) {return;}
+  if (useAppStore.getState().hasSampleData) {
+    return;
+  }
 
   const teamsStore = useTeamsStore.getState();
   for (const team of SAMPLE_TEAMS) {
@@ -20,7 +22,9 @@ export function loadSampleData(): void {
 }
 
 export function removeSampleData(): void {
-  if (!useAppStore.getState().hasSampleData) {return;}
+  if (!useAppStore.getState().hasSampleData) {
+    return;
+  }
 
   useTeamsStore.getState().removeTeamsByIds(SAMPLE_TEAMS.map((t) => t.id));
   useMatchStore.getState().removePastMatchesByIds(SAMPLE_PAST_MATCHES.map((m) => m.id));

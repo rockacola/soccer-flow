@@ -15,6 +15,7 @@ export type MatchesStackParamList = {
 export type RootTabParamList = {
   Teams: NavigatorScreenParams<TeamsStackParamList>;
   Matches: NavigatorScreenParams<MatchesStackParamList>;
+  Settings: undefined;
 };
 
 export type RootStackParamList = {

@@ -9,6 +9,7 @@ type AppStore = {
   hasSampleData: boolean;
   completeOnboarding: () => void;
   setHasSampleData: (value: boolean) => void;
+  reset: () => void;
 };
 
 export const useAppStore = create<AppStore>()(
@@ -18,6 +19,7 @@ export const useAppStore = create<AppStore>()(
       hasSampleData: false,
       completeOnboarding: () => set({ hasCompletedOnboarding: true }),
       setHasSampleData: (value) => set({ hasSampleData: value }),
+      reset: () => set({ hasCompletedOnboarding: false, hasSampleData: false }),
     }),
     {
       name: STORAGE_KEY_APP,
