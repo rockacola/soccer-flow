@@ -2,40 +2,21 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import type { NavigationProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { createAndStartMatch } from '../../services/matchService';
-import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList, RootTabParamList } from '../../types';
 
 import Stepper from './Stepper';
+import { useMatchSetupScreen } from './useMatchSetupScreen';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchSetup'>;
 
 export default function MatchSetupScreen({ route, navigation }: Props) {
   const { homeTeamId } = route.params;
-  const teams = useTeamsStore((s) => s.teams);
-  const homeTeam = teams.find((t) => t.id === homeTeamId);
-
   const rootNav = useNavigation<NavigationProp<RootTabParamList>>();
-  const [opponentName, setOpponentName] = useState('');
-  const [periodDurationMinutes, setPeriodDurationMinutes] = useState(40);
-  const [breakDurationMinutes, setBreakDurationMinutes] = useState(15);
-
-  useEffect(
-    function dismissOnTabBlur() {
-      const parent = navigation.getParent();
-      if (!parent) {
-        return () => {};
-      }
-      const unsubscribe = parent.addListener('blur', () => {
-        navigation.popToTop();
-      });
-      return unsubscribe;
-    },
-    [navigation],
-  );
+  const vm = useMatchSetupScreen(homeTeamId, navigation);
+  const { homeTeam } = vm;
 
   useEffect(
     function syncHeaderOptions() {
@@ -63,25 +44,8 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
         ),
       });
     },
-    [navigation, homeTeam, homeTeamId, rootNav],
+    [navigation, homeTeam, rootNav, homeTeamId],
   );
-
-  const adjustPeriod = (delta: number) => {
-    setPeriodDurationMinutes((m) => Math.min(90, Math.max(1, m + delta)));
-  };
-
-  const adjustBreak = (delta: number) => {
-    setBreakDurationMinutes((m) => Math.min(30, Math.max(1, m + delta)));
-  };
-
-  const handleStart = () => {
-    try {
-      createAndStartMatch(homeTeamId, opponentName, 2, periodDurationMinutes, breakDurationMinutes);
-      navigation.replace('MatchLive');
-    } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Could not start match.');
-    }
-  };
 
   if (!homeTeam) {
     return (
@@ -90,6 +54,16 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
       </View>
     );
   }
+
+  const {
+    opponentName,
+    setOpponentName,
+    periodDurationMinutes,
+    breakDurationMinutes,
+    adjustPeriod,
+    adjustBreak,
+    handleStart,
+  } = vm;
 
   return (
     <View style={styles.container}>

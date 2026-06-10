@@ -1,29 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useReducer, useState } from 'react';
-import {
-  Alert,
-  FlatList,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { FlatList, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-import {
-  adjustScore,
-  adjustTimestamps,
-  deleteActivity,
-  finishMatch,
-  recordGoal,
-  recordRemark,
-  recordSubstitution,
-  updateActivity,
-} from '../../services/matchService';
-import { useMatchStore } from '../../stores/matchStore';
-import { useTeamsStore } from '../../stores/teamsStore';
 import type {
   GoalActivity,
   MatchActivity,
@@ -31,7 +10,7 @@ import type {
   RemarkActivity,
   SubstitutionActivity,
 } from '../../types';
-import { computePhase, computeSegmentWindow, phaseLabel, resolveOpponent } from '../../utils/match';
+import { phaseLabel } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
 
 import ActivityLogItem from './ActivityLogItem';
@@ -40,28 +19,14 @@ import RemarkModal from './RemarkModal';
 import SlideToConfirm from './SlideToConfirm';
 import SubstitutionModal from './SubstitutionModal';
 import TimerAdjustModal from './TimerAdjustModal';
+import { useMatchLiveScreen } from './useMatchLiveScreen';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchLive'>;
 
 export default function MatchLiveScreen({ navigation }: Props) {
-  const currentMatch = useMatchStore((s) => s.currentMatch);
-  const teams = useTeamsStore((s) => s.teams);
+  const vm = useMatchLiveScreen(navigation);
 
-  const [, tick] = useReducer((n: number) => n + 1, 0);
-  const [goalModalVisible, setGoalModalVisible] = useState(false);
-  const [subModalVisible, setSubModalVisible] = useState(false);
-  const [remarkModalVisible, setRemarkModalVisible] = useState(false);
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [timerAdjustVisible, setTimerAdjustVisible] = useState(false);
-  const [capturedAt, setCapturedAt] = useState(0);
-  const [editingActivity, setEditingActivity] = useState<MatchActivity | null>(null);
-
-  useEffect(function startTicker() {
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  if (!currentMatch) {
+  if (vm.status === 'no-match') {
     return (
       <View style={styles.centred}>
         <Text style={styles.noMatchText}>No active match.</Text>
@@ -69,9 +34,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
     );
   }
 
-  const homeTeam = teams.find((t) => t.id === currentMatch.homeTeamId);
-
-  if (!homeTeam) {
+  if (vm.status === 'team-missing') {
     return (
       <View style={styles.centred}>
         <Text style={styles.noMatchText}>Team data not found.</Text>
@@ -79,117 +42,45 @@ export default function MatchLiveScreen({ navigation }: Props) {
     );
   }
 
-  const opponentLabel = resolveOpponent(currentMatch.opponentName);
-  const now = Date.now();
-  const phase = computePhase(now, currentMatch.segments);
-  const capturedPhase = capturedAt > 0 ? computePhase(capturedAt, currentMatch.segments) : phase;
-  const segmentWindow = computeSegmentWindow(
-    now,
-    currentMatch.segments,
-    currentMatch.endedAt,
-    currentMatch.periodDurationMinutes,
-    currentMatch.breakDurationMinutes,
-  );
-
-  const reversedActivities = [...currentMatch.activities].reverse();
-
-  const openGoalModal = () => {
-    setCapturedAt(Date.now());
-    setGoalModalVisible(true);
-  };
-
-  const openSubModal = () => {
-    setCapturedAt(Date.now());
-    setSubModalVisible(true);
-  };
-
-  const openRemarkModal = () => {
-    setCapturedAt(Date.now());
-    setRemarkModalVisible(true);
-  };
-
-  const doFinish = () => {
-    setConfirmVisible(false);
-    finishMatch();
-    navigation.popToTop();
-  };
-
-  const handleGoal = (side: 'home' | 'away', playerId: string | null) => {
-    if (editingActivity && editingActivity.type === 'goal') {
-      try {
-        updateActivity({ ...editingActivity, side, playerId });
-      } catch (e) {
-        Alert.alert('Error', e instanceof Error ? e.message : 'Could not update goal.');
-      }
-      setEditingActivity(null);
-      return;
-    }
-    try {
-      recordGoal(side, playerId);
-    } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Could not record goal.');
-    }
-  };
-
-  const handleSub = (outId: string, inId: string) => {
-    if (editingActivity && editingActivity.type === 'substitution') {
-      try {
-        updateActivity({ ...editingActivity, playerOutId: outId, playerInId: inId });
-      } catch (e) {
-        Alert.alert('Error', e instanceof Error ? e.message : 'Could not update substitution.');
-      }
-      setEditingActivity(null);
-      return;
-    }
-    try {
-      recordSubstitution('home', outId, inId);
-    } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Could not record substitution.');
-    }
-  };
-
-  const handleRemark = (text: string) => {
-    if (editingActivity && editingActivity.type === 'remark') {
-      try {
-        updateActivity({ ...editingActivity, text });
-      } catch (e) {
-        Alert.alert('Error', e instanceof Error ? e.message : 'Could not update note.');
-      }
-      setEditingActivity(null);
-      return;
-    }
-    try {
-      recordRemark(text);
-    } catch (e) {
-      Alert.alert('Error', e instanceof Error ? e.message : 'Could not record note.');
-    }
-  };
-
-  const handleEditActivity = (activity: MatchActivity) => {
-    setCapturedAt(activity.createdAt);
-    setEditingActivity(activity);
-    if (activity.type === 'goal') {
-      setGoalModalVisible(true);
-    } else if (activity.type === 'substitution') {
-      setSubModalVisible(true);
-    } else {
-      setRemarkModalVisible(true);
-    }
-  };
-
-  const handleDeleteActivity = (activityId: string) => {
-    deleteActivity(activityId);
-  };
+  const {
+    currentMatch,
+    homeTeam,
+    opponentLabel,
+    phase,
+    capturedPhase,
+    segmentWindow,
+    reversedActivities,
+    goalModalVisible,
+    subModalVisible,
+    remarkModalVisible,
+    confirmVisible,
+    timerAdjustVisible,
+    editingActivity,
+    openGoalModal,
+    closeGoalModal,
+    openSubModal,
+    closeSubModal,
+    openRemarkModal,
+    closeRemarkModal,
+    openTimerAdjust,
+    closeTimerAdjust,
+    openConfirm,
+    closeConfirm,
+    doFinish,
+    handleGoal,
+    handleSub,
+    handleRemark,
+    handleEditActivity,
+    handleDeleteActivity,
+    handleAdjustScore,
+    handleAdjustTimestamps,
+  } = vm;
 
   return (
     <View style={styles.container}>
       {/* Scoreboard */}
       <View style={styles.scoreboard}>
-        <TouchableOpacity
-          style={styles.timerRow}
-          onPress={() => setTimerAdjustVisible(true)}
-          activeOpacity={0.7}
-        >
+        <TouchableOpacity style={styles.timerRow} onPress={openTimerAdjust} activeOpacity={0.7}>
           <Text style={styles.periodInfo}>
             {phaseLabel(phase, currentMatch.segments)}
             {' | '}
@@ -205,11 +96,17 @@ export default function MatchLiveScreen({ navigation }: Props) {
               {homeTeam.name}
             </Text>
             <View style={styles.scoreControl}>
-              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('home', -1)}>
+              <TouchableOpacity
+                style={styles.scoreButton}
+                onPress={() => handleAdjustScore('home', -1)}
+              >
                 <Text style={styles.scoreButtonText}>−</Text>
               </TouchableOpacity>
               <Text style={styles.scoreDigit}>{currentMatch.homeScore}</Text>
-              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('home', 1)}>
+              <TouchableOpacity
+                style={styles.scoreButton}
+                onPress={() => handleAdjustScore('home', 1)}
+              >
                 <Text style={styles.scoreButtonText}>+</Text>
               </TouchableOpacity>
             </View>
@@ -223,11 +120,17 @@ export default function MatchLiveScreen({ navigation }: Props) {
               {opponentLabel}
             </Text>
             <View style={styles.scoreControl}>
-              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('away', -1)}>
+              <TouchableOpacity
+                style={styles.scoreButton}
+                onPress={() => handleAdjustScore('away', -1)}
+              >
                 <Text style={styles.scoreButtonText}>−</Text>
               </TouchableOpacity>
               <Text style={styles.scoreDigit}>{currentMatch.awayScore}</Text>
-              <TouchableOpacity style={styles.scoreButton} onPress={() => adjustScore('away', 1)}>
+              <TouchableOpacity
+                style={styles.scoreButton}
+                onPress={() => handleAdjustScore('away', 1)}
+              >
                 <Text style={styles.scoreButtonText}>+</Text>
               </TouchableOpacity>
             </View>
@@ -236,7 +139,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
         {/* Controls */}
         <View style={styles.controlRow}>
-          <TouchableOpacity style={styles.finishButton} onPress={() => setConfirmVisible(true)}>
+          <TouchableOpacity style={styles.finishButton} onPress={openConfirm}>
             <Text style={styles.finishButtonText}>Finish</Text>
           </TouchableOpacity>
         </View>
@@ -292,10 +195,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
       <GoalModal
         visible={goalModalVisible}
-        onClose={() => {
-          setGoalModalVisible(false);
-          setEditingActivity(null);
-        }}
+        onClose={closeGoalModal}
         onRecord={handleGoal}
         homeTeam={homeTeam}
         opponentName={currentMatch.opponentName}
@@ -306,10 +206,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
       />
       <SubstitutionModal
         visible={subModalVisible}
-        onClose={() => {
-          setSubModalVisible(false);
-          setEditingActivity(null);
-        }}
+        onClose={closeSubModal}
         onRecord={handleSub}
         homeTeam={homeTeam}
         capturedPhaseSeconds={capturedPhase.withinSeconds}
@@ -321,10 +218,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
       />
       <RemarkModal
         visible={remarkModalVisible}
-        onClose={() => {
-          setRemarkModalVisible(false);
-          setEditingActivity(null);
-        }}
+        onClose={closeRemarkModal}
         onRecord={handleRemark}
         capturedPhaseSeconds={capturedPhase.withinSeconds}
         editActivity={
@@ -334,8 +228,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
       <TimerAdjustModal
         visible={timerAdjustVisible}
-        onClose={() => setTimerAdjustVisible(false)}
-        onApply={(segs, newEndedAt) => adjustTimestamps(segs, newEndedAt)}
+        onClose={closeTimerAdjust}
+        onApply={handleAdjustTimestamps}
         segments={currentMatch.segments}
         endedAt={currentMatch.endedAt}
         periodDurationMinutes={currentMatch.periodDurationMinutes}
@@ -347,16 +241,13 @@ export default function MatchLiveScreen({ navigation }: Props) {
           <TouchableOpacity
             style={styles.confirmBackdrop}
             activeOpacity={1}
-            onPress={() => setConfirmVisible(false)}
+            onPress={closeConfirm}
           />
           <View style={styles.confirmPanel}>
             <Text style={styles.confirmTitle}>End match?</Text>
             <Text style={styles.confirmSubtitle}>Slide to confirm</Text>
             <SlideToConfirm onConfirm={doFinish} />
-            <TouchableOpacity
-              style={styles.confirmCancelButton}
-              onPress={() => setConfirmVisible(false)}
-            >
+            <TouchableOpacity style={styles.confirmCancelButton} onPress={closeConfirm}>
               <Text style={styles.confirmCancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>

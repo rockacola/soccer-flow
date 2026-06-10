@@ -1,42 +1,21 @@
-import type { NavigationProp } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { useMatchStore } from '../../stores/matchStore';
-import { useTeamsStore } from '../../stores/teamsStore';
-import type { Player, RootTabParamList, TeamsStackParamList } from '../../types';
+import type { TeamsStackParamList } from '../../types';
 
 import AddPlayerModal from './AddPlayerModal';
 import EditPlayerModal from './EditPlayerModal';
 import EditTeamModal from './EditTeamModal';
 import PlayerRow from './PlayerRow';
+import { useTeamDetailScreen } from './useTeamDetailScreen';
 
 type Props = NativeStackScreenProps<TeamsStackParamList, 'TeamDetail'>;
 
 export default function TeamDetailScreen({ route, navigation }: Props) {
   const { teamId } = route.params;
-  const team = useTeamsStore((s) => s.teams.find((t) => t.id === teamId));
-  const currentMatch = useMatchStore((s) => s.currentMatch);
-  const [addModalVisible, setAddModalVisible] = useState(false);
-  const [editTeamModalVisible, setEditTeamModalVisible] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const rootNav = useNavigation<NavigationProp<RootTabParamList>>();
-
-  useEffect(
-    function dismissOnTabBlur() {
-      const parent = navigation.getParent();
-      if (!parent) {
-        return () => {};
-      }
-      const unsubscribe = parent.addListener('blur', () => {
-        navigation.popToTop();
-      });
-      return unsubscribe;
-    },
-    [navigation],
-  );
+  const vm = useTeamDetailScreen(teamId, navigation);
+  const { team, openEditTeamModal } = vm;
 
   useEffect(
     function syncHeaderTitle() {
@@ -45,25 +24,15 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
       }
       navigation.setOptions({
         headerTitle: () => (
-          <TouchableOpacity
-            onPress={() => setEditTeamModalVisible(true)}
-            style={styles.headerTitleContainer}
-          >
+          <TouchableOpacity onPress={openEditTeamModal} style={styles.headerTitleContainer}>
             <View style={[styles.headerColourDot, { backgroundColor: team.colour }]} />
             <Text style={styles.headerTitleText}>{team.name}</Text>
           </TouchableOpacity>
         ),
       });
     },
-    [navigation, team],
+    [navigation, team, openEditTeamModal],
   );
-
-  const handleStartMatch = () => {
-    rootNav.navigate('Matches', {
-      screen: 'MatchSetup',
-      params: { homeTeamId: teamId },
-    });
-  };
 
   if (!team) {
     return (
@@ -73,18 +42,30 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
     );
   }
 
-  const matchButton =
-    currentMatch !== null ? (
-      <View style={[styles.matchButton, styles.matchButtonDisabled]}>
-        <Text style={[styles.matchButtonText, styles.matchButtonTextDisabled]}>
-          A match is already in progress
-        </Text>
-      </View>
-    ) : (
-      <TouchableOpacity style={styles.matchButton} onPress={handleStartMatch}>
-        <Text style={styles.matchButtonText}>Start Match</Text>
-      </TouchableOpacity>
-    );
+  const {
+    hasActiveMatch,
+    addModalVisible,
+    editTeamModalVisible,
+    selectedPlayer,
+    openAddModal,
+    closeAddModal,
+    closeEditTeamModal,
+    selectPlayer,
+    deselectPlayer,
+    handleStartMatch,
+  } = vm;
+
+  const matchButton = hasActiveMatch ? (
+    <View style={[styles.matchButton, styles.matchButtonDisabled]}>
+      <Text style={[styles.matchButtonText, styles.matchButtonTextDisabled]}>
+        A match is already in progress
+      </Text>
+    </View>
+  ) : (
+    <TouchableOpacity style={styles.matchButton} onPress={handleStartMatch}>
+      <Text style={styles.matchButtonText}>Start Match</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -92,29 +73,25 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
         data={team.players}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <PlayerRow teamId={teamId} player={item} onPress={() => setSelectedPlayer(item)} />
+          <PlayerRow teamId={teamId} player={item} onPress={() => selectPlayer(item)} />
         )}
         ListHeaderComponent={matchButton}
         contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={<Text style={styles.emptyText}>No players yet.</Text>}
       />
 
-      <TouchableOpacity style={styles.fab} onPress={() => setAddModalVisible(true)}>
+      <TouchableOpacity style={styles.fab} onPress={openAddModal}>
         <Text style={styles.fabLabel}>+</Text>
       </TouchableOpacity>
 
-      <AddPlayerModal
-        teamId={teamId}
-        visible={addModalVisible}
-        onClose={() => setAddModalVisible(false)}
-      />
+      <AddPlayerModal teamId={teamId} visible={addModalVisible} onClose={closeAddModal} />
 
       {selectedPlayer !== null && (
         <EditPlayerModal
           teamId={teamId}
           player={selectedPlayer}
           visible={selectedPlayer !== null}
-          onClose={() => setSelectedPlayer(null)}
+          onClose={deselectPlayer}
         />
       )}
 
@@ -123,7 +100,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
         initialName={team.name}
         initialColour={team.colour}
         visible={editTeamModalVisible}
-        onClose={() => setEditTeamModalVisible(false)}
+        onClose={closeEditTeamModal}
       />
     </View>
   );
