@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
@@ -25,23 +25,8 @@ export default function SubstitutionModal({
   capturedPhaseSeconds,
   editActivity,
 }: Props) {
-  const [playerOutId, setPlayerOutId] = useState<string | null>(null);
-  const [playerInId, setPlayerInId] = useState<string | null>(null);
-
-  useEffect(
-    function resetFormOnOpen() {
-      if (visible) {
-        if (editActivity) {
-          setPlayerOutId(editActivity.playerOutId);
-          setPlayerInId(editActivity.playerInId);
-        } else {
-          setPlayerOutId(null);
-          setPlayerInId(null);
-        }
-      }
-    },
-    [visible, editActivity],
-  );
+  const [playerOutId, setPlayerOutId] = useState<string | null>(editActivity?.playerOutId ?? null);
+  const [playerInId, setPlayerInId] = useState<string | null>(editActivity?.playerInId ?? null);
 
   const handleRecord = () => {
     if (!playerOutId || !playerInId) {

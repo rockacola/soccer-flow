@@ -127,6 +127,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
 
       {selectedPlayer !== null && (
         <EditPlayerModal
+          key={selectedPlayer.id}
           teamId={teamId}
           player={selectedPlayer}
           visible={selectedPlayer !== null}
@@ -135,6 +136,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
       )}
 
       <EditTeamModal
+        key={String(editTeamModalVisible)}
         teamId={teamId}
         initialName={team.name}
         initialColour={team.colour}

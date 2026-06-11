@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
@@ -35,22 +35,9 @@ export default function GoalModal({
   capturedPhaseSeconds,
   editActivity,
 }: Props) {
-  const [side, setSide] = useState<'home' | 'away'>('home');
-  const [selectedPlayerId, setSelectedPlayerId] = useState<string | null | undefined>(undefined);
-
-  useEffect(
-    function resetFormOnOpen() {
-      if (visible) {
-        if (editActivity) {
-          setSide(editActivity.side);
-          setSelectedPlayerId(editActivity.playerId);
-        } else {
-          setSide('home');
-          setSelectedPlayerId(undefined);
-        }
-      }
-    },
-    [visible, editActivity],
+  const [side, setSide] = useState<'home' | 'away'>(editActivity?.side ?? 'home');
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string | null | undefined>(
+    editActivity?.playerId,
   );
 
   const scorerRows = buildScorerRows(homeTeam.players);
