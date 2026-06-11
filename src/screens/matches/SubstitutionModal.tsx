@@ -3,7 +3,7 @@ import { Alert, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } fr
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { SubstitutionActivity, Team } from '../../types';
 import { formatPlayerLabel } from '../../utils/player';
 import { formatElapsed } from '../../utils/time';
@@ -131,16 +131,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   cancel: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.accent,
   },
   sectionLabel: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -158,13 +159,14 @@ const styles = StyleSheet.create({
   },
   playerText: {
     fontSize: typeScale.input,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     flex: 1,
   },
   checkmark: {
     fontSize: typeScale.input,
     color: colors.accent,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   emptyNotice: {
     paddingHorizontal: spacing.lg,
@@ -172,6 +174,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   recordButton: {
@@ -183,7 +186,7 @@ const styles = StyleSheet.create({
   },
   recordButtonText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
 });

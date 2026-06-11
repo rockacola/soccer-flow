@@ -4,7 +4,7 @@ import { FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react
 import JerseyBadge from '../../components/JerseyBadge';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { GoalActivity, Team } from '../../types';
 import {
   buildScorerRows,
@@ -153,16 +153,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   cancel: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.accent,
   },
   sectionLabel: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
   },
   teamTabText: {
     fontSize: typeScale.md,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.textPrimary,
   },
   teamTabTextActive: {
@@ -206,18 +207,20 @@ const styles = StyleSheet.create({
   },
   playerName: {
     fontSize: typeScale.input,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     flex: 1,
   },
   unknownLabel: {
     fontSize: typeScale.input,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     flex: 1,
   },
   checkmark: {
     fontSize: typeScale.input,
     color: colors.accent,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   recordButton: {
     margin: spacing.lg,
@@ -228,7 +231,7 @@ const styles = StyleSheet.create({
   },
   recordButtonText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
 });

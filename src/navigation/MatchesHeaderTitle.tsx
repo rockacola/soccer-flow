@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../constants/theme';
-import { typeScale } from '../constants/typography';
+import { fonts, typeScale } from '../constants/typography';
 
 export default function MatchesHeaderTitle() {
   return (
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
 });

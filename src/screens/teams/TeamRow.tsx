@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { Team, TeamsStackParamList } from '../../types';
 
 type Nav = NativeStackNavigationProp<TeamsStackParamList, 'TeamsList'>;
@@ -60,11 +60,12 @@ const styles = StyleSheet.create({
   },
   teamName: {
     fontSize: typeScale.input,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   playerCount: {
     fontSize: typeScale.base,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     marginTop: 2,
   },

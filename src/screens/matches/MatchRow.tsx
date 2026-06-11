@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { Match, MatchesStackParamList } from '../../types';
 import { resolveOpponent } from '../../utils/match';
 import { formatMatchDate } from '../../utils/time';
@@ -64,19 +64,20 @@ const styles = StyleSheet.create({
   },
   teamText: {
     fontSize: typeScale.body,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.textPrimary,
     flex: 1,
   },
   scoreText: {
     fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     marginHorizontal: spacing.md,
     fontVariant: ['tabular-nums'],
   },
   dateText: {
     fontSize: typeScale.sm,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     textAlign: 'right',
   },

@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import { formatElapsed } from '../../utils/time';
 
 type Props = {
@@ -114,14 +114,14 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: typeScale.base,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.accent,
   },
   duration: {
     flex: 1,
     textAlign: 'center',
     fontSize: typeScale.lg,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     fontVariant: ['tabular-nums'],
   },

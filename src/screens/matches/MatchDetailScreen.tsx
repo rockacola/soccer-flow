@@ -4,7 +4,7 @@ import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import { deletePastMatch } from '../../services/matchService';
 import type { MatchesStackParamList } from '../../types';
 import { formatBreakDuration, formatMatchDateLong, formatWallClock } from '../../utils/time';
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   date: {
     fontSize: typeScale.sm,
     color: colors.textTertiary,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
@@ -154,14 +154,14 @@ const styles = StyleSheet.create({
   },
   teamName: {
     fontSize: typeScale.md,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     flex: 1,
     textAlign: 'center',
   },
   score: {
     fontSize: typeScale.xxl,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     fontVariant: ['tabular-nums'],
   },
@@ -179,12 +179,13 @@ const styles = StyleSheet.create({
   },
   periodLabel: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     letterSpacing: 0.5,
   },
   periodMeta: {
     fontSize: typeScale.sm,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     fontVariant: ['tabular-nums'],
   },
@@ -201,6 +202,7 @@ const styles = StyleSheet.create({
   },
   emptyRowText: {
     fontSize: typeScale.md,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   breakSeparator: {
@@ -217,12 +219,13 @@ const styles = StyleSheet.create({
   },
   breakText: {
     fontSize: typeScale.sm,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.textSecondary,
     letterSpacing: 0.3,
   },
   emptyText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   deleteButton: {
@@ -237,7 +240,7 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     fontSize: typeScale.body,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.destructive,
   },
 });

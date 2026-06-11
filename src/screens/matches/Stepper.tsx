@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 
 type Props = {
   label: string;
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -85,13 +85,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: typeScale.md,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.textSecondary,
     lineHeight: 24,
   },
   value: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     minWidth: 64,
     textAlign: 'center',

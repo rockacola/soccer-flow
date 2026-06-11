@@ -4,7 +4,7 @@ import { Alert, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } f
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type {
   GoalActivity,
   MatchActivity,
@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
   },
   noMatchText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   scoreboard: {
@@ -304,12 +305,11 @@ const styles = StyleSheet.create({
   },
   periodInfo: {
     fontSize: typeScale.base,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.textSecondary,
   },
   timer: {
     fontSize: typeScale.xl,
-    fontWeight: '700',
     color: colors.textPrimary,
     fontVariant: ['tabular-nums'],
     fontFamily: Platform.select({ ios: 'Menlo', android: 'monospace', default: 'monospace' }),
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
   },
   teamNameLabel: {
     fontSize: typeScale.base,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     marginBottom: 6,
   },
@@ -345,12 +345,13 @@ const styles = StyleSheet.create({
   },
   scoreButtonText: {
     fontSize: typeScale.lg,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     lineHeight: 24,
   },
   scoreDigit: {
     fontSize: typeScale.xxxl,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     minWidth: 48,
     textAlign: 'center',
@@ -358,6 +359,7 @@ const styles = StyleSheet.create({
   },
   scoreDivider: {
     fontSize: 32,
+    fontFamily: fonts.regular,
     color: colors.textTertiary,
     paddingTop: 18,
   },
@@ -373,7 +375,7 @@ const styles = StyleSheet.create({
   },
   finishButtonText: {
     fontSize: typeScale.body,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   activityButtons: {
@@ -399,7 +401,7 @@ const styles = StyleSheet.create({
   },
   activityButtonText: {
     fontSize: typeScale.md,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   emptyLog: {
@@ -409,6 +411,7 @@ const styles = StyleSheet.create({
   },
   emptyLogText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   activityRow: {
@@ -424,7 +427,7 @@ const styles = StyleSheet.create({
   },
   activityDeleteText: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.destructive,
   },
 });

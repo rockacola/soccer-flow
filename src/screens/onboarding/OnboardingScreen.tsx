@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 
 import { useOnboardingScreen } from './useOnboardingScreen';
 
@@ -57,12 +57,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typeScale.xxxl,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     marginBottom: spacing.xl,
   },
   description: {
     fontSize: typeScale.title,
+    fontFamily: fonts.regular,
     lineHeight: 26,
     color: colors.textSecondary,
   },
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   },
   primaryButtonLabel: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   secondaryButton: {
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
   },
   secondaryButtonLabel: {
     fontSize: typeScale.title,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
 });

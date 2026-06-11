@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors } from '../constants/theme';
-import { typeScale } from '../constants/typography';
+import { fonts, typeScale } from '../constants/typography';
 
 type Props = {
   number?: number;
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   number: {
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
   },
 });

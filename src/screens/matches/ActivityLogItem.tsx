@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { MatchActivity, MatchSegment, Team } from '../../types';
 import { computePhase } from '../../utils/match';
 import { formatElapsed, formatWallClock } from '../../utils/time';
@@ -104,12 +104,13 @@ const styles = StyleSheet.create({
   },
   minute: {
     fontSize: typeScale.base,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     minWidth: 40,
   },
   clock: {
     fontSize: 11,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     minWidth: 40,
   },
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: typeScale.xs,
-    fontWeight: '700',
+    fontFamily: fonts.bold,
     color: colors.textPrimary,
     letterSpacing: 0.3,
   },
@@ -141,10 +142,12 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: typeScale.md,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   noteText: {
     fontSize: typeScale.md,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     flex: 1,
   },

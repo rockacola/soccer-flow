@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import JerseyBadge from '../../components/JerseyBadge';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { Player } from '../../types';
 
 type Props = {
@@ -48,11 +48,12 @@ const styles = StyleSheet.create({
   },
   playerName: {
     fontSize: typeScale.input,
-    fontWeight: '500',
+    fontFamily: fonts.medium,
     color: colors.textPrimary,
   },
   playerPosition: {
     fontSize: typeScale.base,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     marginTop: 2,
   },
