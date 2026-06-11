@@ -228,6 +228,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
       />
 
       <GoalModal
+        key={editingActivity?.id ?? 'new'}
         visible={goalModalVisible}
         onClose={closeGoalModal}
         onRecord={handleGoal}
@@ -239,6 +240,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
         }
       />
       <SubstitutionModal
+        key={editingActivity?.id ?? 'new'}
         visible={subModalVisible}
         onClose={closeSubModal}
         onRecord={handleSub}
@@ -251,6 +253,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
         }
       />
       <RemarkModal
+        key={editingActivity?.id ?? 'new'}
         visible={remarkModalVisible}
         onClose={closeRemarkModal}
         onRecord={handleRemark}
@@ -261,6 +264,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
       />
 
       <TimerAdjustModal
+        key={String(timerAdjustVisible)}
         visible={timerAdjustVisible}
         onClose={closeTimerAdjust}
         onApply={handleAdjustTimestamps}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Modal,
   Pressable,
@@ -33,17 +33,6 @@ export default function EditTeamModal({
   const [name, setName] = useState(initialName);
   const [colour, setColour] = useState(initialColour);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(
-    function resetFormOnOpen() {
-      if (visible) {
-        setName(initialName);
-        setColour(initialColour);
-        setError(null);
-      }
-    },
-    [visible, initialName, initialColour],
-  );
 
   function handleSave() {
     try {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
@@ -22,16 +22,7 @@ export default function RemarkModal({
   capturedPhaseSeconds,
   editActivity,
 }: Props) {
-  const [text, setText] = useState('');
-
-  useEffect(
-    function resetFormOnOpen() {
-      if (visible) {
-        setText(editActivity ? editActivity.text : '');
-      }
-    },
-    [visible, editActivity],
-  );
+  const [text, setText] = useState(editActivity?.text ?? '');
 
   const handleRecord = () => {
     if (text.trim().length === 0) {

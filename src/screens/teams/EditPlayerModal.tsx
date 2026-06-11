@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { PLAYER_POSITIONS } from '../../constants/player';
@@ -21,18 +21,6 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
   const [jerseyInput, setJerseyInput] = useState(player.jerseyNumber?.toString() ?? '');
   const [position, setPosition] = useState<PlayerPosition | undefined>(player.position);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(
-    function resetFormOnOpen() {
-      if (visible) {
-        setName(player.name);
-        setJerseyInput(player.jerseyNumber?.toString() ?? '');
-        setPosition(player.position);
-        setError(null);
-      }
-    },
-    [visible, player],
-  );
 
   function handleSave() {
     const jerseyNumber = parseJerseyNumber(jerseyInput);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
@@ -32,39 +32,17 @@ export default function TimerAdjustModal({
   periodDurationMinutes,
   breakDurationMinutes,
 }: Props) {
-  const [draftSegments, setDraftSegments] = useState<MatchSegment[]>([]);
-  const [draftEndedAt, setDraftEndedAt] = useState(0);
+  const [draftSegments, setDraftSegments] = useState<MatchSegment[]>(() => [...segments]);
+  const [draftEndedAt, setDraftEndedAt] = useState(() => {
+    if (endedAt !== null) {return endedAt;}
+    const lastSeg = segments[segments.length - 1];
+    const durationMs =
+      lastSeg.segmentType === 'period'
+        ? periodDurationMinutes * 60 * 1000
+        : breakDurationMinutes * 60 * 1000;
+    return lastSeg.startedAt + durationMs;
+  });
   const [selectedKey, setSelectedKey] = useState<SelectedKey>(null);
-
-  const segmentsRef = useRef(segments);
-  segmentsRef.current = segments;
-  const endedAtRef = useRef(endedAt);
-  endedAtRef.current = endedAt;
-  const periodDurationMinutesRef = useRef(periodDurationMinutes);
-  periodDurationMinutesRef.current = periodDurationMinutes;
-  const breakDurationMinutesRef = useRef(breakDurationMinutes);
-  breakDurationMinutesRef.current = breakDurationMinutes;
-
-  useEffect(
-    function initialiseDraftOnOpen() {
-      if (visible) {
-        const segs = segmentsRef.current;
-        setDraftSegments([...segs]);
-        if (endedAtRef.current !== null) {
-          setDraftEndedAt(endedAtRef.current);
-        } else {
-          const lastSeg = segs[segs.length - 1];
-          const durationMs =
-            lastSeg.segmentType === 'period'
-              ? periodDurationMinutesRef.current * 60 * 1000
-              : breakDurationMinutesRef.current * 60 * 1000;
-          setDraftEndedAt(lastSeg.startedAt + durationMs);
-        }
-        setSelectedKey(null);
-      }
-    },
-    [visible],
-  );
 
   const toggle = (key: string) => setSelectedKey((prev) => (prev === key ? null : key));
 
