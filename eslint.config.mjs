@@ -27,7 +27,7 @@ const eslintConfig = [
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
       },
-      globals: { ...globals.browser },
+      globals: { ...globals.browser, require: 'readonly' },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
