@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 
 import { useSettingsScreen } from './useSettingsScreen';
 
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     letterSpacing: 0.5,
     marginBottom: spacing.xs,
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   rowLabel: {
     fontSize: typeScale.input,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
   },
   destructiveLabel: {

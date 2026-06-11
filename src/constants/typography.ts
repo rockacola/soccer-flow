@@ -11,3 +11,11 @@ export const typeScale = {
   xxl: 36,
   xxxl: 40,
 } as const;
+
+export const fonts = {
+  thin: 'Montserrat_100Thin',
+  regular: 'Montserrat_400Regular',
+  medium: 'Montserrat_500Medium',
+  semiBold: 'Montserrat_600SemiBold',
+  bold: 'Montserrat_700Bold',
+} as const;

@@ -3,7 +3,7 @@ import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } fro
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { RemarkActivity } from '../../types';
 import { formatElapsed } from '../../utils/time';
 
@@ -92,11 +92,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   cancel: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.accent,
   },
   inputWrapper: {
@@ -109,6 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceElevated,
     borderRadius: 10,
     fontSize: typeScale.input,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     minHeight: 100,
     textAlignVertical: 'top',
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
   },
   recordButtonText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
 });

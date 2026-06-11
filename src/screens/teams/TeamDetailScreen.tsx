@@ -4,7 +4,7 @@ import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import { deleteTeam } from '../../services/teamsService';
 import type { TeamsStackParamList } from '../../types';
 
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   centred: {
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   },
   missingText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   matchButton: {
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   },
   matchButtonText: {
     fontSize: typeScale.input,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   matchButtonTextDisabled: {
@@ -204,6 +205,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   deleteTeamButton: {
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
   },
   deleteTeamButtonText: {
     fontSize: typeScale.body,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.destructive,
   },
   fab: {

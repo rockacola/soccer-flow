@@ -7,7 +7,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { MatchesStackParamList, RootTabParamList } from '../../types';
 
 import Stepper from './Stepper';
@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   headerTitleContainer: {
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   },
   headerTitleText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   headerTitleSeparator: {
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -153,11 +154,13 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: typeScale.title,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     paddingVertical: 0,
   },
   periodNote: {
     fontSize: typeScale.sm,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     marginTop: 6,
     marginHorizontal: 32,
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
   },
   startButtonText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
 });

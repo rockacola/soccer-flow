@@ -3,7 +3,7 @@ import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { MatchSegment } from '../../types';
 import { segmentLabel } from '../../utils/match';
 import { formatDurationLabel, formatWallClockFull } from '../../utils/time';
@@ -34,7 +34,9 @@ export default function TimerAdjustModal({
 }: Props) {
   const [draftSegments, setDraftSegments] = useState<MatchSegment[]>(() => [...segments]);
   const [draftEndedAt, setDraftEndedAt] = useState(() => {
-    if (endedAt !== null) {return endedAt;}
+    if (endedAt !== null) {
+      return endedAt;
+    }
     const lastSeg = segments[segments.length - 1];
     const durationMs =
       lastSeg.segmentType === 'period'
@@ -189,11 +191,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   cancel: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.accent,
   },
   list: {
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: typeScale.body,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     marginBottom: 2,
   },
@@ -220,6 +223,7 @@ const styles = StyleSheet.create({
   },
   timeRowLabel: {
     fontSize: typeScale.base,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     width: 36,
   },
@@ -234,6 +238,7 @@ const styles = StyleSheet.create({
   },
   timeChipText: {
     fontSize: typeScale.md,
+    fontFamily: fonts.regular,
     fontVariant: ['tabular-nums'],
     color: colors.textPrimary,
   },
@@ -242,7 +247,7 @@ const styles = StyleSheet.create({
   },
   cardDuration: {
     fontSize: typeScale.base,
-    fontWeight: '400',
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   applyButton: {
@@ -255,7 +260,7 @@ const styles = StyleSheet.create({
   },
   applyButtonText: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
 });

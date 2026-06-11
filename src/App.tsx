@@ -1,4 +1,12 @@
+import {
+  Montserrat_100Thin,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_700Bold,
+} from '@expo-google-fonts/montserrat';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 import React from 'react';
 import { StatusBar } from 'react-native';
 
@@ -18,6 +26,18 @@ const navigationTheme = {
 };
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Montserrat_100Thin,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+    Montserrat_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <>
       <StatusBar barStyle="light-content" />

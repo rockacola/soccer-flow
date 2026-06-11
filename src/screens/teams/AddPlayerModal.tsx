@@ -4,7 +4,7 @@ import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import { PLAYER_POSITIONS } from '../../constants/player';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import { addPlayer } from '../../services/teamsService';
 import type { PlayerPosition } from '../../types';
 import { parseJerseyNumber } from '../../utils/player';
@@ -145,24 +145,25 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   cancelButton: {
     fontSize: typeScale.title,
+    fontFamily: fonts.regular,
     color: colors.accent,
   },
   saveButton: {
     fontSize: typeScale.title,
     color: colors.accent,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
   },
   body: {
     padding: spacing.lg,
   },
   label: {
     fontSize: typeScale.base,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -175,6 +176,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: spacing.md,
     fontSize: typeScale.input,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.separator,
@@ -182,6 +184,7 @@ const styles = StyleSheet.create({
   errorText: {
     marginTop: 6,
     fontSize: typeScale.base,
+    fontFamily: fonts.regular,
     color: colors.destructive,
   },
   positionRow: {
@@ -202,7 +205,7 @@ const styles = StyleSheet.create({
   },
   positionChipText: {
     fontSize: typeScale.body,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   positionChipTextSelected: {

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import type { Team } from '../../types';
 
 type Props = {
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: typeScale.md,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
   },
 });

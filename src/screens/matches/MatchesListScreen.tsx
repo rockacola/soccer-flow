@@ -4,7 +4,7 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import { useMatchStore } from '../../stores/matchStore';
 import { useTeamsStore } from '../../stores/teamsStore';
 import type { MatchesStackParamList } from '../../types';
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   resumeLabel: {
     fontSize: typeScale.sm,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     opacity: 0.85,
     textTransform: 'uppercase',
@@ -81,11 +81,12 @@ const styles = StyleSheet.create({
   },
   resumeTeams: {
     fontSize: typeScale.body,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
   },
   resumeChevron: {
     fontSize: 24,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
   },
   emptyContainer: {
@@ -100,12 +101,13 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: typeScale.title,
-    fontWeight: '600',
+    fontFamily: fonts.semiBold,
     color: colors.textPrimary,
     marginBottom: 6,
   },
   emptySubtitle: {
     fontSize: typeScale.md,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
     textAlign: 'center',
   },

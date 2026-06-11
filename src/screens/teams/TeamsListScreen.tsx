@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
-import { typeScale } from '../../constants/typography';
+import { fonts, typeScale } from '../../constants/typography';
 import { useTeamsStore } from '../../stores/teamsStore';
 
 import CreateTeamModal from './CreateTeamModal';
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: typeScale.body,
+    fontFamily: fonts.regular,
     color: colors.textSecondary,
   },
   fab: {
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
   },
   fabLabel: {
     fontSize: 30,
+    fontFamily: fonts.regular,
     color: colors.textPrimary,
     lineHeight: 34,
   },
