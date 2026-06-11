@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { fonts, typeScale } from '../../constants/typography';
@@ -11,40 +12,41 @@ export default function SettingsScreen() {
   const { hasSampleData, onToggleSampleData, onResetAll } = useSettingsScreen();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.sectionLabel}>SAMPLE DATA</Text>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={onToggleSampleData}
-          accessibilityRole="button"
-          accessibilityLabel={hasSampleData ? 'Remove sample data' : 'Load sample data'}
-        >
-          <Text style={styles.rowLabel}>
-            {hasSampleData ? 'Remove Sample Data' : 'Load Sample Data'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+    <ScreenBackground>
+      <View style={styles.container}>
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>SAMPLE DATA</Text>
+          <TouchableOpacity
+            style={styles.row}
+            onPress={onToggleSampleData}
+            accessibilityRole="button"
+            accessibilityLabel={hasSampleData ? 'Remove sample data' : 'Load sample data'}
+          >
+            <Text style={styles.rowLabel}>
+              {hasSampleData ? 'Remove Sample Data' : 'Load Sample Data'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionLabel}>DANGER ZONE</Text>
-        <TouchableOpacity
-          style={styles.row}
-          onPress={onResetAll}
-          accessibilityRole="button"
-          accessibilityLabel="Reset all data"
-        >
-          <Text style={[styles.rowLabel, styles.destructiveLabel]}>Reset All Data</Text>
-        </TouchableOpacity>
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>DANGER ZONE</Text>
+          <TouchableOpacity
+            style={styles.row}
+            onPress={onResetAll}
+            accessibilityRole="button"
+            accessibilityLabel="Reset all data"
+          >
+            <Text style={[styles.rowLabel, styles.destructiveLabel]}>Reset All Data</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     paddingTop: spacing.xxl,
   },
   section: {

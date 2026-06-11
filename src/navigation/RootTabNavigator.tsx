@@ -2,10 +2,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
-import SettingsScreen from '../screens/settings/SettingsScreen';
 import type { RootTabParamList } from '../types';
 
 import MatchesStackNavigator from './MatchesStackNavigator';
+import SettingsStackNavigator from './SettingsStackNavigator';
 import TeamsStackNavigator from './TeamsStackNavigator';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -51,9 +51,9 @@ export default function RootTabNavigator() {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsStackNavigator}
         options={{
-          title: 'Settings',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="cog-outline" size={size} color={color} />
           ),

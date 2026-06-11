@@ -12,10 +12,14 @@ export type MatchesStackParamList = {
   MatchDetail: { matchId: string };
 };
 
+export type SettingsStackParamList = {
+  SettingsList: undefined;
+};
+
 export type RootTabParamList = {
   Teams: NavigatorScreenParams<TeamsStackParamList>;
   Matches: NavigatorScreenParams<MatchesStackParamList>;
-  Settings: undefined;
+  Settings: NavigatorScreenParams<SettingsStackParamList>;
 };
 
 export type RootStackParamList = {
