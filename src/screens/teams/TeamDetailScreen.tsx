@@ -127,7 +127,11 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
           </TouchableOpacity>
         }
         contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
-        ListEmptyComponent={<Text style={styles.emptyText}>No players yet.</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>
+            No players yet. Tap Add to build your roster before starting a match.
+          </Text>
+        }
       />
 
       <AddPlayerModal teamId={teamId} visible={addModalVisible} onClose={closeAddModal} />
@@ -214,6 +218,8 @@ const styles = StyleSheet.create({
     fontSize: typeScale.body,
     fontFamily: fonts.regular,
     color: colors.textSecondary,
+    textAlign: 'center',
+    paddingHorizontal: spacing.xxl,
   },
   deleteTeamButton: {
     marginHorizontal: spacing.lg,
