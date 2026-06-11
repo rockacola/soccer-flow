@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { FlatList, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -200,17 +199,12 @@ export default function MatchLiveScreen({ navigation }: Props) {
         data={reversedActivities}
         keyExtractor={(item: MatchActivity) => item.id}
         renderItem={({ item }) => (
-          <Swipeable
-            renderRightActions={() => (
-              <TouchableOpacity
-                style={styles.deleteAction}
-                onPress={() => handleDeleteActivity(item.id)}
-              >
-                <Text style={styles.deleteActionText}>Delete</Text>
-              </TouchableOpacity>
-            )}
-          >
-            <TouchableOpacity activeOpacity={0.7} onPress={() => handleEditActivity(item)}>
+          <View style={styles.activityRow}>
+            <TouchableOpacity
+              style={styles.activityRowContent}
+              activeOpacity={0.7}
+              onPress={() => handleEditActivity(item)}
+            >
               <ActivityLogItem
                 activity={item}
                 homeTeam={homeTeam}
@@ -218,7 +212,15 @@ export default function MatchLiveScreen({ navigation }: Props) {
                 segments={currentMatch.segments}
               />
             </TouchableOpacity>
-          </Swipeable>
+            <TouchableOpacity
+              style={styles.activityDeleteButton}
+              onPress={() => handleDeleteActivity(item.id)}
+              accessibilityRole="button"
+              accessibilityLabel="Delete activity"
+            >
+              <Text style={styles.activityDeleteText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         )}
         contentContainerStyle={reversedActivities.length === 0 ? styles.emptyLog : undefined}
         ListEmptyComponent={<Text style={styles.emptyLogText}>No activity yet.</Text>}
@@ -427,16 +429,21 @@ const styles = StyleSheet.create({
     fontSize: typeScale.body,
     color: colors.textSecondary,
   },
-  deleteAction: {
-    backgroundColor: colors.destructive,
+  activityRow: {
+    flexDirection: 'row',
+  },
+  activityRowContent: {
+    flex: 1,
+  },
+  activityDeleteButton: {
+    paddingHorizontal: spacing.md,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80,
   },
-  deleteActionText: {
-    color: colors.textPrimary,
-    fontSize: typeScale.md,
+  activityDeleteText: {
+    fontSize: typeScale.sm,
     fontWeight: '600',
+    color: colors.destructive,
   },
   confirmOverlay: {
     flex: 1,

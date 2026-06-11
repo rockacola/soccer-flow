@@ -1,10 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { typeScale } from '../../constants/typography';
+import { deletePastMatch } from '../../services/matchService';
 import type { MatchesStackParamList } from '../../types';
 import { formatBreakDuration, formatMatchDateLong, formatWallClock } from '../../utils/time';
 
@@ -13,9 +14,23 @@ import { useMatchDetailScreen } from './useMatchDetailScreen';
 
 type Props = NativeStackScreenProps<MatchesStackParamList, 'MatchDetail'>;
 
-export default function MatchDetailScreen({ route }: Props) {
+export default function MatchDetailScreen({ route, navigation }: Props) {
   const { matchId } = route.params;
   const vm = useMatchDetailScreen(matchId);
+
+  function handleDeleteMatch() {
+    Alert.alert('Delete Match', 'This cannot be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          deletePastMatch(matchId);
+          navigation.goBack();
+        },
+      },
+    ]);
+  }
 
   if (vm.status === 'not-found') {
     return (
@@ -91,6 +106,15 @@ export default function MatchDetailScreen({ route }: Props) {
           </React.Fragment>
         ))}
       </View>
+
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={handleDeleteMatch}
+        accessibilityRole="button"
+        accessibilityLabel="Delete match"
+      >
+        <Text style={styles.deleteButtonText}>Delete Match</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -200,5 +224,20 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: typeScale.body,
     color: colors.textSecondary,
+  },
+  deleteButton: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xxl,
+    marginBottom: spacing.xxl,
+    paddingVertical: 14,
+    borderRadius: spacing.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.destructive,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    fontSize: typeScale.body,
+    fontWeight: '600',
+    color: colors.destructive,
   },
 });

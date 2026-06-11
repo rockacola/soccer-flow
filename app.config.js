@@ -6,6 +6,7 @@ module.exports = {
     slug: 'soccer-flow',
     version,
     orientation: 'portrait',
+    userInterfaceStyle: 'dark',
     icon: './assets/icon.png',
     newArchEnabled: true,
     assetBundlePatterns: ['**/*'],
