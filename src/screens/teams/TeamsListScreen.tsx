@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { fonts, typeScale } from '../../constants/typography';
@@ -35,38 +36,39 @@ export default function TeamsListScreen({ navigation }: Props) {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={teams}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <TeamRow team={item} />}
-        contentContainerStyle={teams.length === 0 ? styles.emptyContainer : undefined}
-        ListEmptyComponent={
-          <View style={styles.emptyContent}>
-            <Text style={styles.emptyText}>
-              No teams yet. Create your first team to get started.
-            </Text>
-            <TouchableOpacity
-              style={styles.emptyButton}
-              onPress={() => setModalVisible(true)}
-              accessibilityRole="button"
-              accessibilityLabel="Add team"
-            >
-              <Text style={styles.emptyButtonLabel}>Add Team</Text>
-            </TouchableOpacity>
-          </View>
-        }
-      />
+    <ScreenBackground>
+      <View style={styles.container}>
+        <FlatList
+          data={teams}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <TeamRow team={item} />}
+          contentContainerStyle={teams.length === 0 ? styles.emptyContainer : undefined}
+          ListEmptyComponent={
+            <View style={styles.emptyContent}>
+              <Text style={styles.emptyText}>
+                No teams yet. Create your first team to get started.
+              </Text>
+              <TouchableOpacity
+                style={styles.emptyButton}
+                onPress={() => setModalVisible(true)}
+                accessibilityRole="button"
+                accessibilityLabel="Add team"
+              >
+                <Text style={styles.emptyButtonLabel}>Add Team</Text>
+              </TouchableOpacity>
+            </View>
+          }
+        />
 
-      <CreateTeamModal visible={modalVisible} onClose={() => setModalVisible(false)} />
-    </View>
+        <CreateTeamModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+      </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   emptyContainer: {
     flex: 1,

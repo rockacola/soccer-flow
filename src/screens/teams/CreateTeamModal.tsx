@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { TEAM_COLOUR_OPTIONS } from '../../constants/team';
 import { colors } from '../../constants/theme';
@@ -46,7 +47,7 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <View style={styles.container}>
+      <ScreenBackground>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={handleClose}
@@ -102,16 +103,12 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
             ))}
           </View>
         </View>
-      </View>
+      </ScreenBackground>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.surface,
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

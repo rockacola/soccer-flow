@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { PLAYER_POSITIONS } from '../../constants/player';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -45,7 +46,7 @@ export default function AddPlayerModal({ teamId, visible, onClose }: Props) {
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <View style={styles.container}>
+      <ScreenBackground>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={resetAndClose}
@@ -123,16 +124,12 @@ export default function AddPlayerModal({ teamId, visible, onClose }: Props) {
             ))}
           </View>
         </View>
-      </View>
+      </ScreenBackground>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.surface,
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

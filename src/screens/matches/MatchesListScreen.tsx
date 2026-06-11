@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { fonts, typeScale } from '../../constants/typography';
@@ -20,47 +21,48 @@ export default function MatchesListScreen({ navigation }: Props) {
   const teams = useTeamsStore((s) => s.teams);
 
   return (
-    <View style={styles.container}>
-      {currentMatch !== null && (
-        <TouchableOpacity
-          style={styles.resumeBanner}
-          onPress={() => navigation.navigate('MatchLive')}
-          accessibilityRole="button"
-          accessibilityLabel={`Match in progress: ${resolveTeamName(teams, currentMatch.homeTeamId)} vs ${resolveOpponent(currentMatch.opponentName)}. Tap to resume.`}
-        >
-          <View>
-            <Text style={styles.resumeLabel}>Match in progress</Text>
-            <Text style={styles.resumeTeams}>
-              {resolveTeamName(teams, currentMatch.homeTeamId)} vs{' '}
-              {resolveOpponent(currentMatch.opponentName)}
-            </Text>
-          </View>
-          <Text style={styles.resumeChevron}>›</Text>
-        </TouchableOpacity>
-      )}
-
-      <FlatList
-        data={[...pastMatches].reverse()}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <MatchRow match={item} resolveTeamName={(teamId) => resolveTeamName(teams, teamId)} />
+    <ScreenBackground>
+      <View style={styles.container}>
+        {currentMatch !== null && (
+          <TouchableOpacity
+            style={styles.resumeBanner}
+            onPress={() => navigation.navigate('MatchLive')}
+            accessibilityRole="button"
+            accessibilityLabel={`Match in progress: ${resolveTeamName(teams, currentMatch.homeTeamId)} vs ${resolveOpponent(currentMatch.opponentName)}. Tap to resume.`}
+          >
+            <View>
+              <Text style={styles.resumeLabel}>Match in progress</Text>
+              <Text style={styles.resumeTeams}>
+                {resolveTeamName(teams, currentMatch.homeTeamId)} vs{' '}
+                {resolveOpponent(currentMatch.opponentName)}
+              </Text>
+            </View>
+            <Text style={styles.resumeChevron}>›</Text>
+          </TouchableOpacity>
         )}
-        contentContainerStyle={pastMatches.length === 0 ? styles.emptyContainer : undefined}
-        ListEmptyComponent={
-          <View style={styles.emptyContent}>
-            <Text style={styles.emptyTitle}>No past matches</Text>
-            <Text style={styles.emptySubtitle}>Start a match from a team's detail screen.</Text>
-          </View>
-        }
-      />
-    </View>
+
+        <FlatList
+          data={[...pastMatches].reverse()}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <MatchRow match={item} resolveTeamName={(teamId) => resolveTeamName(teams, teamId)} />
+          )}
+          contentContainerStyle={pastMatches.length === 0 ? styles.emptyContainer : undefined}
+          ListEmptyComponent={
+            <View style={styles.emptyContent}>
+              <Text style={styles.emptyTitle}>No past matches</Text>
+              <Text style={styles.emptySubtitle}>Start a match from a team's detail screen.</Text>
+            </View>
+          }
+        />
+      </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   resumeBanner: {
     flexDirection: 'row',

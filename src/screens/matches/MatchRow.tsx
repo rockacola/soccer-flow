@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BlurView } from 'expo-blur';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -25,13 +26,13 @@ export default function MatchRow({ match, resolveTeamName }: Props) {
   }
 
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.row}
       onPress={handlePress}
-      activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={`${resolveTeamName(match.homeTeamId)} vs ${resolveOpponent(match.opponentName)}, ${match.homeScore} to ${match.awayScore}`}
     >
+      <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
       <View style={styles.rowTeams}>
         <Text style={styles.teamText} numberOfLines={1}>
           {resolveTeamName(match.homeTeamId)}
@@ -44,17 +45,17 @@ export default function MatchRow({ match, resolveTeamName }: Props) {
         </Text>
       </View>
       <Text style={styles.dateText}>{formatMatchDate(match.segments[0]?.startedAt ?? null)}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   row: {
-    backgroundColor: colors.surface,
     marginHorizontal: spacing.lg,
     marginTop: spacing.md,
     borderRadius: spacing.md,
     padding: 14,
+    overflow: 'hidden',
   },
   rowTeams: {
     flexDirection: 'row',
