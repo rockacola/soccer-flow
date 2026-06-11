@@ -10,5 +10,5 @@ export const TEAM_COLOUR_OPTIONS: { hex: string; label: string }[] = [
   { hex: palette.orange[500], label: 'Orange' },
   { hex: palette.brown[500], label: 'Brown' },
   { hex: palette.neutral[500], label: 'Grey' },
-  { hex: palette.gray[920], label: 'Black' },
+  { hex: palette.gray[950], label: 'Black' },
 ];
