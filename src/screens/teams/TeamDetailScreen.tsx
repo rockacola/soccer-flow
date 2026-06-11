@@ -19,7 +19,7 @@ type Props = NativeStackScreenProps<TeamsStackParamList, 'TeamDetail'>;
 export default function TeamDetailScreen({ route, navigation }: Props) {
   const { teamId } = route.params;
   const vm = useTeamDetailScreen(teamId, navigation);
-  const { team, openEditTeamModal } = vm;
+  const { team, openEditTeamModal, openAddModal } = vm;
 
   useEffect(
     function syncHeaderTitle() {
@@ -38,6 +38,23 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
     [navigation, team, openEditTeamModal],
   );
 
+  useEffect(
+    function syncHeaderAddButton() {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={openAddModal}
+            accessibilityRole="button"
+            accessibilityLabel="Add player"
+          >
+            <Text style={styles.headerButton}>Add</Text>
+          </TouchableOpacity>
+        ),
+      });
+    },
+    [navigation, openAddModal],
+  );
+
   if (!team) {
     return (
       <View style={styles.centred}>
@@ -51,7 +68,6 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
     addModalVisible,
     editTeamModalVisible,
     selectedPlayer,
-    openAddModal,
     closeAddModal,
     closeEditTeamModal,
     selectPlayer,
@@ -113,15 +129,6 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
         contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={<Text style={styles.emptyText}>No players yet.</Text>}
       />
-
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={openAddModal}
-        accessibilityRole="button"
-        accessibilityLabel="Add player"
-      >
-        <Text style={styles.fabLabel}>+</Text>
-      </TouchableOpacity>
 
       <AddPlayerModal teamId={teamId} visible={addModalVisible} onClose={closeAddModal} />
 
@@ -224,25 +231,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     color: colors.destructive,
   },
-  fab: {
-    position: 'absolute',
-    bottom: 32,
-    right: spacing.xxl,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.background,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  fabLabel: {
-    fontSize: 30,
-    color: colors.textPrimary,
-    lineHeight: 34,
+  headerButton: {
+    fontSize: typeScale.body,
+    fontFamily: fonts.semiBold,
+    color: colors.accent,
   },
 });

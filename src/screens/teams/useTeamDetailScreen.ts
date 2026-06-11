@@ -48,6 +48,7 @@ export function useTeamDetailScreen(teamId: string, navigation: Navigation): Tea
   );
 
   const openEditTeamModal = useCallback(() => setEditTeamModalVisible(true), []);
+  const openAddModal = useCallback(() => setAddModalVisible(true), []);
 
   return {
     team,
@@ -55,7 +56,7 @@ export function useTeamDetailScreen(teamId: string, navigation: Navigation): Tea
     addModalVisible,
     editTeamModalVisible,
     selectedPlayer,
-    openAddModal: () => setAddModalVisible(true),
+    openAddModal,
     closeAddModal: () => setAddModalVisible(false),
     openEditTeamModal,
     closeEditTeamModal: () => setEditTeamModalVisible(false),
