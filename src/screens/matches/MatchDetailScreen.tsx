@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { fonts, typeScale } from '../../constants/typography';
@@ -34,95 +35,100 @@ export default function MatchDetailScreen({ route, navigation }: Props) {
 
   if (vm.status === 'not-found') {
     return (
-      <View style={styles.centred}>
-        <Text style={styles.emptyText}>Match not found.</Text>
-      </View>
+      <ScreenBackground>
+        <View style={styles.centred}>
+          <Text style={styles.emptyText}>Match not found.</Text>
+        </View>
+      </ScreenBackground>
     );
   }
 
   const { match, homeTeam, opponentName, groups } = vm;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.listContent}>
-      {/* Score */}
-      <View style={styles.scoreCard}>
-        <Text style={styles.date}>{formatMatchDateLong(match.segments[0]?.startedAt ?? null)}</Text>
-        <View style={styles.scoreRow}>
-          <Text style={styles.teamName} numberOfLines={2}>
-            {homeTeam.name}
+    <ScreenBackground>
+      <ScrollView style={styles.container} contentContainerStyle={styles.listContent}>
+        {/* Score */}
+        <View style={styles.scoreCard}>
+          <Text style={styles.date}>
+            {formatMatchDateLong(match.segments[0]?.startedAt ?? null)}
           </Text>
-          <Text style={styles.score}>
-            {match.homeScore} – {match.awayScore}
-          </Text>
-          <Text style={styles.teamName} numberOfLines={2}>
-            {opponentName}
-          </Text>
+          <View style={styles.scoreRow}>
+            <Text style={styles.teamName} numberOfLines={2}>
+              {homeTeam.name}
+            </Text>
+            <Text style={styles.score}>
+              {match.homeScore} – {match.awayScore}
+            </Text>
+            <Text style={styles.teamName} numberOfLines={2}>
+              {opponentName}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      {/* Segment groups */}
-      <View style={styles.segmentsContainer}>
-        {groups.map((group) => (
-          <React.Fragment key={group.segmentId}>
-            <View style={styles.periodHeader}>
-              <Text style={styles.periodLabel}>{group.label.toUpperCase()}</Text>
-              {group.endedAt !== null && (
-                <Text style={styles.periodMeta}>
-                  {formatWallClock(group.startedAt)}
-                  {' – '}
-                  {formatWallClock(group.endedAt)}
-                  {'  ·  '}
-                  {Math.round((group.endedAt - group.startedAt) / 60000)} min
-                </Text>
-              )}
-            </View>
-            <View style={styles.activityCard}>
-              {group.activities.length === 0 ? (
-                <View style={styles.emptyRow}>
-                  <Text style={styles.emptyRowText}>No activities</Text>
-                </View>
-              ) : (
-                group.activities.map((activity, aIdx) => (
-                  <ActivityLogItem
-                    key={activity.id}
-                    activity={activity}
-                    homeTeam={homeTeam}
-                    opponentName={opponentName}
-                    segments={match.segments}
-                    showBottomBorder={aIdx < group.activities.length - 1}
-                  />
-                ))
-              )}
-            </View>
-            {group.breakAfter !== null && (
-              <View style={styles.breakSeparator}>
-                <View style={styles.breakLine} />
-                <Text style={styles.breakText}>
-                  {group.breakAfter.label} · {formatBreakDuration(group.breakAfter.durationMs)}
-                </Text>
-                <View style={styles.breakLine} />
+        {/* Segment groups */}
+        <View style={styles.segmentsContainer}>
+          {groups.map((group) => (
+            <React.Fragment key={group.segmentId}>
+              <View style={styles.periodHeader}>
+                <Text style={styles.periodLabel}>{group.label.toUpperCase()}</Text>
+                {group.endedAt !== null && (
+                  <Text style={styles.periodMeta}>
+                    {formatWallClock(group.startedAt)}
+                    {' – '}
+                    {formatWallClock(group.endedAt)}
+                    {'  ·  '}
+                    {Math.round((group.endedAt - group.startedAt) / 60000)} min
+                  </Text>
+                )}
               </View>
-            )}
-          </React.Fragment>
-        ))}
-      </View>
+              <View style={styles.activityCard}>
+                {group.activities.length === 0 ? (
+                  <View style={styles.emptyRow}>
+                    <Text style={styles.emptyRowText}>No activities</Text>
+                  </View>
+                ) : (
+                  group.activities.map((activity, aIdx) => (
+                    <ActivityLogItem
+                      key={activity.id}
+                      activity={activity}
+                      homeTeam={homeTeam}
+                      opponentName={opponentName}
+                      segments={match.segments}
+                      showBottomBorder={aIdx < group.activities.length - 1}
+                    />
+                  ))
+                )}
+              </View>
+              {group.breakAfter !== null && (
+                <View style={styles.breakSeparator}>
+                  <View style={styles.breakLine} />
+                  <Text style={styles.breakText}>
+                    {group.breakAfter.label} · {formatBreakDuration(group.breakAfter.durationMs)}
+                  </Text>
+                  <View style={styles.breakLine} />
+                </View>
+              )}
+            </React.Fragment>
+          ))}
+        </View>
 
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={handleDeleteMatch}
-        accessibilityRole="button"
-        accessibilityLabel="Delete match"
-      >
-        <Text style={styles.deleteButtonText}>Delete Match</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={handleDeleteMatch}
+          accessibilityRole="button"
+          accessibilityLabel="Delete match"
+        >
+          <Text style={styles.deleteButtonText}>Delete Match</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   listContent: {
     paddingBottom: 40,
@@ -131,7 +137,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.background,
   },
   scoreCard: {
     backgroundColor: colors.surface,

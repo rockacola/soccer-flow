@@ -1,5 +1,6 @@
+import { BlurView } from 'expo-blur';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import JerseyBadge from '../../components/JerseyBadge';
 import { spacing } from '../../constants/spacing';
@@ -14,12 +15,8 @@ type Props = {
 
 export default function PlayerRow({ player, onPress }: Props) {
   return (
-    <TouchableOpacity
-      style={styles.playerRow}
-      onPress={onPress}
-      activeOpacity={0.7}
-      accessibilityLabel={player.name}
-    >
+    <Pressable style={styles.playerRow} onPress={onPress} accessibilityLabel={player.name}>
+      <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
       <JerseyBadge number={player.jerseyNumber} />
       <View style={styles.playerInfo}>
         <Text style={styles.playerName}>{player.name}</Text>
@@ -28,7 +25,7 @@ export default function PlayerRow({ player, onPress }: Props) {
         )}
       </View>
       <Text style={styles.chevron}>›</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -40,7 +37,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
-    backgroundColor: colors.background,
+    overflow: 'hidden',
     gap: spacing.md,
   },
   playerInfo: {

@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { fonts, typeScale } from '../../constants/typography';
@@ -57,9 +58,11 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
 
   if (!team) {
     return (
-      <View style={styles.centred}>
-        <Text style={styles.missingText}>Team not found.</Text>
-      </View>
+      <ScreenBackground>
+        <View style={styles.centred}>
+          <Text style={styles.missingText}>Team not found.</Text>
+        </View>
+      </ScreenBackground>
     );
   }
 
@@ -110,58 +113,59 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={team.players}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <PlayerRow player={item} onPress={() => selectPlayer(item)} />}
-        ListHeaderComponent={matchButton}
-        ListFooterComponent={
-          <TouchableOpacity
-            style={styles.deleteTeamButton}
-            onPress={handleDeleteTeam}
-            accessibilityRole="button"
-            accessibilityLabel="Delete team"
-          >
-            <Text style={styles.deleteTeamButtonText}>Delete Team</Text>
-          </TouchableOpacity>
-        }
-        contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            No players yet. Tap Add to build your roster before starting a match.
-          </Text>
-        }
-      />
-
-      <AddPlayerModal teamId={teamId} visible={addModalVisible} onClose={closeAddModal} />
-
-      {selectedPlayer !== null && (
-        <EditPlayerModal
-          key={selectedPlayer.id}
-          teamId={teamId}
-          player={selectedPlayer}
-          visible={selectedPlayer !== null}
-          onClose={deselectPlayer}
+    <ScreenBackground>
+      <View style={styles.container}>
+        <FlatList
+          data={team.players}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <PlayerRow player={item} onPress={() => selectPlayer(item)} />}
+          ListHeaderComponent={matchButton}
+          ListFooterComponent={
+            <TouchableOpacity
+              style={styles.deleteTeamButton}
+              onPress={handleDeleteTeam}
+              accessibilityRole="button"
+              accessibilityLabel="Delete team"
+            >
+              <Text style={styles.deleteTeamButtonText}>Delete Team</Text>
+            </TouchableOpacity>
+          }
+          contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>
+              No players yet. Tap Add to build your roster before starting a match.
+            </Text>
+          }
         />
-      )}
 
-      <EditTeamModal
-        key={String(editTeamModalVisible)}
-        teamId={teamId}
-        initialName={team.name}
-        initialColour={team.colour}
-        visible={editTeamModalVisible}
-        onClose={closeEditTeamModal}
-      />
-    </View>
+        <AddPlayerModal teamId={teamId} visible={addModalVisible} onClose={closeAddModal} />
+
+        {selectedPlayer !== null && (
+          <EditPlayerModal
+            key={selectedPlayer.id}
+            teamId={teamId}
+            player={selectedPlayer}
+            visible={selectedPlayer !== null}
+            onClose={deselectPlayer}
+          />
+        )}
+
+        <EditTeamModal
+          key={String(editTeamModalVisible)}
+          teamId={teamId}
+          initialName={team.name}
+          initialColour={team.colour}
+          visible={editTeamModalVisible}
+          onClose={closeEditTeamModal}
+        />
+      </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   headerTitleContainer: {
     flexDirection: 'row',

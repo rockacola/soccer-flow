@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BlurView } from 'expo-blur';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -22,20 +23,20 @@ export default function TeamRow({ team }: Props) {
   }
 
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.row}
       onPress={handlePress}
-      activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={team.name}
     >
+      <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
       <View style={[styles.colourDot, { backgroundColor: team.colour }]} />
       <View style={styles.rowText}>
         <Text style={styles.teamName}>{team.name}</Text>
         <Text style={styles.playerCount}>{team.players.length} players</Text>
       </View>
       <Text style={styles.chevron}>›</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.separator,
-    backgroundColor: colors.background,
+    overflow: 'hidden',
   },
   colourDot: {
     width: 16,

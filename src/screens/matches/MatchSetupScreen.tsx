@@ -5,6 +5,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import ScreenBackground from '../../components/ScreenBackground';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { fonts, typeScale } from '../../constants/typography';
@@ -52,9 +53,11 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
 
   if (!homeTeam) {
     return (
-      <View style={styles.centred}>
-        <Text style={styles.errorText}>Team not found.</Text>
-      </View>
+      <ScreenBackground>
+        <View style={styles.centred}>
+          <Text style={styles.errorText}>Team not found.</Text>
+        </View>
+      </ScreenBackground>
     );
   }
 
@@ -69,44 +72,45 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
   } = vm;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.section}>
-        <Text style={styles.label}>Opponent</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Opponent name (optional)"
-          placeholderTextColor={colors.textSecondary}
-          value={opponentName}
-          onChangeText={setOpponentName}
-          keyboardAppearance="dark"
-          returnKeyType="done"
-          accessibilityLabel="Opponent name"
-        />
+    <ScreenBackground>
+      <View style={styles.container}>
+        <View style={styles.section}>
+          <Text style={styles.label}>Opponent</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Opponent name (optional)"
+            placeholderTextColor={colors.textSecondary}
+            value={opponentName}
+            onChangeText={setOpponentName}
+            keyboardAppearance="dark"
+            returnKeyType="done"
+            accessibilityLabel="Opponent name"
+          />
+        </View>
+
+        <Stepper label="Period duration" value={periodDurationMinutes} onAdjust={adjustPeriod} />
+        <Text style={styles.periodNote}>2 periods per match</Text>
+
+        <Stepper label="Break duration" value={breakDurationMinutes} onAdjust={adjustBreak} />
+
+        <View style={styles.spacer} />
+
+        <TouchableOpacity
+          style={styles.startButton}
+          onPress={handleStart}
+          accessibilityRole="button"
+          accessibilityLabel="Start match"
+        >
+          <Text style={styles.startButtonText}>Start Match</Text>
+        </TouchableOpacity>
       </View>
-
-      <Stepper label="Period duration" value={periodDurationMinutes} onAdjust={adjustPeriod} />
-      <Text style={styles.periodNote}>2 periods per match</Text>
-
-      <Stepper label="Break duration" value={breakDurationMinutes} onAdjust={adjustBreak} />
-
-      <View style={styles.spacer} />
-
-      <TouchableOpacity
-        style={styles.startButton}
-        onPress={handleStart}
-        accessibilityRole="button"
-        accessibilityLabel="Start match"
-      >
-        <Text style={styles.startButtonText}>Start Match</Text>
-      </TouchableOpacity>
-    </View>
+    </ScreenBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   centred: {
     flex: 1,
