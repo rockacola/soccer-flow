@@ -79,3 +79,15 @@
 **Reason:** Two attempts preceded this decision. First, `uuid` v14 was used but it references `import.meta` internally, which Metro's web bundler does not support (blank screen on web). Second, `crypto.randomUUID()` was called directly, but `crypto` is not a reliable global in Hermes on Expo Go — it caused a runtime crash on device. `expo-crypto` is Expo's own cryptography module, is bundled into Expo Go, works on web, and abstracts over whatever the platform provides. The `generateId()` wrapper means all future call sites are unaffected if the implementation changes again.
 
 **Trade-off:** One Expo SDK dependency, but it is a first-party package with no native build step required in managed workflow.
+
+---
+
+## ADR-009: Replace Gesture-Based Destructive Actions with Explicit Buttons
+
+**Decision:** Remove swipe-to-delete (list rows) and slide-to-finish (live match) affordances. Replace with always-visible explicit buttons and `Alert.alert()` confirmation.
+
+**Reason:** Gesture affordances are not discoverable, not testable by Maestro automation, and not portable across platforms. The baseline UI should work with zero gesture knowledge. Swipe-to-delete and slide-to-confirm are additive affordances — they can be layered back in later via feature flags, gated by platform or user preference.
+
+**Trade-off:** Slightly more taps for power users who would have used the gesture. Accepted — the goal is incremental affordance, not maximum gesture coverage from day one.
+
+**Revisit:** Slide-to-finish in `MatchLiveScreen` was a deliberate high-friction guard against accidentally ending a match. Worth reconsidering once feature flags are in place (Part 9) so it can be offered as an opt-in or platform-specific enhancement.

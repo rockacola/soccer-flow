@@ -35,7 +35,6 @@ export type MatchLiveScreenState =
       goalModalVisible: boolean;
       subModalVisible: boolean;
       remarkModalVisible: boolean;
-      confirmVisible: boolean;
       timerAdjustVisible: boolean;
       editingActivity: MatchActivity | null;
       openGoalModal: () => void;
@@ -46,8 +45,6 @@ export type MatchLiveScreenState =
       closeRemarkModal: () => void;
       openTimerAdjust: () => void;
       closeTimerAdjust: () => void;
-      openConfirm: () => void;
-      closeConfirm: () => void;
       doFinish: () => void;
       handleGoal: (side: 'home' | 'away', playerId: string | null) => void;
       handleSub: (outId: string, inId: string) => void;
@@ -66,7 +63,6 @@ export function useMatchLiveScreen(navigation: Navigation): MatchLiveScreenState
   const [goalModalVisible, setGoalModalVisible] = useState(false);
   const [subModalVisible, setSubModalVisible] = useState(false);
   const [remarkModalVisible, setRemarkModalVisible] = useState(false);
-  const [confirmVisible, setConfirmVisible] = useState(false);
   const [timerAdjustVisible, setTimerAdjustVisible] = useState(false);
   const [capturedAt, setCapturedAt] = useState(0);
   const [editingActivity, setEditingActivity] = useState<MatchActivity | null>(null);
@@ -171,7 +167,6 @@ export function useMatchLiveScreen(navigation: Navigation): MatchLiveScreenState
     goalModalVisible,
     subModalVisible,
     remarkModalVisible,
-    confirmVisible,
     timerAdjustVisible,
     editingActivity,
     openGoalModal: () => {
@@ -200,10 +195,7 @@ export function useMatchLiveScreen(navigation: Navigation): MatchLiveScreenState
     },
     openTimerAdjust: () => setTimerAdjustVisible(true),
     closeTimerAdjust: () => setTimerAdjustVisible(false),
-    openConfirm: () => setConfirmVisible(true),
-    closeConfirm: () => setConfirmVisible(false),
     doFinish: () => {
-      setConfirmVisible(false);
       finishMatch();
       navigation.navigate('MatchesList');
     },

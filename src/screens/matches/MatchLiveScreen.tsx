@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
-import { FlatList, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -18,7 +18,6 @@ import { formatElapsed, formatWallClock } from '../../utils/time';
 import ActivityLogItem from './ActivityLogItem';
 import GoalModal from './GoalModal';
 import RemarkModal from './RemarkModal';
-import SlideToConfirm from './SlideToConfirm';
 import SubstitutionModal from './SubstitutionModal';
 import TimerAdjustModal from './TimerAdjustModal';
 import { useMatchLiveScreen } from './useMatchLiveScreen';
@@ -55,7 +54,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
     goalModalVisible,
     subModalVisible,
     remarkModalVisible,
-    confirmVisible,
     timerAdjustVisible,
     editingActivity,
     openGoalModal,
@@ -66,8 +64,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
     closeRemarkModal,
     openTimerAdjust,
     closeTimerAdjust,
-    openConfirm,
-    closeConfirm,
     doFinish,
     handleGoal,
     handleSub,
@@ -157,7 +153,12 @@ export default function MatchLiveScreen({ navigation }: Props) {
         <View style={styles.controlRow}>
           <TouchableOpacity
             style={styles.finishButton}
-            onPress={openConfirm}
+            onPress={() =>
+              Alert.alert('End Match?', 'This cannot be undone.', [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Finish', style: 'destructive', onPress: doFinish },
+              ])
+            }
             accessibilityRole="button"
             accessibilityLabel="Finish match"
           >
@@ -268,29 +269,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
         periodDurationMinutes={currentMatch.periodDurationMinutes}
         breakDurationMinutes={currentMatch.breakDurationMinutes}
       />
-
-      <Modal visible={confirmVisible} transparent animationType="fade">
-        <View style={styles.confirmOverlay}>
-          <TouchableOpacity
-            style={styles.confirmBackdrop}
-            activeOpacity={1}
-            onPress={closeConfirm}
-          />
-          <View style={styles.confirmPanel}>
-            <Text style={styles.confirmTitle}>End match?</Text>
-            <Text style={styles.confirmSubtitle}>Slide to confirm</Text>
-            <SlideToConfirm onConfirm={doFinish} />
-            <TouchableOpacity
-              style={styles.confirmCancelButton}
-              onPress={closeConfirm}
-              accessibilityRole="button"
-              accessibilityLabel="Cancel finish"
-            >
-              <Text style={styles.confirmCancelText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
@@ -444,43 +422,5 @@ const styles = StyleSheet.create({
     fontSize: typeScale.sm,
     fontWeight: '600',
     color: colors.destructive,
-  },
-  confirmOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'flex-end',
-  },
-  confirmBackdrop: {
-    flex: 1,
-  },
-  confirmPanel: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: spacing.xl,
-    borderTopRightRadius: spacing.xl,
-    paddingHorizontal: spacing.xxl,
-    paddingTop: spacing.xxl,
-    paddingBottom: 40,
-    gap: spacing.lg,
-  },
-  confirmTitle: {
-    fontSize: typeScale.lg,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    textAlign: 'center',
-  },
-  confirmSubtitle: {
-    fontSize: typeScale.base,
-    color: colors.textTertiary,
-    textAlign: 'center',
-    marginTop: -8,
-  },
-  confirmCancelButton: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  confirmCancelText: {
-    fontSize: typeScale.input,
-    color: colors.textSecondary,
-    fontWeight: '500',
   },
 });
