@@ -8,6 +8,11 @@ module.exports = {
     orientation: 'portrait',
     userInterfaceStyle: 'dark',
     icon: './assets/icon.png',
+    splash: {
+      image: './assets/splash.jpg',
+      resizeMode: 'cover',
+      backgroundColor: '#181818',
+    },
     newArchEnabled: true,
     assetBundlePatterns: ['**/*'],
     ios: {
@@ -18,7 +23,7 @@ module.exports = {
         ITSAppUsesNonExemptEncryption: false,
       },
     },
-    plugins: ['expo-font', 'expo-asset'],
+    plugins: ['expo-font', 'expo-asset', 'expo-splash-screen'],
     extra: {
       eas: {
         projectId: 'b0d48e41-9eab-4e61-9bda-56c84137b4ef',

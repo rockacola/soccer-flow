@@ -106,7 +106,7 @@
 
 **Release**
 
-- [ ] App icon and splash screen
+- [x] App icon and splash screen
 - [ ] App Store metadata and privacy policy
 - [ ] TestFlight build
 

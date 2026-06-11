@@ -7,11 +7,14 @@ import {
 } from '@expo-google-fonts/montserrat';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import React from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 
 import { colors } from './constants/theme';
 import RootStackNavigator from './navigation/RootStackNavigator';
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const navigationTheme = {
   ...DarkTheme,
@@ -33,6 +36,12 @@ export default function App() {
     Montserrat_600SemiBold,
     Montserrat_700Bold,
   });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;
