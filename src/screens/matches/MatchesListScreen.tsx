@@ -1,8 +1,6 @@
-import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback, useRef } from 'react';
+import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import type { Swipeable } from 'react-native-gesture-handler';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -20,16 +18,6 @@ export default function MatchesListScreen({ navigation }: Props) {
   const currentMatch = useMatchStore((s) => s.currentMatch);
   const pastMatches = useMatchStore((s) => s.pastMatches);
   const teams = useTeamsStore((s) => s.teams);
-  const openSwipeableRef = useRef<Swipeable | null>(null);
-
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        openSwipeableRef.current?.close();
-        openSwipeableRef.current = null;
-      };
-    }, []),
-  );
 
   return (
     <View style={styles.container}>
@@ -55,11 +43,7 @@ export default function MatchesListScreen({ navigation }: Props) {
         data={[...pastMatches].reverse()}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <MatchRow
-            match={item}
-            resolveTeamName={(teamId) => resolveTeamName(teams, teamId)}
-            openSwipeableRef={openSwipeableRef}
-          />
+          <MatchRow match={item} resolveTeamName={(teamId) => resolveTeamName(teams, teamId)} />
         )}
         contentContainerStyle={pastMatches.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={

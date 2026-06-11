@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { PLAYER_POSITIONS } from '../../constants/player';
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { typeScale } from '../../constants/typography';
-import { updatePlayer } from '../../services/teamsService';
+import { deletePlayer, updatePlayer } from '../../services/teamsService';
 import type { Player, PlayerPosition } from '../../types';
 import { parseJerseyNumber } from '../../utils/player';
 
@@ -42,6 +42,20 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
     }
+  }
+
+  function handleDelete() {
+    Alert.alert('Delete Player', 'This cannot be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          deletePlayer(teamId, player.id);
+          onClose();
+        },
+      },
+    ]);
   }
 
   function handlePositionPress(p: PlayerPosition) {
@@ -127,6 +141,15 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
               </TouchableOpacity>
             ))}
           </View>
+
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleDelete}
+            accessibilityRole="button"
+            accessibilityLabel="Delete player"
+          >
+            <Text style={styles.deleteButtonText}>Delete Player</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -212,5 +235,18 @@ const styles = StyleSheet.create({
   },
   positionChipTextSelected: {
     color: colors.textPrimary,
+  },
+  deleteButton: {
+    marginTop: spacing.xxl,
+    paddingVertical: 14,
+    borderRadius: spacing.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.destructive,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    fontSize: typeScale.body,
+    fontWeight: '600',
+    color: colors.destructive,
   },
 });

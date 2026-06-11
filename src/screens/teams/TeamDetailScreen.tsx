@@ -1,10 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
 import { typeScale } from '../../constants/typography';
+import { deleteTeam } from '../../services/teamsService';
 import type { TeamsStackParamList } from '../../types';
 
 import AddPlayerModal from './AddPlayerModal';
@@ -58,6 +59,20 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
     handleStartMatch,
   } = vm;
 
+  function handleDeleteTeam() {
+    Alert.alert('Delete Team', 'This cannot be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          deleteTeam(teamId);
+          navigation.goBack();
+        },
+      },
+    ]);
+  }
+
   const matchButton = hasActiveMatch ? (
     <View
       style={[styles.matchButton, styles.matchButtonDisabled]}
@@ -83,10 +98,18 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
       <FlatList
         data={team.players}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <PlayerRow teamId={teamId} player={item} onPress={() => selectPlayer(item)} />
-        )}
+        renderItem={({ item }) => <PlayerRow player={item} onPress={() => selectPlayer(item)} />}
         ListHeaderComponent={matchButton}
+        ListFooterComponent={
+          <TouchableOpacity
+            style={styles.deleteTeamButton}
+            onPress={handleDeleteTeam}
+            accessibilityRole="button"
+            accessibilityLabel="Delete team"
+          >
+            <Text style={styles.deleteTeamButtonText}>Delete Team</Text>
+          </TouchableOpacity>
+        }
         contentContainerStyle={team.players.length === 0 ? styles.emptyContainer : undefined}
         ListEmptyComponent={<Text style={styles.emptyText}>No players yet.</Text>}
       />
@@ -180,6 +203,22 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: typeScale.body,
     color: colors.textSecondary,
+  },
+  deleteTeamButton: {
+    marginHorizontal: spacing.lg,
+    marginTop: spacing.xxl,
+    marginBottom: 100,
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: spacing.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.destructive,
+    alignItems: 'center',
+  },
+  deleteTeamButtonText: {
+    fontSize: typeScale.body,
+    fontWeight: '600',
+    color: colors.destructive,
   },
   fab: {
     position: 'absolute',
