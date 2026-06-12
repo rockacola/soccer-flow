@@ -36,7 +36,7 @@ export default function TeamsListScreen({ navigation }: Props) {
   );
 
   return (
-    <ScreenBackground>
+    <ScreenBackground variant="player">
       <View style={styles.container}>
         <FlatList
           data={teams}

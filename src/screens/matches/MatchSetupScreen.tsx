@@ -53,7 +53,7 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
 
   if (!homeTeam) {
     return (
-      <ScreenBackground>
+      <ScreenBackground variant="match">
         <View style={styles.centred}>
           <Text style={styles.errorText}>Team not found.</Text>
         </View>
@@ -72,7 +72,7 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
   } = vm;
 
   return (
-    <ScreenBackground>
+    <ScreenBackground variant="match">
       <View style={styles.container}>
         <View style={styles.section}>
           <Text style={styles.label}>Opponent</Text>

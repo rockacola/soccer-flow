@@ -35,7 +35,7 @@ export default function MatchDetailScreen({ route, navigation }: Props) {
 
   if (vm.status === 'not-found') {
     return (
-      <ScreenBackground>
+      <ScreenBackground variant="match">
         <View style={styles.centred}>
           <Text style={styles.emptyText}>Match not found.</Text>
         </View>
@@ -46,7 +46,7 @@ export default function MatchDetailScreen({ route, navigation }: Props) {
   const { match, homeTeam, opponentName, groups } = vm;
 
   return (
-    <ScreenBackground>
+    <ScreenBackground variant="match">
       <ScrollView style={styles.container} contentContainerStyle={styles.listContent}>
         {/* Score */}
         <View style={styles.scoreCard}>

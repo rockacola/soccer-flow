@@ -21,7 +21,7 @@ export default function MatchesListScreen({ navigation }: Props) {
   const teams = useTeamsStore((s) => s.teams);
 
   return (
-    <ScreenBackground>
+    <ScreenBackground variant="match">
       <View style={styles.container}>
         {currentMatch !== null && (
           <TouchableOpacity
