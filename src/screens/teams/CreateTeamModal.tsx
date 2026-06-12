@@ -47,7 +47,7 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <ScreenBackground>
+      <ScreenBackground variant="player">
         <View style={styles.header}>
           <TouchableOpacity
             onPress={handleClose}

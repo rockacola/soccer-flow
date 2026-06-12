@@ -30,7 +30,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
   if (vm.status === 'no-match') {
     return (
-      <ScreenBackground>
+      <ScreenBackground variant="match">
         <View style={styles.centred}>
           <Text style={styles.noMatchText}>No active match.</Text>
         </View>
@@ -40,7 +40,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
 
   if (vm.status === 'team-missing') {
     return (
-      <ScreenBackground>
+      <ScreenBackground variant="match">
         <View style={styles.centred}>
           <Text style={styles.noMatchText}>Team data not found.</Text>
         </View>
@@ -80,7 +80,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
   } = vm;
 
   return (
-    <ScreenBackground>
+    <ScreenBackground variant="match">
       <View style={styles.container}>
         {/* Scoreboard */}
         <View style={styles.scoreboard}>

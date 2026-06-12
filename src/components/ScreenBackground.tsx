@@ -1,19 +1,25 @@
 import React from 'react';
-import type { ImageSourcePropType } from 'react-native';
 import { ImageBackground, StyleSheet } from 'react-native';
 
 import { colors } from '../constants/theme';
 
-const defaultSource = require('../../assets/bg-default.png');
+const sources = {
+  default: require('../../assets/bg-default.png'),
+  match: require('../../assets/bg-match.png'),
+  player: require('../../assets/bg-player.png'),
+  settings: require('../../assets/bg-settings.png'),
+} as const;
+
+type Variant = keyof typeof sources;
 
 type Props = {
   children: React.ReactNode;
-  source?: ImageSourcePropType;
+  variant?: Variant;
 };
 
-export default function ScreenBackground({ children, source }: Props) {
+export default function ScreenBackground({ children, variant = 'default' }: Props) {
   return (
-    <ImageBackground source={source ?? defaultSource} style={styles.container} resizeMode="cover">
+    <ImageBackground source={sources[variant]} style={styles.container} resizeMode="cover">
       {children}
     </ImageBackground>
   );

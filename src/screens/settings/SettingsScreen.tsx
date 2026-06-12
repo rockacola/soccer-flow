@@ -12,7 +12,7 @@ export default function SettingsScreen() {
   const { hasSampleData, onToggleSampleData, onResetAll } = useSettingsScreen();
 
   return (
-    <ScreenBackground>
+    <ScreenBackground variant="settings">
       <View style={styles.container}>
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>SAMPLE DATA</Text>
