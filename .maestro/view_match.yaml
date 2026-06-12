@@ -1,0 +1,30 @@
+appId: com.travaganza.soccerflow
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "See Sample Data"
+    timeout: 10000
+- tapOn: "See Sample Data"
+
+- extendedWaitUntil:
+    visible: "Phoenix FC"
+    timeout: 5000
+
+# Navigate to Matches tab
+- tapOn:
+    id: "tab-matches"
+- extendedWaitUntil:
+    visible: "Phoenix FC vs Northgate FC, 3 to 1"
+    timeout: 5000
+
+# Open the most recent match
+- tapOn: "Phoenix FC vs Northgate FC, 3 to 1"
+- extendedWaitUntil:
+    visible: "Northgate FC"
+    timeout: 5000
+
+# Verify match detail content
+- assertVisible: "Northgate FC"
+- assertVisible: "3 – 1"

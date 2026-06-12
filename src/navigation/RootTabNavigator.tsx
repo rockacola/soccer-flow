@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
+import { Pressable, type PressableProps } from 'react-native';
 
 import type { RootTabParamList } from '../types';
 
@@ -18,6 +19,9 @@ export default function RootTabNavigator() {
         component={TeamsStackNavigator}
         options={{
           headerShown: false,
+          tabBarButton: (props) => (
+            <Pressable {...(props as unknown as PressableProps)} testID="tab-teams" />
+          ),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account-group" size={size} color={color} />
           ),
@@ -36,6 +40,9 @@ export default function RootTabNavigator() {
         component={MatchesStackNavigator}
         options={{
           headerShown: false,
+          tabBarButton: (props) => (
+            <Pressable {...(props as unknown as PressableProps)} testID="tab-matches" />
+          ),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="scoreboard-outline" size={size} color={color} />
           ),
@@ -54,6 +61,9 @@ export default function RootTabNavigator() {
         component={SettingsStackNavigator}
         options={{
           headerShown: false,
+          tabBarButton: (props) => (
+            <Pressable {...(props as unknown as PressableProps)} testID="tab-settings" />
+          ),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="cog-outline" size={size} color={color} />
           ),
