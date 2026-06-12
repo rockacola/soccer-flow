@@ -75,7 +75,7 @@
 ## Part 8 — Testing
 
 - [x] More Maestro video recordings — `manage_team` flow added
-- [ ] Maestro recording — `start_match` (start match, record activities, finish match)
+- [x] Maestro recording — `start_match` (start match, record activities, finish match)
 - [ ] Maestro recording — `view_match` (browse past matches, open match detail)
 - [ ] Maestro E2E flows (no recording) — common user scenarios
 

@@ -229,7 +229,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
         />
 
         <GoalModal
-          key={editingActivity?.id ?? 'new'}
+          key={editingActivity?.id ?? 'goal-new'}
           visible={goalModalVisible}
           onClose={closeGoalModal}
           onRecord={handleGoal}
@@ -241,7 +241,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
           }
         />
         <SubstitutionModal
-          key={editingActivity?.id ?? 'new'}
+          key={editingActivity?.id ?? 'sub-new'}
           visible={subModalVisible}
           onClose={closeSubModal}
           onRecord={handleSub}
@@ -254,7 +254,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
           }
         />
         <RemarkModal
-          key={editingActivity?.id ?? 'new'}
+          key={editingActivity?.id ?? 'remark-new'}
           visible={remarkModalVisible}
           onClose={closeRemarkModal}
           onRecord={handleRemark}
