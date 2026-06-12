@@ -76,11 +76,7 @@ export default function TimerAdjustModal({
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Adjust Segments</Text>
-          <TouchableOpacity
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={onClose} accessibilityRole="button">
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -165,7 +161,6 @@ export default function TimerAdjustModal({
             onClose();
           }}
           accessibilityRole="button"
-          accessibilityLabel="Apply timer adjustments"
         >
           <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>

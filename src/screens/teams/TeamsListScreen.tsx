@@ -22,11 +22,7 @@ export default function TeamsListScreen({ navigation }: Props) {
     function syncHeaderButton() {
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            accessibilityRole="button"
-            accessibilityLabel="Add team"
-          >
+          <TouchableOpacity onPress={() => setModalVisible(true)} accessibilityRole="button">
             <Text style={styles.headerButton}>Add</Text>
           </TouchableOpacity>
         ),
@@ -52,7 +48,6 @@ export default function TeamsListScreen({ navigation }: Props) {
                 style={styles.emptyButton}
                 onPress={() => setModalVisible(true)}
                 accessibilityRole="button"
-                accessibilityLabel="Add team"
               >
                 <Text style={styles.emptyButtonLabel}>Add Team</Text>
               </TouchableOpacity>

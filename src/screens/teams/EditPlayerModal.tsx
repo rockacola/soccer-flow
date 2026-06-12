@@ -54,19 +54,11 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={onClose} accessibilityRole="button">
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Edit Player</Text>
-          <TouchableOpacity
-            onPress={handleSave}
-            accessibilityRole="button"
-            accessibilityLabel="Save player"
-          >
+          <TouchableOpacity onPress={handleSave} accessibilityRole="button">
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>
@@ -134,7 +126,6 @@ export default function EditPlayerModal({ teamId, player, visible, onClose }: Pr
             style={styles.deleteButton}
             onPress={handleDelete}
             accessibilityRole="button"
-            accessibilityLabel="Delete player"
           >
             <Text style={styles.deleteButtonText}>Delete Player</Text>
           </TouchableOpacity>

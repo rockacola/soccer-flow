@@ -166,9 +166,8 @@ export default function MatchLiveScreen({ navigation }: Props) {
                 ])
               }
               accessibilityRole="button"
-              accessibilityLabel="Finish match"
             >
-              <Text style={styles.finishButtonText}>Finish</Text>
+              <Text style={styles.finishButtonText}>Finish Match</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -179,7 +178,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
             style={[styles.activityButton, styles.goalButton]}
             onPress={openGoalModal}
             accessibilityRole="button"
-            accessibilityLabel="Record goal"
           >
             <Text style={styles.activityButtonText}>Goal</Text>
           </TouchableOpacity>
@@ -187,7 +185,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
             style={[styles.activityButton, styles.subButton]}
             onPress={openSubModal}
             accessibilityRole="button"
-            accessibilityLabel="Record substitution"
           >
             <Text style={styles.activityButtonText}>Sub</Text>
           </TouchableOpacity>
@@ -195,7 +192,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
             style={[styles.activityButton, styles.noteButton]}
             onPress={openRemarkModal}
             accessibilityRole="button"
-            accessibilityLabel="Record note"
           >
             <Text style={styles.activityButtonText}>Note</Text>
           </TouchableOpacity>
@@ -223,7 +219,6 @@ export default function MatchLiveScreen({ navigation }: Props) {
                 style={styles.activityDeleteButton}
                 onPress={() => handleDeleteActivity(item.id)}
                 accessibilityRole="button"
-                accessibilityLabel="Delete activity"
               >
                 <Text style={styles.activityDeleteText}>Delete</Text>
               </TouchableOpacity>

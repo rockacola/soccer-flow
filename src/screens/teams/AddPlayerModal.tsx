@@ -48,19 +48,11 @@ export default function AddPlayerModal({ teamId, visible, onClose }: Props) {
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <ScreenBackground>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={resetAndClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={resetAndClose} accessibilityRole="button">
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>New Player</Text>
-          <TouchableOpacity
-            onPress={handleSave}
-            accessibilityRole="button"
-            accessibilityLabel="Save player"
-          >
+          <TouchableOpacity onPress={handleSave} accessibilityRole="button">
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>

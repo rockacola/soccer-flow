@@ -43,11 +43,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
     function syncHeaderAddButton() {
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity
-            onPress={openAddModal}
-            accessibilityRole="button"
-            accessibilityLabel="Add player"
-          >
+          <TouchableOpacity onPress={openAddModal} accessibilityRole="button">
             <Text style={styles.headerButton}>Add</Text>
           </TouchableOpacity>
         ),
@@ -125,7 +121,6 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
               style={styles.deleteTeamButton}
               onPress={handleDeleteTeam}
               accessibilityRole="button"
-              accessibilityLabel="Delete team"
             >
               <Text style={styles.deleteTeamButtonText}>Delete Team</Text>
             </TouchableOpacity>

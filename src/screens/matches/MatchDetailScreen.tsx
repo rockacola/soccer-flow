@@ -117,7 +117,6 @@ export default function MatchDetailScreen({ route, navigation }: Props) {
           style={styles.deleteButton}
           onPress={handleDeleteMatch}
           accessibilityRole="button"
-          accessibilityLabel="Delete match"
         >
           <Text style={styles.deleteButtonText}>Delete Match</Text>
         </TouchableOpacity>
