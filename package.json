@@ -19,7 +19,8 @@
     "test:coverage": "jest --coverage",
     "maestro:create_team": "maestro record --local .maestro/create_team.yaml \"recordings/$(date +%Y%m%d_%H%M%S)_create_team.mp4\"",
     "maestro:manage_team": "maestro record --local .maestro/manage_team.yaml \"recordings/$(date +%Y%m%d_%H%M%S)_manage_team.mp4\"",
-    "maestro:start_match": "maestro record --local .maestro/start_match.yaml \"recordings/$(date +%Y%m%d_%H%M%S)_start_match.mp4\""
+    "maestro:start_match": "maestro record --local .maestro/start_match.yaml \"recordings/$(date +%Y%m%d_%H%M%S)_start_match.mp4\"",
+    "maestro:view_match": "maestro record --local .maestro/view_match.yaml \"recordings/$(date +%Y%m%d_%H%M%S)_view_match.mp4\""
   },
   "jest": {
     "preset": "jest-expo",
