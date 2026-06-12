@@ -58,7 +58,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
 
   if (!team) {
     return (
-      <ScreenBackground variant="player">
+      <ScreenBackground>
         <View style={styles.centred}>
           <Text style={styles.missingText}>Team not found.</Text>
         </View>
@@ -113,7 +113,7 @@ export default function TeamDetailScreen({ route, navigation }: Props) {
   );
 
   return (
-    <ScreenBackground variant="player">
+    <ScreenBackground>
       <View style={styles.container}>
         <FlatList
           data={team.players}
