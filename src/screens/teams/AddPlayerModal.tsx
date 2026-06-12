@@ -46,7 +46,7 @@ export default function AddPlayerModal({ teamId, visible, onClose }: Props) {
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <ScreenBackground variant="player">
+      <ScreenBackground>
         <View style={styles.header}>
           <TouchableOpacity
             onPress={resetAndClose}
