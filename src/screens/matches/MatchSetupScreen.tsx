@@ -99,7 +99,6 @@ export default function MatchSetupScreen({ route, navigation }: Props) {
           style={styles.startButton}
           onPress={handleStart}
           accessibilityRole="button"
-          accessibilityLabel="Start match"
         >
           <Text style={styles.startButtonText}>Start Match</Text>
         </TouchableOpacity>
