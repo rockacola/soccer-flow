@@ -15,7 +15,7 @@ type Props = {
 
 export default function PlayerRow({ player, onPress }: Props) {
   return (
-    <Pressable style={styles.playerRow} onPress={onPress} accessibilityLabel={player.name}>
+    <Pressable style={styles.playerRow} onPress={onPress} accessible={false}>
       <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
       <JerseyBadge number={player.jerseyNumber} />
       <View style={styles.playerInfo}>
