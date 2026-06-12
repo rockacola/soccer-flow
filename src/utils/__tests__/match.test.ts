@@ -1,9 +1,16 @@
-import type { MatchSegment } from '../../types';
+import type { Match, MatchActivity, MatchSegment, Player } from '../../types';
 import {
+  buildScorerRows,
+  buildSegmentGroups,
   buildSegments,
   computePhase,
   computeSegmentWindow,
   phaseLabel,
+  resolveGoalPlayerId,
+  resolveOpponent,
+  resolveTeamName,
+  scorerRowId,
+  scorerRowPlayerId,
   segmentLabel,
 } from '../match';
 
@@ -218,5 +225,196 @@ describe('segmentLabel', () => {
   it('labels break in a 4-period match as "Break"', () => {
     expect(segmentLabel(segs4[1], 1, segs4)).toBe('Break');
     expect(segmentLabel(segs4[3], 3, segs4)).toBe('Break');
+  });
+});
+
+// ── resolveOpponent ───────────────────────────────────────────────────────────
+
+describe('resolveOpponent', () => {
+  it('returns the name when non-empty', () => {
+    expect(resolveOpponent('Rivals')).toBe('Rivals');
+  });
+
+  it('returns "Opponent" for empty string', () => {
+    expect(resolveOpponent('')).toBe('Opponent');
+  });
+
+  it('returns "Opponent" for whitespace-only string', () => {
+    expect(resolveOpponent('   ')).toBe('Opponent');
+  });
+
+  it('trims and returns the name', () => {
+    expect(resolveOpponent('  Rivals  ')).toBe('Rivals');
+  });
+});
+
+// ── resolveTeamName ───────────────────────────────────────────────────────────
+
+describe('resolveTeamName', () => {
+  const teams = [
+    { id: 't_1', name: 'Red Lions', colour: '#f00', players: [] },
+    { id: 't_2', name: 'Blue Eagles', colour: '#00f', players: [] },
+  ];
+
+  it('returns the matching team name', () => {
+    expect(resolveTeamName(teams, 't_1')).toBe('Red Lions');
+    expect(resolveTeamName(teams, 't_2')).toBe('Blue Eagles');
+  });
+
+  it('returns "Unknown" when teamId is not found', () => {
+    expect(resolveTeamName(teams, 't_unknown')).toBe('Unknown');
+  });
+
+  it('returns "Unknown" when teams array is empty', () => {
+    expect(resolveTeamName([], 't_1')).toBe('Unknown');
+  });
+});
+
+// ── buildScorerRows ───────────────────────────────────────────────────────────
+
+describe('buildScorerRows', () => {
+  const player: Player = { id: 'p_1', name: 'Alex Morgan', jerseyNumber: 13 };
+
+  it('always includes the unknown row first', () => {
+    expect(buildScorerRows([])[0]).toEqual({ type: 'unknown' });
+  });
+
+  it('returns only the unknown row for an empty roster', () => {
+    expect(buildScorerRows([])).toHaveLength(1);
+  });
+
+  it('maps each player to a player row after the unknown row', () => {
+    const rows = buildScorerRows([player]);
+    expect(rows).toHaveLength(2);
+    expect(rows[1]).toEqual({ type: 'player', player });
+  });
+});
+
+// ── scorerRowId ───────────────────────────────────────────────────────────────
+
+describe('scorerRowId', () => {
+  const player: Player = { id: 'p_1', name: 'Alex Morgan' };
+
+  it('returns "__none__" for the unknown row', () => {
+    expect(scorerRowId({ type: 'unknown' })).toBe('__none__');
+  });
+
+  it('returns the player id for a player row', () => {
+    expect(scorerRowId({ type: 'player', player })).toBe('p_1');
+  });
+});
+
+// ── scorerRowPlayerId ─────────────────────────────────────────────────────────
+
+describe('scorerRowPlayerId', () => {
+  const player: Player = { id: 'p_1', name: 'Alex Morgan' };
+
+  it('returns null for the unknown row', () => {
+    expect(scorerRowPlayerId({ type: 'unknown' })).toBeNull();
+  });
+
+  it('returns the player id for a player row', () => {
+    expect(scorerRowPlayerId({ type: 'player', player })).toBe('p_1');
+  });
+});
+
+// ── resolveGoalPlayerId ───────────────────────────────────────────────────────
+
+describe('resolveGoalPlayerId', () => {
+  it('returns null for away goals regardless of selected player', () => {
+    expect(resolveGoalPlayerId('away', 'p_1')).toBeNull();
+    expect(resolveGoalPlayerId('away', null)).toBeNull();
+    expect(resolveGoalPlayerId('away', undefined)).toBeNull();
+  });
+
+  it('returns the playerId for home goals', () => {
+    expect(resolveGoalPlayerId('home', 'p_1')).toBe('p_1');
+  });
+
+  it('returns null for home goals when selectedPlayerId is null', () => {
+    expect(resolveGoalPlayerId('home', null)).toBeNull();
+  });
+
+  it('returns null for home goals when selectedPlayerId is undefined', () => {
+    expect(resolveGoalPlayerId('home', undefined)).toBeNull();
+  });
+});
+
+// ── buildSegmentGroups ────────────────────────────────────────────────────────
+
+const baseMatch: Match = {
+  id: 'm_test',
+  homeTeamId: 't_home',
+  opponentName: 'Rivals',
+  periodDurationMinutes: 40,
+  breakDurationMinutes: 15,
+  status: 'finished',
+  segments: [
+    { segmentType: 'period', startedAt: T0 },
+    { segmentType: 'break', startedAt: T0 + P },
+    { segmentType: 'period', startedAt: T0 + P + B },
+  ],
+  endedAt: T0 + P + B + P,
+  homeScore: 1,
+  awayScore: 0,
+  activities: [],
+};
+
+describe('buildSegmentGroups', () => {
+  it('returns one group per period only (skips breaks)', () => {
+    const groups = buildSegmentGroups(baseMatch);
+    expect(groups).toHaveLength(2);
+    expect(groups[0].label).toBe('1st Period');
+    expect(groups[1].label).toBe('2nd Period');
+  });
+
+  it('first group has breakAfter set to Half Time', () => {
+    const groups = buildSegmentGroups(baseMatch);
+    expect(groups[0].breakAfter).not.toBeNull();
+    expect(groups[0].breakAfter?.label).toBe('Half Time');
+  });
+
+  it('last group has no breakAfter', () => {
+    const groups = buildSegmentGroups(baseMatch);
+    expect(groups[1].breakAfter).toBeNull();
+  });
+
+  it('sets correct startedAt and endedAt on each group', () => {
+    const groups = buildSegmentGroups(baseMatch);
+    expect(groups[0].startedAt).toBe(T0);
+    expect(groups[0].endedAt).toBe(T0 + P);
+    expect(groups[1].startedAt).toBe(T0 + P + B);
+    expect(groups[1].endedAt).toBe(T0 + P + B + P);
+  });
+
+  it('assigns activities to the correct period', () => {
+    const activity1: MatchActivity = {
+      id: 'a_1',
+      type: 'goal',
+      createdAt: T0 + 600 * 1000,
+      side: 'home',
+      playerId: null,
+    };
+    const activity2: MatchActivity = {
+      id: 'a_2',
+      type: 'remark',
+      createdAt: T0 + P + B + 300 * 1000,
+      text: 'Good play',
+    };
+    const match = { ...baseMatch, activities: [activity1, activity2] };
+    const groups = buildSegmentGroups(match);
+    expect(groups[0].activities).toEqual([activity1]);
+    expect(groups[1].activities).toEqual([activity2]);
+  });
+
+  it('uses match endedAt as endedAt for last group when match is finished', () => {
+    const groups = buildSegmentGroups(baseMatch);
+    expect(groups[1].endedAt).toBe(baseMatch.endedAt);
+  });
+
+  it('sets endedAt to null for last group when match has no endedAt', () => {
+    const liveMatch = { ...baseMatch, status: 'live' as const, endedAt: null };
+    const groups = buildSegmentGroups(liveMatch);
+    expect(groups[1].endedAt).toBeNull();
   });
 });
