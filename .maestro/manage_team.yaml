@@ -1,0 +1,55 @@
+appId: com.travaganza.soccerflow
+---
+- launchApp:
+    clearState: true
+
+- extendedWaitUntil:
+    visible: "See Sample Data"
+    timeout: 10000
+- tapOn: "See Sample Data"
+
+- extendedWaitUntil:
+    visible: "Phoenix FC"
+    timeout: 5000
+
+# Open Phoenix FC team detail
+- tapOn: "Phoenix FC"
+- extendedWaitUntil:
+    visible: "Start Match"
+    timeout: 5000
+
+# Tap header title to open Edit Team modal
+- tapOn: "Phoenix FC"
+- assertVisible: "Edit Team"
+
+# Rename the team
+- tapOn: "Team name"
+- eraseText: 50
+- inputText: "Rising Sun"
+
+# Change colour to Green
+- tapOn: "Green"
+
+- tapOn: "Save"
+
+- extendedWaitUntil:
+    visible: "Rising Sun"
+    timeout: 5000
+
+# Edit player — Marcus Reid (jersey #2, DEF)
+- tapOn: "Marcus Reid"
+- assertVisible: "Edit Player"
+
+# Change jersey number from 2 to 22
+- tapOn: "Jersey number"
+- eraseText: 10
+- inputText: "22"
+
+# Change position from DEF to MID
+- tapOn: "MID"
+
+- tapOn: "Save"
+
+- assertVisible: "Marcus Reid"
+- assertVisible: "22"
+- assertVisible: "MID"
