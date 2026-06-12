@@ -20,7 +20,6 @@ export default function SettingsScreen() {
             style={styles.row}
             onPress={onToggleSampleData}
             accessibilityRole="button"
-            accessibilityLabel={hasSampleData ? 'Remove sample data' : 'Load sample data'}
           >
             <Text style={styles.rowLabel}>
               {hasSampleData ? 'Remove Sample Data' : 'Load Sample Data'}
@@ -30,12 +29,7 @@ export default function SettingsScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>DANGER ZONE</Text>
-          <TouchableOpacity
-            style={styles.row}
-            onPress={onResetAll}
-            accessibilityRole="button"
-            accessibilityLabel="Reset all data"
-          >
+          <TouchableOpacity style={styles.row} onPress={onResetAll} accessibilityRole="button">
             <Text style={[styles.rowLabel, styles.destructiveLabel]}>Reset All Data</Text>
           </TouchableOpacity>
         </View>

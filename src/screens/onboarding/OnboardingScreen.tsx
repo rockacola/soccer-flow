@@ -27,7 +27,6 @@ export default function OnboardingScreen() {
             style={styles.primaryButton}
             onPress={onLoadSampleData}
             accessibilityRole="button"
-            accessibilityLabel="Load sample data and explore the app"
           >
             <Text style={styles.primaryButtonLabel}>See Sample Data</Text>
           </TouchableOpacity>
@@ -36,7 +35,6 @@ export default function OnboardingScreen() {
             style={styles.secondaryButton}
             onPress={onSkip}
             accessibilityRole="button"
-            accessibilityLabel="Skip and start with an empty app"
           >
             <Text style={styles.secondaryButtonLabel}>Start Fresh</Text>
           </TouchableOpacity>

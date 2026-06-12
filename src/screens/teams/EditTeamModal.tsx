@@ -52,19 +52,11 @@ export default function EditTeamModal({
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={handleClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={handleClose} accessibilityRole="button">
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Edit Team</Text>
-          <TouchableOpacity
-            onPress={handleSave}
-            accessibilityRole="button"
-            accessibilityLabel="Save team"
-          >
+          <TouchableOpacity onPress={handleSave} accessibilityRole="button">
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>

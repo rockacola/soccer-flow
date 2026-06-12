@@ -3,10 +3,15 @@ appId: com.travaganza.soccerflow
 - launchApp:
     clearState: true
 
-- assertVisible: "No teams yet."
+- extendedWaitUntil:
+    visible: "Start Fresh"
+    timeout: 10000
+- tapOn: "Start Fresh"
+
+- assertVisible: "No teams yet. Create your first team to get started."
 
 # Create team
-- tapOn: "+"
+- tapOn: "Add Team"
 - assertVisible: "New Team"
 - tapOn: "e.g. Red Lions"
 - inputText: "Test Team"
@@ -19,7 +24,7 @@ appId: com.travaganza.soccerflow
 - tapOn: "Test Team"
 
 # Player 1
-- tapOn: "+"
+- tapOn: "Add"
 - assertVisible: "New Player"
 - tapOn: "e.g. Alex Morgan"
 - inputText: "James"
@@ -28,7 +33,7 @@ appId: com.travaganza.soccerflow
 - tapOn: "Save"
 
 # Player 2
-- tapOn: "+"
+- tapOn: "Add"
 - assertVisible: "New Player"
 - tapOn: "e.g. Alex Morgan"
 - inputText: "Marcus"
@@ -37,7 +42,7 @@ appId: com.travaganza.soccerflow
 - tapOn: "Save"
 
 # Player 3
-- tapOn: "+"
+- tapOn: "Add"
 - assertVisible: "New Player"
 - tapOn: "e.g. Alex Morgan"
 - inputText: "Oliver"
@@ -46,7 +51,7 @@ appId: com.travaganza.soccerflow
 - tapOn: "Save"
 
 # Player 4
-- tapOn: "+"
+- tapOn: "Add"
 - assertVisible: "New Player"
 - tapOn: "e.g. Alex Morgan"
 - inputText: "Noah"

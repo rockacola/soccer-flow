@@ -70,7 +70,7 @@
 
 - [ ] Introduce Storybook for screen-level evaluation with mock data (screen level, not component level)
 - [x] Sample data seeder — populate app with realistic fixture data for manual and automated testing
-- [ ] Accessibility labels across all interactive elements
+- [x] Accessibility labels across all interactive elements
 
 ## Part 8 — Testing
 

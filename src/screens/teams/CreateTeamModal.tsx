@@ -49,19 +49,11 @@ export default function CreateTeamModal({ visible, onClose }: Props) {
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <ScreenBackground>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={handleClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={handleClose} accessibilityRole="button">
             <Text style={styles.cancelButton}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.title}>New Team</Text>
-          <TouchableOpacity
-            onPress={handleSave}
-            accessibilityRole="button"
-            accessibilityLabel="Save team"
-          >
+          <TouchableOpacity onPress={handleSave} accessibilityRole="button">
             <Text style={styles.saveButton}>Save</Text>
           </TouchableOpacity>
         </View>

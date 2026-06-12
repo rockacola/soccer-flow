@@ -56,11 +56,7 @@ export default function GoalModal({
           <Text style={styles.title}>
             {editActivity ? 'Edit ' : ''}Goal — {formatElapsed(capturedPhaseSeconds)}
           </Text>
-          <TouchableOpacity
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={onClose} accessibilityRole="button">
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -125,7 +121,6 @@ export default function GoalModal({
           style={styles.recordButton}
           onPress={handleRecord}
           accessibilityRole="button"
-          accessibilityLabel={editActivity ? 'Save goal' : 'Record goal'}
         >
           <Text style={styles.recordButtonText}>{editActivity ? 'Save' : 'Record Goal'}</Text>
         </TouchableOpacity>

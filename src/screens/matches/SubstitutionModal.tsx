@@ -44,11 +44,7 @@ export default function SubstitutionModal({
           <Text style={styles.title}>
             {editActivity ? 'Edit ' : ''}Substitution — {formatElapsed(capturedPhaseSeconds)}
           </Text>
-          <TouchableOpacity
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-          >
+          <TouchableOpacity onPress={onClose} accessibilityRole="button">
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -104,7 +100,6 @@ export default function SubstitutionModal({
           style={styles.recordButton}
           onPress={handleRecord}
           accessibilityRole="button"
-          accessibilityLabel={editActivity ? 'Save substitution' : 'Record substitution'}
         >
           <Text style={styles.recordButtonText}>
             {editActivity ? 'Save' : 'Record Substitution'}
