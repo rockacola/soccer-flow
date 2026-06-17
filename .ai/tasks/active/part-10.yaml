@@ -1,0 +1,11 @@
+id: part-10
+title: "Feature enhancements"
+status: pending
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - Remark field on goal and substitution activities
+  - Live match recovery — handle app kill during an active match (persist or detect and recover orphaned state)
+  - Edit past match (segment timestamps, activities)
+  - Past matches list — sort by date; filter by team
+  - Export past match (capability first; format and layout TBD)

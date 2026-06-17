@@ -1,0 +1,11 @@
+id: part-02
+title: "Navigation and persistence"
+status: done
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - React Navigation bottom tabs (Teams, Matches)
+  - RootParamList types for all screens
+  - teamsStore wired to AsyncStorage (load on mount, persist on change)
+  - matchStore wired to AsyncStorage (same pattern)
+  - Storage key constants in src/constants/

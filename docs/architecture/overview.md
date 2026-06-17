@@ -96,7 +96,7 @@ assets/        — images, fonts, icons
 
 ## Key design decisions
 
-See [docs/decisions.md](decisions.md) for full ADRs.
+See [docs/adr/](../adr/) for full ADRs (ADR-001 – ADR-009).
 
 - **Expo managed workflow** — avoids native build complexity; can eject later if needed
 - **Zustand** — no providers, subscribes to slices, no re-render overhead

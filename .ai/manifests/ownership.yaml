@@ -1,0 +1,13 @@
+domains:
+  - name: src
+    owner: @rockacola
+    paths:
+      - src/
+  - name: ios
+    owner: @rockacola
+    paths:
+      - ios/SoccerFlow/
+  - name: ai-config
+    owner: @rockacola
+    paths:
+      - .ai/

@@ -1,0 +1,19 @@
+id: part-04
+title: "Match setup and live tracking"
+status: done
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  Match setup screen:
+  - Select home team; enter opponent name
+  - Set match duration (default 2 x 40 min)
+  - Start match
+
+  Live match screen:
+  - Running match timer (count up)
+  - Timer adjustment modal
+  - Record goal (team, player)
+  - Record substitution (player out, player in)
+  - Record remark (free text)
+  - Scrollable activity log (reverse chronological)
+  - Finish match

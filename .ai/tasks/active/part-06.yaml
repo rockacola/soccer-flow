@@ -1,0 +1,11 @@
+id: part-06
+title: "UI redesign and feature review"
+status: in-progress
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - [ ] Audit and simplify existing features (e.g. team colour)
+  - [x] Onboarding / empty states — guide first-time user to create a team and start a match
+  - [ ] Redesign screens with a primitive, functional UI — no decorative polish
+  - [x] Reconsider NativeWind adoption — deferred to SDK 56 (requires reanimated, peer deps not clean enough yet)
+  - [ ] Define which style affordances (swipe gestures, transitions) are deferred add-ons

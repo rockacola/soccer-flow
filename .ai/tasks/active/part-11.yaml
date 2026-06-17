@@ -1,0 +1,9 @@
+id: part-11
+title: "Architecture"
+status: pending
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - Soft delete on Team and Player (deletedAt?: number) — preserves references in past matches when a team or player is deleted
+  - Relational data model (replace current flat object store; does not scale)
+  - React error boundary at navigator level — graceful crash recovery instead of full app failure

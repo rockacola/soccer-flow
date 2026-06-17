@@ -1,0 +1,16 @@
+id: part-03
+title: "Teams management"
+status: done
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  Team list screen:
+  - List all saved teams
+  - Create a new team (name, colour)
+  - Delete a team (swipe to delete)
+
+  Team detail screen:
+  - View player roster
+  - Add a player (name, jersey number, position)
+  - Edit player details
+  - Remove a player
