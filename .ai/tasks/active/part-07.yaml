@@ -1,0 +1,9 @@
+id: part-07
+title: "Developer tooling"
+status: in-progress
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - [ ] Introduce Storybook for screen-level evaluation with mock data (screen level, not component level)
+  - [x] Sample data seeder — populate app with realistic fixture data for manual and automated testing
+  - [x] Accessibility labels across all interactive elements

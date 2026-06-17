@@ -57,6 +57,6 @@ Open Expo Go on your iPhone and scan the QR code in the terminal.
 
 ## Further reading
 
-- [docs/overview.md](overview.md) — architecture and data flow
-- [docs/tasks.md](tasks.md) — what's built and what's next
-- [docs/decisions.md](decisions.md) — architecture decisions with rationale
+- [docs/architecture/overview.md](../architecture/overview.md) — architecture and data flow
+- [.ai/tasks/active/](../../.ai/tasks/active/) — active work items
+- [docs/adr/](../adr/) — architecture decision records

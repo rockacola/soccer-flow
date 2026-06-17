@@ -1,0 +1,12 @@
+node_modules/
+ios/Pods/
+ios/build/
+.expo/
+recordings/
+assets/
+*.mp4
+*.png
+*.jpg
+.env
+.env.*
+*.key

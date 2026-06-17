@@ -1,0 +1,13 @@
+id: part-01
+title: "Project setup"
+status: done
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - Expo + TypeScript project scaffold
+  - Directory structure (src, docs, config, journal)
+  - TypeScript strict config
+  - ESLint 9 + Prettier config
+  - Type definitions (src/types/index.ts)
+  - Zustand stores (teamsStore, matchStore) as state foundation
+  - Documentation (overview, getting-started, decisions)

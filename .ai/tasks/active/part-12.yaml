@@ -1,0 +1,15 @@
+id: part-12
+title: "Polish and release"
+status: in-progress
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  Settings screen:
+  - [ ] Display current app version
+  - [x] Toggle sample data (populate or remove fixture records)
+  - [x] Full data reset (flush all local storage)
+
+  Release:
+  - [x] App icon and splash screen
+  - [ ] App Store metadata and privacy policy
+  - [ ] TestFlight build

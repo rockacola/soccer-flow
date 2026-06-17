@@ -1,0 +1,8 @@
+id: part-09
+title: "Feature flags and config"
+status: pending
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - Feature flag setup — side-load behaviour without an app store update
+  - Remote config infrastructure (professional setup; allows content/behaviour changes without a release)

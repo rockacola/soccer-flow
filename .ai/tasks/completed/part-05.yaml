@@ -1,0 +1,10 @@
+id: part-05
+title: "Match summary, testing setup and recording"
+status: done
+agent: assistant
+created_at: "2026-06-05"
+description: |
+  - Match detail screen (final score, segment-grouped activity timeline)
+  - Past matches list
+  - Unit tests — services and utils
+  - Maestro setup and create_team video recording

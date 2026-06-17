@@ -4,7 +4,7 @@ A React Native app for coaches to track soccer matches live.
 
 During a match, coaches log goals, substitutions, and remarks with the current minute. After the final whistle the app shows a full timeline and match summary. Between matches, coaches manage team rosters and player details.
 
-**Status:** Phase 1 complete (project setup). Actively building Phase 2 (navigation + state).
+**Status:** Core app complete (teams, matches, live tracking). Actively improving UI and testing.
 
 ---
 
@@ -14,7 +14,7 @@ During a match, coaches log goals, substitutions, and remarks with the current m
 | ----------- | --------------------------------- |
 | Runtime     | React Native + Expo (managed)     |
 | Language    | TypeScript (strict mode)          |
-| Styling     | NativeWind (Tailwind CSS v3)      |
+| Styling     | React Native StyleSheet           |
 | State       | Zustand                           |
 | Persistence | AsyncStorage (local, no backend)  |
 | Navigation  | React Navigation v7 (bottom tabs) |
@@ -27,38 +27,42 @@ During a match, coaches log goals, substitutions, and remarks with the current m
 ```
 src/
   App.tsx       — root component and navigation shell
-  global.css    — Tailwind base styles
   types/        — all TypeScript interfaces in one place
   stores/       — Zustand stores (teamsStore, matchStore)
+  services/     — business logic per domain
   screens/      — one folder per tab (teams/, matches/)
   components/   — shared UI components
+  utils/        — pure helper functions
   constants/    — storage keys and app-wide constants
-docs/           — architecture, setup guide, task list
-config/         — Claude Code / AI assistant instructions
-journal/        — dated session notes and architecture decisions
+docs/
+  architecture/ — system overview and data flow
+  adr/          — architecture decision records
+  onboarding/   — dev setup guide
+.ai/            — AI assistant context, standards, tasks, and journal
 ```
 
 ---
 
 ## Documentation
 
-| File | What's in it |
-| ---- | ------------ |
-| [docs/overview.md](docs/overview.md) | Architecture, data flow, key design decisions |
-| [docs/getting-started.md](docs/getting-started.md) | Dev environment setup and running the app |
-| [docs/tasks.md](docs/tasks.md) | Full task checklist — what's done, what's next |
-| [docs/decisions.md](docs/decisions.md) | Architecture decisions with rationale (ADRs) |
-| [journal/](journal/) | Dated session notes — what was built, what was decided |
-| [config/](config/) | Claude Code instructions, constraints, and code standards |
+| File                                                                     | What's in it                                           |
+| ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| [docs/architecture/overview.md](docs/architecture/overview.md)           | Architecture, data flow, key design decisions          |
+| [docs/onboarding/getting-started.md](docs/onboarding/getting-started.md) | Dev environment setup and running the app              |
+| [docs/adr/](docs/adr/)                                                   | Architecture decision records (ADR-001 – ADR-009)      |
+| [.ai/tasks/active/](.ai/tasks/active/)                                   | Active and upcoming work items                         |
+| [.ai/journal/](.ai/journal/)                                             | Dated session notes — what was built, what was decided |
 
 ---
 
 ## Roadmap
 
-See [docs/tasks.md](docs/tasks.md) for the full task checklist.
+See [.ai/tasks/active/](.ai/tasks/active/) for active work items.
 
-- [x] Phase 1 — Project setup, structure, and tooling
-- [ ] Phase 2 — Navigation, Zustand stores, and AsyncStorage persistence
-- [ ] Phase 3 — Teams management (roster, player CRUD)
-- [ ] Phase 4 — Match setup and live tracking (timer, activities)
-- [ ] Phase 5 — Match summary and polish
+- [x] Project setup, navigation, and persistence
+- [x] Teams management (roster, player CRUD)
+- [x] Match setup and live tracking (timer, goals, subs, remarks)
+- [x] Match summary and past matches list
+- [x] Onboarding, sample data, and Maestro test recordings
+- [ ] UI redesign, Storybook, E2E flows
+- [ ] Feature enhancements, architecture improvements, CI/CD
