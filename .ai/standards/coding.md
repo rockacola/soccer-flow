@@ -1,35 +1,50 @@
-# Code Standards
+# Standard: Coding
 
-## Naming
+These rules apply regardless of language. Language-specific rules belong in `.ai/standards/` within each repository.
 
-- Components: PascalCase (`TeamCard`, `MatchTimer`)
-- Functions and variables: camelCase (`handlePress`, `teamName`)
-- Types and interfaces: PascalCase (`Team`, `MatchActivity`)
-- Constants: SCREAMING_SNAKE_CASE (`STORAGE_KEY_TEAMS`)
-- Files: PascalCase for components, camelCase for utilities
+## Rules
 
-## File Structure
+### Explicitness
 
-- One component per file
-- Styles use `StyleSheet.create` — one `styles` object per file, defined at the bottom
-- Types live in `src/types/index.ts` unless they are only used in one file
-- Stores live in `src/stores/` — one file per domain
+- Prefer explicit over implicit in all constructs — types, error paths, dependencies, and control flow
+- No silent type coercion or implicit defaults at system boundaries
+- All public interfaces must have explicit contracts (types, schemas, or documented invariants)
 
-## Components
+### Structure
 
-- Functional components only
-- Props typed inline or as a named `Props` type at the top of the file
-- No default export for non-component files (named exports only)
-- Default export for screen and component files
+- One concept per file
+- File and folder names in kebab-case
+- Avoid wildcard re-exports that obscure what a module provides
+- Functions and methods should do one thing. Establish a per-project line limit and enforce it. Extract when exceeded.
+- Files should stay focused. Establish a per-project file size limit. Split when exceeded.
 
-## Comments
+### Error Handling
 
-- No comments that describe what the code does
-- Comments only for non-obvious constraints or workarounds
-- No TODO comments left in merged code
+- Explicit error handling required at every I/O boundary (network, file system, external services)
+- No silent catch blocks that swallow errors without logging or re-raising
+- Distinguish recoverable errors from programmer errors — handle them differently
+- Use structured error types, not untyped strings, where the language supports it
 
-## Error Handling
+### Dependencies
 
-- AsyncStorage operations: always try-catch
-- Unknown errors: log to console.error in development only
-- Never swallow errors silently
+- No circular dependencies between modules
+- External dependencies must be declared in the project manifest (package.json, go.mod, pyproject.toml, etc.)
+- Do not use development-only dependencies in production code paths
+
+### Comments
+
+- No comments that describe what the code does — well-named identifiers do that
+- Comments permitted only for: non-obvious constraints, workarounds for external bugs, subtle invariants
+
+### Documentation
+
+- When changing code, update the relevant documentation in the same commit
+- Do not leave docs out of sync with the implementation at any point in the commit history
+
+## Rationale
+
+Explicitness and single-responsibility reduce the surface area an AI system must reason about when modifying code. Explicit error handling surfaces failures early rather than silently propagating corrupt state.
+
+## Examples
+
+See `examples/` for `.ai/` structural patterns. Language-specific elaborations of these rules live in `.ai/standards/` within each repository (see `examples/nextjs-saas/.ai/standards/nextjs.md` for a worked example).

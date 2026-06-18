@@ -3,6 +3,17 @@
 This file is the mandatory entry point for all AI systems operating in this repository.
 Load this file first before any other context.
 
+## Critical Rules
+
+These rules are non-negotiable and apply to every task, every session, without exception.
+
+- **Never commit without explicit instruction from the operator.** Stage changes, show a `git diff --stat` summary, and wait for confirmation. An interrupted or redirected request cancels the prior commit instruction.
+- **Never add `Co-Authored-By` to commit messages.**
+- **Never use em dashes.** Use a comma, full stop, or rewrite the sentence.
+- Commit message format: single-line conventional commits, no body. Types: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`.
+
+---
+
 ## Load Order
 
 1. Standards — `.ai/standards/` (load `coding.md`, `constraints.md`, `testing.md`, `security.md`)
@@ -38,19 +49,7 @@ Also load at the start of any task:
 
 ## Git
 
-- **Never commit without explicit instruction from the operator.** Stage changes, show a `git diff --stat` summary, and wait for confirmation.
-- Commit message format: single-line conventional commits, no body.
-- Permitted types: `feat`, `fix`, `docs`, `refactor`, `chore`, `test`
-- Never add `Co-Authored-By` to commit messages.
-- When changing code, update relevant documentation in the same commit.
-
-```
-feat: add team list screen
-fix: correct timer pause behaviour
-refactor: extract activity list into component
-docs: update architecture with navigation diagram
-chore: upgrade expo to 51
-```
+- When changing code, update relevant documentation in the same commit. Do not leave docs out of sync with the implementation.
 
 ## Journal
 
