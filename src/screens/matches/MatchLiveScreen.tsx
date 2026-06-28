@@ -213,6 +213,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
                   homeTeam={homeTeam}
                   opponentName={currentMatch.opponentName}
                   segments={currentMatch.segments}
+                  showBottomBorder={false}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -229,7 +230,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
         />
 
         <GoalModal
-          key={editingActivity?.id ?? 'goal-new'}
+          key={editingActivity ? `goal-${editingActivity.id}` : 'goal-new'}
           visible={goalModalVisible}
           onClose={closeGoalModal}
           onRecord={handleGoal}
@@ -241,7 +242,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
           }
         />
         <SubstitutionModal
-          key={editingActivity?.id ?? 'sub-new'}
+          key={editingActivity ? `sub-${editingActivity.id}` : 'sub-new'}
           visible={subModalVisible}
           onClose={closeSubModal}
           onRecord={handleSub}
@@ -254,7 +255,7 @@ export default function MatchLiveScreen({ navigation }: Props) {
           }
         />
         <RemarkModal
-          key={editingActivity?.id ?? 'remark-new'}
+          key={editingActivity ? `remark-${editingActivity.id}` : 'remark-new'}
           visible={remarkModalVisible}
           onClose={closeRemarkModal}
           onRecord={handleRemark}
@@ -417,6 +418,8 @@ const styles = StyleSheet.create({
   },
   activityRow: {
     flexDirection: 'row',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.separator,
   },
   activityRowContent: {
     flex: 1,

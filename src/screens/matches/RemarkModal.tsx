@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Keyboard,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { spacing } from '../../constants/spacing';
 import { colors } from '../../constants/theme';
@@ -23,6 +33,20 @@ export default function RemarkModal({
   editActivity,
 }: Props) {
   const [text, setText] = useState(editActivity?.text ?? '');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const show = Keyboard.addListener(showEvent, (e) => setKeyboardHeight(e.endCoordinates.height));
+    const hide = Keyboard.addListener(hideEvent, () => setKeyboardHeight(0));
+
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
 
   const handleRecord = () => {
     if (text.trim().length === 0) {
@@ -35,7 +59,7 @@ export default function RemarkModal({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingBottom: keyboardHeight }]}>
         <View style={styles.header}>
           <Text style={styles.title}>
             {editActivity ? 'Edit ' : ''}Note — {formatElapsed(capturedPhaseSeconds)}
@@ -112,6 +136,7 @@ const styles = StyleSheet.create({
   },
   recordButton: {
     marginHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
     backgroundColor: colors.warning,
     borderRadius: spacing.md,
     paddingVertical: spacing.lg,
